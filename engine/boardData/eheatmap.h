@@ -2,7 +2,7 @@
 #define EHEATMAP_H
 
 #include <vector>
-#include <SDL2/SDL_rect.h>
+#include <SDL_rect.h>
 
 struct eHeat {
     int fValue;

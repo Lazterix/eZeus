@@ -13,11 +13,13 @@ endif()
 
 include(FetchContent)
 
+set(CMAKE_POLICY_VERSION_MINIMUM 3.5)
+
 # Disable unnecessary SDL components (optional but recommended)
 set(SDL_SHARED ON CACHE BOOL "" FORCE)
 set(SDL_STATIC OFF CACHE BOOL "" FORCE)
 set(SDL_TEST OFF CACHE BOOL "" FORCE)
-set(SDLIMAGE_AVIF OFF)
+set(SDL2IMAGE_AVIF OFF CACHE BOOL "" FORCE)
 set(SDLTTF_VENDORED ON CACHE BOOL "" FORCE)
 if(MINGW)
     add_compile_options(-Wa,-mbig-obj)

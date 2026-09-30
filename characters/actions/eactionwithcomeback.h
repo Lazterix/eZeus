@@ -6,7 +6,7 @@
 #include "engine/emovedirection.h"
 #include "walkable/ewalkableobject.h"
 
-#include <SDL2/SDL_rect.h>
+#include <SDL_rect.h>
 
 class eBuilding;
 

@@ -1,7 +1,7 @@
 #ifndef EFONTS_H
 #define EFONTS_H
 
-#include <SDL2/SDL_ttf.h>
+#include <SDL_ttf.h>
 #include <map>
 #include <string>
 

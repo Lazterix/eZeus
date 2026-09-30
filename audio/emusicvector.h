@@ -1,7 +1,7 @@
 #ifndef EMUSICVECTOR_H
 #define EMUSICVECTOR_H
 
-#include <SDL2/SDL_mixer.h>
+#include <SDL_mixer.h>
 
 #include <vector>
 #include <string>

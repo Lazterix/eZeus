@@ -1,8 +1,8 @@
 #ifndef ETEXTURE_H
 #define ETEXTURE_H
 
-#include <SDL2/SDL_image.h>
-#include <SDL2/SDL_ttf.h>
+#include <SDL_image.h>
+#include <SDL_ttf.h>
 
 #include <string>
 #include <memory>

@@ -1,7 +1,7 @@
 ﻿#ifndef EAICITYPLAN_H
 #define EAICITYPLAN_H
 
-#include <SDL2/SDL_rect.h>
+#include <SDL_rect.h>
 #include <vector>
 
 #include "pointers/estdselfref.h"

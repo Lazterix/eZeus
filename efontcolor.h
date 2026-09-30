@@ -2,7 +2,7 @@
 #define EFONTCOLOR_H
 
 #define SDL_MAIN_HANDLED
-#include <SDL2/SDL.h>
+#include <SDL.h>
 
 enum class eFontColor {
     light, dark, yellow, region

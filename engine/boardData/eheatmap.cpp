@@ -4,6 +4,7 @@
 
 #include <algorithm>
 #include <cassert>
+#include <cmath>
 
 void eHeatMap::add(const eHeatMap& other) {
     assert(mDX == other.mDX);

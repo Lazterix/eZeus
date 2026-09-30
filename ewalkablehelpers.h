@@ -2,7 +2,7 @@
 #define EWALKABLEHELPERS_H
 
 #include "engine/etile.h"
-#include <SDL2/SDL_rect.h>
+#include <SDL_rect.h>
 
 #include "characters/actions/walkable/ewalkableobject.h"
 

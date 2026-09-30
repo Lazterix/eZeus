@@ -1,5 +1,7 @@
 #include "ebuildingtextures.h"
 
+#include <cmath>
+
 #include "offsets/SprAmbient.h"
 
 #include "spriteData/palaceTiles15.h"
