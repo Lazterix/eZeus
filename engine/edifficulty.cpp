@@ -175,6 +175,7 @@ int costBase(const eBuildingType type) {
         return 10;
 
     case eBuildingType::bench:
+    case eBuildingType::laurelGarden:
         return 6;
     case eBuildingType::flowerGarden:
         return 20;

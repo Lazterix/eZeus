@@ -247,7 +247,9 @@ enum class eBuildingType {
     pyramidMuseum,
 
     hippodromePiece,
-    crosswalk
+    crosswalk,
+
+    laurelGarden
 };
 
 struct eTextureSpace {

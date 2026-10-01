@@ -74,7 +74,8 @@ eHeat eHeatGetters::appeal(const eBuildingType type) {
 
     case eBuildingType::park: return {3, 3};
 
-    case eBuildingType::bench: return {2, 4};
+    case eBuildingType::bench:
+    case eBuildingType::laurelGarden: return {2, 4};
     case eBuildingType::flowerGarden: return {8, 3};
     case eBuildingType::gazebo: return {6, 6};
     case eBuildingType::hedgeMaze: return {12, 4};

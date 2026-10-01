@@ -46,6 +46,11 @@ public:
     eBench(eGameBoard& board, const eCityId cid);
 };
 
+class eLaurelGarden : public eAestheticsBuilding {
+public:
+    eLaurelGarden(eGameBoard& board, const eCityId cid);
+};
+
 class eFlowerGarden : public eAestheticsBuilding {
 public:
     eFlowerGarden(eGameBoard& board, const eCityId cid);

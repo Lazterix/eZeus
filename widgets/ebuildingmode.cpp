@@ -207,6 +207,8 @@ eBuildingType eBuildingModeHelpers::toBuildingType(const eBuildingMode mode) {
 
     case eBuildingMode::bench:
         return eBuildingType::bench;
+    case eBuildingMode::laurelGarden:
+        return eBuildingType::laurelGarden;
     case eBuildingMode::flowerGarden:
         return eBuildingType::flowerGarden;
     case eBuildingMode::gazebo:

@@ -3746,6 +3746,10 @@ void eGameWidget::paintEvent(ePainter& p) {
             const auto b1 = e::make_shared<eBench>(*mBoard, mViewedCityId);
             ebs.emplace_back(mHoverTX, mHoverTY, b1);
         } break;
+        case eBuildingMode::laurelGarden: {
+            const auto b1 = e::make_shared<eLaurelGarden>(*mBoard, mViewedCityId);
+            ebs.emplace_back(mHoverTX, mHoverTY, b1);
+        } break;
         case eBuildingMode::flowerGarden: {
             const auto b1 = e::make_shared<eFlowerGarden>(*mBoard, mViewedCityId);
             ebs.emplace_back(mHoverTX, mHoverTY, b1);

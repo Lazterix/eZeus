@@ -47,6 +47,7 @@ void eThreadBuilding::load(eBuilding* const src) {
         case eBuildingType::godMonumentTile:
 
         case eBuildingType::bench:
+        case eBuildingType::laurelGarden:
         case eBuildingType::flowerGarden:
         case eBuildingType::gazebo:
         case eBuildingType::hedgeMaze:

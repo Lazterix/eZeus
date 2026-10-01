@@ -1815,6 +1815,10 @@ bool eGameWidget::buildMouseRelease() {
             r = mBoard->build(mHoverTX, mHoverTY, 1, 1, cid, pid, mEditorMode,
                   [this]() { return e::make_shared<eBench>(*mBoard, mViewedCityId); });
         } break;
+        case eBuildingMode::laurelGarden: {
+            r = mBoard->build(mHoverTX, mHoverTY, 1, 1, cid, pid, mEditorMode,
+                  [this]() { return e::make_shared<eLaurelGarden>(*mBoard, mViewedCityId); });
+        } break;
         case eBuildingMode::flowerGarden: {
             r = mBoard->build(mHoverTX, mHoverTY, 2, 2, cid, pid, mEditorMode,
                   [this]() { return e::make_shared<eFlowerGarden>(*mBoard, mViewedCityId); });

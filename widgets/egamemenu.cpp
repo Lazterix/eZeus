@@ -796,6 +796,7 @@ void eGameMenu::initialize(eGameBoard* const b,
         openBuildWidget(cmx, cmy, bb9spr);
     };
     const std::vector<eSPR> r9spr = {eSPR{eBuildingMode::bench, eLanguage::zeusText(28, 127)},
+                                     eSPR{eBuildingMode::laurelGarden, "Laurel Garden"},
                                      eSPR{eBuildingMode::birdBath, eLanguage::zeusText(28, 152)},
                                      eSPR{eBuildingMode::shortObelisk, eLanguage::zeusText(28, 24)},
                                      eSPR{eBuildingMode::tallObelisk, eLanguage::zeusText(28, 19)},

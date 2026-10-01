@@ -129,6 +129,7 @@ bool eBuilding::sPyramidBuilding(const eBuildingType bt) {
 }
 
 bool eBuilding::sAestheticsBuilding(const eBuildingType bt) {
+    if(bt == eBuildingType::laurelGarden) return true;
     const int min = static_cast<int>(eBuildingType::park);
     const int max = static_cast<int>(eBuildingType::stoneCircle);
     const int bi = static_cast<int>(bt);
@@ -730,6 +731,8 @@ std::string eBuilding::sNameForBuilding(const eBuildingType type) {
     case eBuildingType::bench:
         string = 127;
         break;
+    case eBuildingType::laurelGarden:
+        return "Laurel Garden";
     case eBuildingType::birdBath:
         string = 152;
         break;
@@ -1902,6 +1905,11 @@ void eBuilding::sInfoText(eBuilding* const b,
         titleString = 0;
         infoString = 1;
         break;
+    case eBuildingType::laurelGarden:
+        group = 137;
+        titleString = -1;
+        infoString = 1;
+        break;
     case eBuildingType::flowerGarden:
         group = 137;
         titleString = 2;
@@ -2270,7 +2278,11 @@ void eBuilding::sInfoText(eBuilding* const b,
     default:
         break;
     }
-    title = eLanguage::zeusText(group, titleString);
+    if(type == eBuildingType::laurelGarden) {
+        title = "Laurel Garden";
+    } else {
+        title = eLanguage::zeusText(group, titleString);
+    }
     info = eLanguage::zeusText(group, infoString);
     const int g = employmentInfoGroup == -1 ? group : employmentInfoGroup;
     employmentInfo = eLanguage::zeusText(g, employmentInfoString);

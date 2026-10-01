@@ -378,6 +378,9 @@ stdsptr<eBuilding> eBuildingReader::sRead(
     case eBuildingType::bench: {
         b = e::make_shared<eBench>(board, cid);
     } break;
+    case eBuildingType::laurelGarden: {
+        b = e::make_shared<eLaurelGarden>(board, cid);
+    } break;
     case eBuildingType::flowerGarden: {
         b = e::make_shared<eFlowerGarden>(board, cid);
     } break;
