@@ -1528,6 +1528,13 @@ void eGameTextures::loadBench() {
     });
 }
 
+void eGameTextures::loadLaurelGarden() {
+    loadTexture([](const int i) {
+        auto& c = sBuildingTextures[i];
+        c.loadLaurelGarden();
+    });
+}
+
 void eGameTextures::loadPark() {
     loadTexture([](const int i) {
         auto& c = sBuildingTextures[i];

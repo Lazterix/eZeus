@@ -44,6 +44,9 @@ public:
     void setAsRenderTarget(SDL_Renderer* const r);
     bool load(SDL_Renderer* const r,
               const std::string& path);
+    bool loadScaled(SDL_Renderer* const r,
+                    const std::string& path,
+                    const int width, const int height);
     bool load(SDL_Renderer* const r,
               SDL_Surface* const surf);
     bool loadText(SDL_Renderer* const r,

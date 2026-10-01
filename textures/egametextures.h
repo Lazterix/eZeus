@@ -257,6 +257,7 @@ public:
     static void loadGazebo();
     static void loadFlowerGarden();
     static void loadBench();
+    static void loadLaurelGarden();
     static void loadPark();
     static void loadHippodrome();
     static void loadHippodromeSpectators();

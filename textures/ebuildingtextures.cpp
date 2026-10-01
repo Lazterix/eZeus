@@ -622,6 +622,7 @@
 #include "offsets/PoseidonImps.h"
 
 #include "textures/espriteloader.h"
+#include "egamedir.h"
 
 eBuildingTextures::eBuildingTextures(const int tileW, const int tileH,
                                      SDL_Renderer* const renderer) :
@@ -943,6 +944,7 @@ void eBuildingTextures::loadAll() {
     loadGazebo();
     loadFlowerGarden();
     loadBench();
+    loadLaurelGarden();
     loadPark();
 
     loadZeusMonuments();
@@ -2627,6 +2629,23 @@ void eBuildingTextures::loadBench() {
                          nullptr, fRenderer);
 
     fBench = loader.load(20, 20);
+}
+
+void eBuildingTextures::loadLaurelGarden() {
+    if(fLaurelGardenLoaded) return;
+    fLaurelGardenLoaded = true;
+
+    loadBench();
+    const auto texture = std::make_shared<eTexture>();
+    const auto path = eGameDir::texturesDir() +
+                      "buildings/laurel-garden/laurel-garden.png";
+    if(texture->loadScaled(fRenderer, path, fTileW, fTileH)) {
+        fLaurelGarden = texture;
+    } else {
+        printf("Unable to load Laurel Garden custom texture; "
+               "using Bench fallback.\n");
+        fLaurelGarden = fBench;
+    }
 }
 
 void eBuildingTextures::loadPark() {

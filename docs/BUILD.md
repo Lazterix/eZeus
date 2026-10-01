@@ -22,7 +22,7 @@ Expected executable: `build/Release/eZeus.exe`.
 
 | Source | Required contents | Bootstrap behavior |
 | --- | --- | --- |
-| Repository | `build/Release/eZeus.exe`, `Adventures/`, `fonts/`, `sanctuaries/`, `text/` | Staged under `<stage-root>/eZeus/` |
+| Repository | `build/Release/eZeus.exe`, `Adventures/`, `assets/textures/`, `fonts/`, `sanctuaries/`, `text/` | Staged under `<stage-root>/eZeus/` |
 | `<runtime-assets-dir>` | `interface.e`, `Zeus_Text.xml`, `Zeus_MM.xml`, at least one `i15.e`/`i30.e`/`i45.e`/`i60.e`; optional `Bin/*.dll` | Copied into the stage |
 | `<original-game-dir>` | `DATA/`, `Audio/`, `Model/`; optional `Adventures/`, `zeus.ico` | Never copied; referenced by `zeus_path.txt` |
 
@@ -55,6 +55,7 @@ Generated layout:
 ├── Fonts/
 ├── Sanctuaries/
 ├── Text/
+├── Textures/
 ├── interface.e
 ├── i15.e / i30.e / i45.e / i60.e
 ├── Zeus_Text.xml
@@ -62,7 +63,7 @@ Generated layout:
 └── zeus_path.txt
 ```
 
-Preparation replaces staged repository resource directories and removes stale `i*.e` packs. It does not stage original `DATA`, `Audio`, `Model`, `Adventures`, or `Textures`.
+Preparation replaces staged repository resource directories and removes stale `i*.e` packs. It does not stage original `DATA`, `Audio`, `Model`, or `Adventures`.
 
 ## Prepare and run
 

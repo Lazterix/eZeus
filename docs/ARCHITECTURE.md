@@ -83,7 +83,7 @@ main.cpp -> eMainWindow -> eCampaign
 | Original proprietary data | External `DATA/`, `Audio/`, `Model/`, optional `Adventures/`, `zeus.ico`; `eGameDir::path` | Required by runtime systems; bootstrap never copies it |
 | eZeus release assets | `interface.e`; `i15.e`/`i30.e`/`i45.e`/`i60.e`; `Zeus_Text.xml`; `Zeus_MM.xml` | `eBinaryImageLoader` resolves packed blobs through `esplitbinary.h` |
 | Repository data | `spriteData/*`; `offsets/*`; `textureTemplates/*`; `sanctuaries/*.txt`; `text/*`; `fonts/*`; `Adventures/*` | Compiled or staged metadata/content |
-| Repository-owned custom art | Dormant `Textures/<size>/...` branches in `eSpriteLoader`/`eInterfaceTextures` | Not active: loaders hardcode binary packs and bootstrap does not stage `Textures/` |
+| Repository-owned custom art | `assets/textures/` staged to runtime `Textures/`; file loading through `eGameDir::texturesDir()` | Laurel Garden loads one owned PNG and scales it for enabled tile sizes; missing art falls back safely |
 
 Texture chain: concrete type -> category texture field -> `eGameTextures::loadX` -> category loader -> four size-specific `spriteData` arrays -> `eSpriteLoader` -> `eBinaryDataMap`. Interface icons use `eInterfaceTextures` separately.
 
