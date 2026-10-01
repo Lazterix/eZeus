@@ -76,3 +76,6 @@ CMakeLists.txt.user*
 
 # CMake local build directory
 /build/
+
+# Local developer runtime (may contain untracked eZeus release assets)
+/.dev-runtime/

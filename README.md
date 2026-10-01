@@ -56,6 +56,21 @@ Open eZeus.pro in Qt Creator and use it to build eZeus.
 
 Before running eZeus binary make sure to setup all files as specified in **How To Play** section and the release description. Put eZeus binary in (...)/Zeus and Poseidon/eZeus/Bin directory and run it.
 
+## Windows development runtime
+
+Build the Release configuration, then set the original game and extracted official eZeus runtime asset directories:
+
+```powershell
+$env:EZEUS_ORIGINAL_GAME_DIR = 'path\to\Zeus and Poseidon'
+$env:EZEUS_RUNTIME_ASSETS_DIR = 'path\to\extracted eZeus release'
+./scripts/dev-runtime.ps1 -Prepare
+./scripts/dev-runtime.ps1 -Run
+```
+
+`-OriginalGameDir`, `-RuntimeAssetsDir`, and optional `-StageRoot` override `EZEUS_ORIGINAL_GAME_DIR`, `EZEUS_RUNTIME_ASSETS_DIR`, and `EZEUS_STAGE_ROOT`. Without a StageRoot override, the script uses the ignored repository `.dev-runtime/` when the repository and original game share a drive; otherwise it uses `<original game>/.ezeus-dev-runtime/`. StageRoot must be on the original game's drive because the current runtime interprets `zeus_path.txt` relative to `eZeus/Bin/`.
+
+The original `DATA/` directory is required during startup. `Audio/` and `Model/` are required for full gameplay. Original `Adventures/` enables original campaigns, while `zeus.ico` is cosmetic; their absence produces warnings only. `Textures/` is not staged because current texture loading uses the `interface.e` and enabled `i*.e` binary packs. The runtime asset directory must contain `interface.e`, `Zeus_Text.xml`, `Zeus_MM.xml`, and at least one of `i15.e`, `i30.e`, `i45.e`, or `i60.e`.
+
 ## Authors
 
 **Maurycy Liebner** - 2021 - 2025 - [MaurycyLiebner](https://github.com/MaurycyLiebner)
