@@ -1634,8 +1634,11 @@ void eGameWidget::paintEvent(ePainter& p) {
                 }
             }
             const auto terr = tile->terrain();
-            if(!terrUb || flatSanct ||
-               eBuilding::sFlatBuilding(terrBt)) {
+ const bool drawTerrainUnderBuilding =
+        eBuilding::sFlatBuilding(terrBt) ||
+        terrBt == eBuildingType::laurelGarden;
+
+if(!terrUb || flatSanct || drawTerrainUnderBuilding) {
                 if(mViewMode == eViewMode::appeal && !terrUb &&
                    !sDontDrawAppeal(terr) && !tile->isElevationTile()) {
                     const auto& am = mBoard->appealMap();

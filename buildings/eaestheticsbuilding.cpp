@@ -30,9 +30,9 @@ eBench::eBench(eGameBoard& board, const eCityId cid) :
 }
 
 eLaurelGarden::eLaurelGarden(eGameBoard& board, const eCityId cid) :
-    eAestheticsBuilding(board, &eBuildingTextures::fBench,
+    eAestheticsBuilding(board, &eBuildingTextures::fLaurelGarden,
                         eBuildingType::laurelGarden, 1, 1, cid) {
-    eGameTextures::loadBench();
+    eGameTextures::loadLaurelGarden();
 }
 
 eFlowerGarden::eFlowerGarden(eGameBoard& board, const eCityId cid) :

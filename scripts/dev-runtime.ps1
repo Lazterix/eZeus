@@ -172,6 +172,7 @@ foreach ($file in $requiredAssets + $texturePacks) {
 
 $repositoryResources = @(
     @{ Source = 'Adventures'; Destination = 'Adventures' },
+    @{ Source = 'assets/textures'; Destination = 'Textures' },
     @{ Source = 'fonts'; Destination = 'Fonts' },
     @{ Source = 'sanctuaries'; Destination = 'Sanctuaries' },
     @{ Source = 'text'; Destination = 'Text' }

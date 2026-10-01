@@ -169,6 +169,8 @@ public:
     void loadFlowerGarden();
     bool fBenchLoaded = false;
     void loadBench();
+    bool fLaurelGardenLoaded = false;
+    void loadLaurelGarden();
     bool fParkLoaded = false;
     void loadPark();
     bool fHippodromeLoaded = false;
@@ -566,6 +568,7 @@ public:
     eTextureCollection fWaterPark8Overlay;
 
     std::shared_ptr<eTexture> fBench;
+    std::shared_ptr<eTexture> fLaurelGarden;
     std::shared_ptr<eTexture> fFlowerGarden;
     std::shared_ptr<eTexture> fGazebo;
     std::shared_ptr<eTexture> fHedgeMaze;

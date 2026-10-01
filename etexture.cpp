@@ -42,6 +42,40 @@ bool eTexture::load(SDL_Renderer* const r, const std::string& path) {
     return load(r, surf);
 }
 
+bool eTexture::loadScaled(SDL_Renderer* const r,
+                          const std::string& path,
+                          const int width, const int height) {
+    reset();
+    const auto surf = IMG_Load(path.c_str());
+    if(!surf) {
+        printf("Unable to load image %s! SDL_image Error: %s\n",
+               path.c_str(), IMG_GetError());
+        return false;
+    }
+    if(surf->w == width && surf->h == height) return load(r, surf);
+
+    const auto scaled = SDL_CreateRGBSurfaceWithFormat(
+        0, width, height, 32, SDL_PIXELFORMAT_RGBA32);
+    if(!scaled) {
+        printf("Unable to create scaled surface! SDL Error: %s\n",
+               SDL_GetError());
+        SDL_FreeSurface(surf);
+        return false;
+    }
+    SDL_FillRect(scaled, nullptr,
+                 SDL_MapRGBA(scaled->format, 0, 0, 0, 0));
+    SDL_SetSurfaceBlendMode(surf, SDL_BLENDMODE_NONE);
+    if(SDL_BlitScaled(surf, nullptr, scaled, nullptr) < 0) {
+        printf("Unable to scale image %s! SDL Error: %s\n",
+               path.c_str(), SDL_GetError());
+        SDL_FreeSurface(scaled);
+        SDL_FreeSurface(surf);
+        return false;
+    }
+    SDL_FreeSurface(surf);
+    return load(r, scaled);
+}
+
 bool eTexture::load(SDL_Renderer* const r,
                     SDL_Surface* const surf) {
     reset();
