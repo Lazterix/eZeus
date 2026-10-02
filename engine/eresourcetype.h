@@ -47,7 +47,9 @@ enum class eResourceType {
     allTransportable = (1 << 22) - 1,
 
     silver = 1 << 22,
-    drachmas = 1 << 23
+    drachmas = 1 << 23,
+
+    salt = 1 << 24
 };
 
 inline eResourceType operator|(const eResourceType a, const eResourceType b) {
