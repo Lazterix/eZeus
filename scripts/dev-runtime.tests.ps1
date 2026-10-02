@@ -18,6 +18,7 @@ function New-Fixture {
         (Join-Path $RepositoryRoot 'build/Release'),
         (Join-Path $RepositoryRoot 'Adventures'),
         (Join-Path $RepositoryRoot 'assets/textures/buildings/laurel-garden'),
+        (Join-Path $RepositoryRoot 'assets/textures/buildings/salt-works'),
         (Join-Path $RepositoryRoot 'fonts'),
         (Join-Path $RepositoryRoot 'sanctuaries'),
         (Join-Path $RepositoryRoot 'text'),
@@ -33,6 +34,7 @@ function New-Fixture {
     Set-Content -LiteralPath (Join-Path $RepositoryRoot 'build/Release/eZeus.exe') -Value 'exe'
     Set-Content -LiteralPath (Join-Path $RepositoryRoot 'Adventures/adventure.epak') -Value 'adventure'
     Set-Content -LiteralPath (Join-Path $RepositoryRoot 'assets/textures/buildings/laurel-garden/laurel-garden.png') -Value 'owned texture'
+    Set-Content -LiteralPath (Join-Path $RepositoryRoot 'assets/textures/buildings/salt-works/salt-works.png') -Value 'salt works texture'
     Set-Content -LiteralPath (Join-Path $RepositoryRoot 'fonts/Zeus.ttf') -Value 'font'
     Set-Content -LiteralPath (Join-Path $RepositoryRoot 'sanctuaries/zeus.txt') -Value 'sanctuary'
     Set-Content -LiteralPath (Join-Path $RepositoryRoot 'text/language.txt') -Value 'language'
@@ -51,6 +53,8 @@ function Assert-StagedRuntime {
     $stagedTexture = Join-Path $RuntimeRoot 'Textures/buildings/laurel-garden/laurel-garden.png'
     Assert-True (Test-Path -LiteralPath $stagedTexture -PathType Leaf) 'Repository-owned Laurel Garden texture was not staged.'
     Assert-True ((Get-Content -Raw -LiteralPath $stagedTexture) -eq "owned texture`r`n") 'Staged Laurel Garden texture did not match the repository-owned source.'
+    $stagedSaltWorksTexture = Join-Path $RuntimeRoot 'Textures/buildings/salt-works/salt-works.png'
+    Assert-True (Test-Path -LiteralPath $stagedSaltWorksTexture -PathType Leaf) 'Repository-owned Salt Works texture was not staged.'
     Assert-True (Test-Path -LiteralPath (Join-Path $RuntimeRoot 'Fonts/Zeus.ttf') -PathType Leaf) 'Repository font was not staged with runtime casing.'
     Assert-True (Test-Path -LiteralPath (Join-Path $RuntimeRoot 'Sanctuaries/zeus.txt') -PathType Leaf) 'Repository sanctuary data was not staged with runtime casing.'
     Assert-True (-not (Test-Path -LiteralPath (Join-Path $RuntimeRoot 'DATA'))) 'Original DATA directory was copied into the runtime.'

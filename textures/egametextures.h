@@ -212,6 +212,7 @@ public:
     static void loadDairy();
     static void loadGrowersLodge();
     static void loadTimberMill();
+    static void loadSaltWorks();
     static void loadMasonryShop();
     static void loadMint();
     static void loadFoundry();

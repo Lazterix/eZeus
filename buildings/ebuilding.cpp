@@ -442,6 +442,8 @@ std::string eBuilding::sNameForBuilding(const eBuildingType type) {
     case eBuildingType::timberMill:
         string = 51;
         break;
+    case eBuildingType::saltWorks:
+        return "Salt Works";
     case eBuildingType::masonryShop:
         string = 49;
         break;
@@ -1583,6 +1585,12 @@ void eBuilding::sInfoText(eBuilding* const b,
             employmentInfoString = 10;
         }
     } break;
+    case eBuildingType::saltWorks: {
+        group = -1;
+        titleString = -1;
+        infoString = -1;
+        employmentInfoString = -1;
+    } break;
     case eBuildingType::dairy: {
         const auto d = static_cast<eDairy*>(b);
         const bool sd = d->shutDown();
@@ -2280,10 +2288,16 @@ void eBuilding::sInfoText(eBuilding* const b,
     }
     if(type == eBuildingType::laurelGarden) {
         title = "Laurel Garden";
+    } else if(type == eBuildingType::saltWorks) {
+        title = "Salt Works";
     } else {
         title = eLanguage::zeusText(group, titleString);
     }
-    info = eLanguage::zeusText(group, infoString);
+    if(type == eBuildingType::saltWorks) {
+        info = "Produces salt for storage in Warehouses.";
+    } else {
+        info = eLanguage::zeusText(group, infoString);
+    }
     const int g = employmentInfoGroup == -1 ? group : employmentInfoGroup;
     employmentInfo = eLanguage::zeusText(g, employmentInfoString);
     additionalInfo = eLanguage::zeusText(group, additionalInfoString);

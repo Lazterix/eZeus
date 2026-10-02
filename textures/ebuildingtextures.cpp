@@ -891,6 +891,7 @@ void eBuildingTextures::loadAll() {
     loadDairy();
     loadGrowersLodge();
     loadTimberMill();
+    loadSaltWorks();
     loadMasonryShop();
     loadBlackMarbleWorkshop();
     loadRefinery();
@@ -1588,6 +1589,23 @@ void eBuildingTextures::loadTimberMill() {
     fTimberMill = loader.load(1, 1);
     for(int i = 2; i < 12; i++) {
         loader.load(1, i, fTimberMillOverlay);
+    }
+}
+
+void eBuildingTextures::loadSaltWorks() {
+    if(fSaltWorksLoaded) return;
+    fSaltWorksLoaded = true;
+
+    loadTimberMill();
+    const auto texture = std::make_shared<eTexture>();
+    const auto path = eGameDir::texturesDir() +
+                      "buildings/salt-works/salt-works.png";
+    if(texture->loadScaled(fRenderer, path, 2*fTileW, 2*fTileH)) {
+        fSaltWorks = texture;
+    } else {
+        printf("Unable to load Salt Works custom texture; "
+               "using Timber Mill fallback.\n");
+        fSaltWorks = fTimberMill;
     }
 }
 

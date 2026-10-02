@@ -63,6 +63,8 @@ public:
     void loadGrowersLodge();
     bool fTimberMillLoaded = false;
     void loadTimberMill();
+    bool fSaltWorksLoaded = false;
+    void loadSaltWorks();
     bool fMasonryShopLoaded = false;
     void loadMasonryShop();
     bool fBlackMarbleWorkshopLoaded = false;
@@ -378,6 +380,7 @@ public:
 
     std::shared_ptr<eTexture> fTimberMill;
     eTextureCollection fTimberMillOverlay;
+    std::shared_ptr<eTexture> fSaltWorks;
 
     std::shared_ptr<eTexture> fMasonryShop;
     eTextureCollection fMasonryShopStones;

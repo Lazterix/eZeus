@@ -237,7 +237,9 @@ enum class eBuildingMode {
     hippodromePiece,
     crosswalk,
 
-    laurelGarden
+    laurelGarden,
+
+    saltWorks
 };
 
 namespace eBuildingModeHelpers {

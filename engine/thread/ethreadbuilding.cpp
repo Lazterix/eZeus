@@ -110,7 +110,8 @@ void eThreadBuilding::load(eBuilding* const src) {
         case eBuildingType::refinery:
         case eBuildingType::blackMarbleWorkshop:
         case eBuildingType::mint:
-        case eBuildingType::timberMill: {
+        case eBuildingType::timberMill:
+        case eBuildingType::saltWorks: {
             const auto b = static_cast<eResourceBuildingBase*>(src);
             mResource[0] = b->resourceType();
             mResourceCount[0] = b->resource();

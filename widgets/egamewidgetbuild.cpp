@@ -1070,6 +1070,10 @@ bool eGameWidget::buildMouseRelease() {
             r = mBoard->build(mHoverTX, mHoverTY, 2, 2, cid, pid, mEditorMode,
                   [this]() { return e::make_shared<eTimberMill>(*mBoard, mViewedCityId); });
         } break;
+        case eBuildingMode::saltWorks: {
+            r = mBoard->build(mHoverTX, mHoverTY, 2, 2, cid, pid, mEditorMode,
+                  [this]() { return e::make_shared<eSaltWorks>(*mBoard, mViewedCityId); });
+        } break;
         case eBuildingMode::masonryShop: {
             r = mBoard->build(mHoverTX, mHoverTY, 2, 2, cid, pid, mEditorMode,
                   [this]() { return e::make_shared<eMasonryShop>(*mBoard, mViewedCityId); });

@@ -1634,11 +1634,12 @@ void eGameWidget::paintEvent(ePainter& p) {
                 }
             }
             const auto terr = tile->terrain();
- const bool drawTerrainUnderBuilding =
-        eBuilding::sFlatBuilding(terrBt) ||
-        terrBt == eBuildingType::laurelGarden;
+            const bool drawTerrainUnderBuilding =
+                    eBuilding::sFlatBuilding(terrBt) ||
+                    terrBt == eBuildingType::laurelGarden ||
+                    terrBt == eBuildingType::saltWorks;
 
-if(!terrUb || flatSanct || drawTerrainUnderBuilding) {
+            if(!terrUb || flatSanct || drawTerrainUnderBuilding) {
                 if(mViewMode == eViewMode::appeal && !terrUb &&
                    !sDontDrawAppeal(terr) && !tile->isElevationTile()) {
                     const auto& am = mBoard->appealMap();
@@ -3318,6 +3319,10 @@ if(!terrUb || flatSanct || drawTerrainUnderBuilding) {
         } break;
         case eBuildingMode::timberMill: {
             const auto b1 = e::make_shared<eTimberMill>(*mBoard, mViewedCityId);
+            ebs.emplace_back(mHoverTX, mHoverTY, b1);
+        } break;
+        case eBuildingMode::saltWorks: {
+            const auto b1 = e::make_shared<eSaltWorks>(*mBoard, mViewedCityId);
             ebs.emplace_back(mHoverTX, mHoverTY, b1);
         } break;
         case eBuildingMode::masonryShop: {

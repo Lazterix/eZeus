@@ -861,6 +861,7 @@ void eBoardCity::registerBuilding(eBuilding* const b) {
     case eBuildingType::orangeTendersLodge:
     case eBuildingType::winery:
     case eBuildingType::timberMill:
+    case eBuildingType::saltWorks:
     case eBuildingType::masonryShop:
     case eBuildingType::foundry:
     case eBuildingType::armory:
