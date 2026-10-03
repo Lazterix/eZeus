@@ -19,6 +19,7 @@ function New-Fixture {
         (Join-Path $RepositoryRoot 'Adventures'),
         (Join-Path $RepositoryRoot 'assets/textures/buildings/laurel-garden'),
         (Join-Path $RepositoryRoot 'assets/textures/buildings/salt-works'),
+        (Join-Path $RepositoryRoot 'assets/textures/resources/salt'),
         (Join-Path $RepositoryRoot 'fonts'),
         (Join-Path $RepositoryRoot 'sanctuaries'),
         (Join-Path $RepositoryRoot 'text'),
@@ -35,6 +36,15 @@ function New-Fixture {
     Set-Content -LiteralPath (Join-Path $RepositoryRoot 'Adventures/adventure.epak') -Value 'adventure'
     Set-Content -LiteralPath (Join-Path $RepositoryRoot 'assets/textures/buildings/laurel-garden/laurel-garden.png') -Value 'owned texture'
     Set-Content -LiteralPath (Join-Path $RepositoryRoot 'assets/textures/buildings/salt-works/salt-works.png') -Value 'salt works texture'
+    foreach ($file in @(
+        'salt-unit.png',
+        'warehouse-salt-1.png',
+        'warehouse-salt-2.png',
+        'warehouse-salt-3.png',
+        'warehouse-salt-4.png'
+    )) {
+        Set-Content -LiteralPath (Join-Path $RepositoryRoot "assets/textures/resources/salt/$file") -Value $file
+    }
     Set-Content -LiteralPath (Join-Path $RepositoryRoot 'fonts/Zeus.ttf') -Value 'font'
     Set-Content -LiteralPath (Join-Path $RepositoryRoot 'sanctuaries/zeus.txt') -Value 'sanctuary'
     Set-Content -LiteralPath (Join-Path $RepositoryRoot 'text/language.txt') -Value 'language'
@@ -55,6 +65,16 @@ function Assert-StagedRuntime {
     Assert-True ((Get-Content -Raw -LiteralPath $stagedTexture) -eq "owned texture`r`n") 'Staged Laurel Garden texture did not match the repository-owned source.'
     $stagedSaltWorksTexture = Join-Path $RuntimeRoot 'Textures/buildings/salt-works/salt-works.png'
     Assert-True (Test-Path -LiteralPath $stagedSaltWorksTexture -PathType Leaf) 'Repository-owned Salt Works texture was not staged.'
+    foreach ($file in @(
+        'salt-unit.png',
+        'warehouse-salt-1.png',
+        'warehouse-salt-2.png',
+        'warehouse-salt-3.png',
+        'warehouse-salt-4.png'
+    )) {
+        $stagedSaltTexture = Join-Path $RuntimeRoot "Textures/resources/salt/$file"
+        Assert-True (Test-Path -LiteralPath $stagedSaltTexture -PathType Leaf) "Repository-owned Salt texture was not staged: $file"
+    }
     Assert-True (Test-Path -LiteralPath (Join-Path $RuntimeRoot 'Fonts/Zeus.ttf') -PathType Leaf) 'Repository font was not staged with runtime casing.'
     Assert-True (Test-Path -LiteralPath (Join-Path $RuntimeRoot 'Sanctuaries/zeus.txt') -PathType Leaf) 'Repository sanctuary data was not staged with runtime casing.'
     Assert-True (-not (Test-Path -LiteralPath (Join-Path $RuntimeRoot 'DATA'))) 'Original DATA directory was copied into the runtime.'

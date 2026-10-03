@@ -61,8 +61,7 @@ void eWarehouseBase::getSpaceOverlays(const eTileSize size,
             o.fTex = texs.fWarehouseMarble.getTexture(texId);
             break;
         case eResourceType::salt:
-            // Temporary visual fallback until repository-owned Salt warehouse art exists.
-            o.fTex = texs.fWarehouseMarble.getTexture(texId);
+            o.fTex = texs.fWarehouseSalt.getTexture(texId);
             break;
         case eResourceType::grapes:
             o.fTex = texs.fWarehouseGrapes.getTexture(texId);

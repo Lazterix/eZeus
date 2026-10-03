@@ -522,6 +522,7 @@ public:
     eTextureCollection fWarehouseWood;
     eTextureCollection fWarehouseBronze;
     eTextureCollection fWarehouseMarble;
+    eTextureCollection fWarehouseSalt;
     eTextureCollection fWarehouseGrapes;
     eTextureCollection fWarehouseOlives;
     eTextureCollection fWarehouseFleece;

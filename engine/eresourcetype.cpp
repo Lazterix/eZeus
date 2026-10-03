@@ -285,8 +285,7 @@ std::shared_ptr<eTexture> eResourceTypeHelpers::icon(
     case eResourceType::blackMarble:
         return coll.fBlackMarbleUnit;
     case eResourceType::salt:
-        // Temporary fallback until repository-owned Salt icon is loaded.
-        return coll.fMarbleUnit;
+        return coll.fSaltUnit ? coll.fSaltUnit : coll.fMarbleUnit;
     default:
         return nullptr;
     }

@@ -769,6 +769,7 @@ eBuildingTextures::eBuildingTextures(const int tileW, const int tileH,
     fWarehouseWood(renderer),
     fWarehouseBronze(renderer),
     fWarehouseMarble(renderer),
+    fWarehouseSalt(renderer),
     fWarehouseGrapes(renderer),
     fWarehouseOlives(renderer),
     fWarehouseFleece(renderer),
@@ -3175,6 +3176,20 @@ void eBuildingTextures::load() {
         }
         for(int i = 37; i < 41; i++) {
             loader.load(1, i, fWarehouseMarble);
+        }
+        for(int i = 0; i < 4; i++) {
+            const auto& fallback = fWarehouseMarble.getTexture(i);
+            auto& salt = fWarehouseSalt.addTexture();
+            const auto path = eGameDir::texturesDir() +
+                              "resources/salt/warehouse-salt-" +
+                              std::to_string(i + 1) + ".png";
+            if(!salt->loadScaled(fRenderer, path,
+                                 fallback->width(),
+                                 fallback->height())) {
+                printf("Unable to load Salt warehouse texture %d; "
+                       "using Marble fallback.\n", i + 1);
+                salt = fallback;
+            }
         }
         for(int i = 41; i < 45; i++) {
             loader.load(1, i, fWarehouseGrapes);
