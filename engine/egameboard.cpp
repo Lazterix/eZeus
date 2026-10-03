@@ -931,6 +931,8 @@ void eGameBoard::giftToReceived(const stdsptr<eWorldCity>& c,
                                 const eResourceType type,
                                 const int count,
                                 const ePlayerId pid) {
+    const int giftCount = eGiftHelpers::giftCount(type);
+    if(giftCount <= 0) return;
     const bool a = c->acceptsGift(type, count);
     eEventData ed(pid);
     ed.fType = eMessageEventType::resourceGranted;
@@ -938,7 +940,7 @@ void eGameBoard::giftToReceived(const stdsptr<eWorldCity>& c,
     ed.fResourceType = type;
     ed.fResourceCount = count;
     if(a) {
-        const int mult = count/eGiftHelpers::giftCount(type);
+        const int mult = count/giftCount;
         const bool b = c->buys(type);
         const bool s = c->sells(type);
         if(type == eResourceType::drachmas) {

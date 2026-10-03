@@ -1,11 +1,10 @@
 #include "egifthelpers.h"
 
-int eGiftHelpers::giftCount(const eResourceType r) {
-    int count;
+namespace {
+constexpr int giftCountValue(const eResourceType r) {
     switch(r) {
     case eResourceType::drachmas:
-        count = 500;
-        break;
+        return 500;
     case eResourceType::urchin:
     case eResourceType::fish:
     case eResourceType::meat:
@@ -15,8 +14,7 @@ int eGiftHelpers::giftCount(const eResourceType r) {
     case eResourceType::wheat:
     case eResourceType::oranges:
     case eResourceType::food:
-        count = 8;
-        break;
+        return 8;
     case eResourceType::grapes:
     case eResourceType::olives:
     case eResourceType::wine:
@@ -25,18 +23,34 @@ int eGiftHelpers::giftCount(const eResourceType r) {
 
     case eResourceType::wood:
     case eResourceType::bronze:
-        count = 8;
-        break;
+    case eResourceType::orichalc:
+        return 8;
     case eResourceType::marble:
     case eResourceType::armor:
-        count = 4;
-        break;
+    case eResourceType::blackMarble:
+        return 4;
     case eResourceType::sculpture:
-        count = 1;
-        break;
+        return 1;
     default:
-        count = 0;
-        break;
+        return 0;
     };
-    return count;
+}
+
+constexpr bool allGiftableResourcesHavePositiveCount() {
+    const int allBasic = static_cast<int>(eResourceType::allBasic);
+    for(int resource = 1; resource <= allBasic; resource <<= 1) {
+        if(giftCountValue(static_cast<eResourceType>(resource)) <= 0) {
+            return false;
+        }
+    }
+    return giftCountValue(eResourceType::drachmas) > 0;
+}
+
+static_assert(giftCountValue(eResourceType::orichalc) == 8);
+static_assert(giftCountValue(eResourceType::blackMarble) == 4);
+static_assert(allGiftableResourcesHavePositiveCount());
+}
+
+int eGiftHelpers::giftCount(const eResourceType r) {
+    return giftCountValue(r);
 }
