@@ -1295,6 +1295,16 @@ void eInterfaceTextures::load() {
         fWoodUnit = loader.load(117, 124);
         fBronzeUnit = loader.load(117, 125);
         fMarbleUnit = loader.load(117, 126);
+        fSaltUnit = std::make_shared<eTexture>();
+        const auto saltPath = eGameDir::texturesDir() +
+                              "resources/salt/salt-unit.png";
+        if(!fSaltUnit->loadScaled(fRenderer, saltPath,
+                                  fMarbleUnit->width(),
+                                  fMarbleUnit->height())) {
+            printf("Unable to load Salt unit texture; "
+                   "using Marble unit fallback.\n");
+            fSaltUnit = fMarbleUnit;
+        }
         fGrapesUnit = loader.load(117, 127);
         fOlivesUnit = loader.load(117, 128);
         fFleeceUnit = loader.load(117, 129);

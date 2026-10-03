@@ -60,6 +60,9 @@ void eWarehouseBase::getSpaceOverlays(const eTileSize size,
         case eResourceType::marble:
             o.fTex = texs.fWarehouseMarble.getTexture(texId);
             break;
+        case eResourceType::salt:
+            o.fTex = texs.fWarehouseSalt.getTexture(texId);
+            break;
         case eResourceType::grapes:
             o.fTex = texs.fWarehouseGrapes.getTexture(texId);
             break;

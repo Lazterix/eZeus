@@ -43,6 +43,7 @@ std::vector<eResourceType> eResourceTypeHelpers::extractResourceTypes(const eRes
 
     extractResourceType(from, eResourceType::orichalc, result);
     extractResourceType(from, eResourceType::blackMarble, result);
+    extractResourceType(from, eResourceType::salt, result);
     return result;
 }
 
@@ -129,6 +130,8 @@ std::string eResourceTypeHelpers::typeName(const eResourceType type) {
     case eResourceType::blackMarble:
         string = 16;
         break;
+    case eResourceType::salt:
+        return "Salt";
     default:
         break;
     }
@@ -215,6 +218,8 @@ std::string eResourceTypeHelpers::typeLongName(const eResourceType type) {
     case eResourceType::blackMarble:
         string = 16;
         break;
+    case eResourceType::salt:
+        return "Salt";
     default:
         break;
     }
@@ -279,6 +284,8 @@ std::shared_ptr<eTexture> eResourceTypeHelpers::icon(
         return coll.fOrichalcUnit;
     case eResourceType::blackMarble:
         return coll.fBlackMarbleUnit;
+    case eResourceType::salt:
+        return coll.fSaltUnit ? coll.fSaltUnit : coll.fMarbleUnit;
     default:
         return nullptr;
     }
@@ -308,6 +315,7 @@ int eResourceTypeHelpers::transportSize(const eResourceType type) {
     case eResourceType::marble:
     case eResourceType::orichalc:
     case eResourceType::blackMarble:
+    case eResourceType::salt:
 
     case eResourceType::armor:
         return 4;
@@ -362,6 +370,9 @@ int eResourceTypeHelpers::defaultPrice(const eResourceType type) {
 
     case eResourceType::blackMarble:
         return 88;
+
+    case eResourceType::salt:
+        return 0;
 
     case eResourceType::food:
     case eResourceType::warehouse:

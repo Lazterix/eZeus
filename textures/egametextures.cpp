@@ -1213,6 +1213,13 @@ void eGameTextures::loadTimberMill() {
     });
 }
 
+void eGameTextures::loadSaltWorks() {
+    loadTexture([](const int i) {
+        auto& c = sBuildingTextures[i];
+        c.loadSaltWorks();
+    });
+}
+
 void eGameTextures::loadMasonryShop() {
     loadTexture([](const int i) {
         auto& c = sBuildingTextures[i];

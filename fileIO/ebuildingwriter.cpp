@@ -184,6 +184,7 @@ void eBuildingWriter::sWrite(const eBuilding* const b,
 
     case eBuildingType::bench:
     case eBuildingType::laurelGarden:
+    case eBuildingType::saltWorks:
     case eBuildingType::flowerGarden:
     case eBuildingType::gazebo:
     case eBuildingType::hedgeMaze:

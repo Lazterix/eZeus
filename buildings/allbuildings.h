@@ -23,6 +23,7 @@
 #include "buildings/eblackmarbleworkshop.h"
 #include "buildings/erefinery.h"
 #include "buildings/etimbermill.h"
+#include "buildings/esaltworks.h"
 #include "buildings/emasonryshop.h"
 #include "buildings/etaxoffice.h"
 #include "buildings/eresourcebuilding.h"

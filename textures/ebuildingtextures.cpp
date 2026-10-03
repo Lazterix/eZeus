@@ -769,6 +769,7 @@ eBuildingTextures::eBuildingTextures(const int tileW, const int tileH,
     fWarehouseWood(renderer),
     fWarehouseBronze(renderer),
     fWarehouseMarble(renderer),
+    fWarehouseSalt(renderer),
     fWarehouseGrapes(renderer),
     fWarehouseOlives(renderer),
     fWarehouseFleece(renderer),
@@ -891,6 +892,7 @@ void eBuildingTextures::loadAll() {
     loadDairy();
     loadGrowersLodge();
     loadTimberMill();
+    loadSaltWorks();
     loadMasonryShop();
     loadBlackMarbleWorkshop();
     loadRefinery();
@@ -1588,6 +1590,23 @@ void eBuildingTextures::loadTimberMill() {
     fTimberMill = loader.load(1, 1);
     for(int i = 2; i < 12; i++) {
         loader.load(1, i, fTimberMillOverlay);
+    }
+}
+
+void eBuildingTextures::loadSaltWorks() {
+    if(fSaltWorksLoaded) return;
+    fSaltWorksLoaded = true;
+
+    loadTimberMill();
+    const auto texture = std::make_shared<eTexture>();
+    const auto path = eGameDir::texturesDir() +
+                      "buildings/salt-works/salt-works.png";
+    if(texture->loadScaled(fRenderer, path, 2*fTileW, 2*fTileH)) {
+        fSaltWorks = texture;
+    } else {
+        printf("Unable to load Salt Works custom texture; "
+               "using Timber Mill fallback.\n");
+        fSaltWorks = fTimberMill;
     }
 }
 
@@ -3157,6 +3176,20 @@ void eBuildingTextures::load() {
         }
         for(int i = 37; i < 41; i++) {
             loader.load(1, i, fWarehouseMarble);
+        }
+        for(int i = 0; i < 4; i++) {
+            const auto& fallback = fWarehouseMarble.getTexture(i);
+            auto& salt = fWarehouseSalt.addTexture();
+            const auto path = eGameDir::texturesDir() +
+                              "resources/salt/warehouse-salt-" +
+                              std::to_string(i + 1) + ".png";
+            if(!salt->loadScaled(fRenderer, path,
+                                 fallback->width(),
+                                 fallback->height())) {
+                printf("Unable to load Salt warehouse texture %d; "
+                       "using Marble fallback.\n", i + 1);
+                salt = fallback;
+            }
         }
         for(int i = 41; i < 45; i++) {
             loader.load(1, i, fWarehouseGrapes);

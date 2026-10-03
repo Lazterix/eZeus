@@ -493,7 +493,8 @@ private:
                              {eResourceType::sculpture, 0},
 
                              {eResourceType::orichalc, 0},
-                             {eResourceType::blackMarble, 0}};
+                             {eResourceType::blackMarble, 0},
+                             {eResourceType::salt, 0}};
 
     std::map<eResourceType, int> mWaiting = {{eResourceType::urchin, 0},
                                              {eResourceType::fish, 0},
@@ -518,7 +519,8 @@ private:
                                              {eResourceType::sculpture, 0},
 
                                              {eResourceType::orichalc, 0},
-                                             {eResourceType::blackMarble, 0}};
+                                             {eResourceType::blackMarble, 0},
+                                             {eResourceType::salt, 0}};
 
     std::map<eCityId, std::map<eResourceType, int>> mExported;
 
@@ -605,7 +607,8 @@ private:
     std::map<eSector, std::vector<eEmployingBuilding*>> mSectorBuildings;
 
     eAvailableBuildings mAvailableBuildings;
-    eResourceType mSupportedResources = eResourceType::allBasic;
+    eResourceType mSupportedResources =
+            eResourceType::allBasic | eResourceType::salt;
 
     bool mPop100 = false;
     bool mPop500 = false;

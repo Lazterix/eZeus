@@ -302,6 +302,7 @@ public:
     std::shared_ptr<eTexture> fWoodUnit;
     std::shared_ptr<eTexture> fBronzeUnit;
     std::shared_ptr<eTexture> fMarbleUnit;
+    std::shared_ptr<eTexture> fSaltUnit;
     std::shared_ptr<eTexture> fGrapesUnit;
     std::shared_ptr<eTexture> fOlivesUnit;
     std::shared_ptr<eTexture> fFleeceUnit;

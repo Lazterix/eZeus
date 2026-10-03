@@ -235,6 +235,8 @@ add_executable(eZeus
     buildings/eroad.h
     buildings/eruins.cpp
     buildings/eruins.h
+    buildings/esaltworks.cpp
+    buildings/esaltworks.h
     buildings/esculpturestudio.cpp
     buildings/esculpturestudio.h
     buildings/eshepherbuildingbase.cpp

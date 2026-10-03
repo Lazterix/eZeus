@@ -19,7 +19,8 @@ eHeat eHeatGetters::appeal(const eBuildingType type) {
     case eBuildingType::corral: return {-12, 5};
     case eBuildingType::orangeTendersLodge: return {2, 2};
 
-    case eBuildingType::timberMill: return {-5, 4};
+    case eBuildingType::timberMill:
+    case eBuildingType::saltWorks: return {-5, 4};
     case eBuildingType::masonryShop: return {-6, 4};
     case eBuildingType::blackMarbleWorkshop: return {-6, 4};
     case eBuildingType::mint:
@@ -218,7 +219,8 @@ eHeat eHeatGetters::industry(const eBuildingType type) {
     const bool s = eBuilding::sSanctuaryBuilding(type);
     if(s) return {0, 0};
     switch(type) {
-    case eBuildingType::timberMill: return {10, 5};
+    case eBuildingType::timberMill:
+    case eBuildingType::saltWorks: return {10, 5};
     case eBuildingType::masonryShop: return {10, 5};
     case eBuildingType::mint: return {10, 5};
     case eBuildingType::foundry: return {10, 5};

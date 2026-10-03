@@ -62,7 +62,7 @@ void eStorageDataWidget::initialize() {
 
     const auto inner = innerWidget();
 
-    const auto all = eResourceType::allBasic; // mBoard.supportedResources();
+    const auto all = eResourceType::allBasic | eResourceType::salt;
     const auto tps = eResourceTypeHelpers::extractResourceTypes(all);
     const auto res = resolution();
     const auto uiScale = res.uiScale();

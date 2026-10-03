@@ -199,6 +199,7 @@ bool eSectorHelpers::sBuildingSector(const eBuildingType type,
         sector = eSector::storageAndDistribution;
         break;
     case eBuildingType::timberMill:
+    case eBuildingType::saltWorks:
     case eBuildingType::masonryShop:
     case eBuildingType::mint:
     case eBuildingType::foundry:
@@ -286,6 +287,8 @@ std::vector<eResourceType> eIndustryHelpers::sIndustries(
         return {eResourceType::meat};
     case eBuildingType::timberMill:
         return {eResourceType::wood};
+    case eBuildingType::saltWorks:
+        return {eResourceType::salt};
     case eBuildingType::masonryShop:
         return {eResourceType::marble};
     case eBuildingType::foundry:
@@ -337,6 +340,8 @@ std::vector<eBuildingType> eIndustryHelpers::sBuildings(const eResourceType type
         return {eBuildingType::huntingLodge, eBuildingType::corral};
     case eResourceType::wood:
         return {eBuildingType::timberMill};
+    case eResourceType::salt:
+        return {eBuildingType::saltWorks};
     case eResourceType::marble:
         return {eBuildingType::masonryShop};
     case eResourceType::bronze:

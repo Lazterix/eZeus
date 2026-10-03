@@ -4,7 +4,7 @@
 
 eWarehouse::eWarehouse(eGameBoard& board, const eCityId cid) :
     eWarehouseBase(board, eBuildingType::warehouse, 3, 3, 12,
-                   eResourceType::warehouse, cid) {
+                   eResourceType::warehouse | eResourceType::salt, cid) {
     setOverlayEnabledFunc([]() { return true; });
 }
 

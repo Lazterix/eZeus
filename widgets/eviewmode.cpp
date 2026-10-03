@@ -54,6 +54,7 @@ bool eViewModeHelpers::buildingVisible(
 
     case eViewMode::industry: {
         return bt == eBuildingType::timberMill ||
+               bt == eBuildingType::saltWorks ||
                bt == eBuildingType::masonryShop ||
                bt == eBuildingType::mint ||
                bt == eBuildingType::foundry ||
