@@ -624,6 +624,65 @@
 #include "textures/espriteloader.h"
 #include "egamedir.h"
 
+namespace {
+
+std::shared_ptr<eTexture> composeWarehouseSalt(
+        SDL_Renderer* const renderer,
+        const std::shared_ptr<eTexture>& empty,
+        const std::shared_ptr<eTexture>& saltPile,
+        const std::shared_ptr<eTexture>& fallback) {
+    if(!empty || !saltPile || !fallback) {
+        return fallback ? fallback : empty;
+    }
+
+    const auto result = std::make_shared<eTexture>();
+    if(!result->create(renderer, fallback->width(), fallback->height())) {
+        return fallback;
+    }
+
+    const auto previousTarget = SDL_GetRenderTarget(renderer);
+    SDL_BlendMode previousBlendMode = SDL_BLENDMODE_NONE;
+    Uint8 previousR = 0;
+    Uint8 previousG = 0;
+    Uint8 previousB = 0;
+    Uint8 previousA = 0;
+    SDL_GetRenderDrawBlendMode(renderer, &previousBlendMode);
+    SDL_GetRenderDrawColor(renderer, &previousR, &previousG,
+                           &previousB, &previousA);
+
+    bool composed = SDL_SetRenderTarget(renderer, result->tex()) == 0;
+    if(composed) {
+        SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
+        composed = SDL_RenderClear(renderer) == 0;
+    }
+    if(composed) {
+        SDL_ClearError();
+        empty->render(renderer,
+                      (result->width() - empty->width())/2,
+                      result->height() - empty->height());
+        composed = SDL_GetError()[0] == '\0';
+    }
+    if(composed) {
+        SDL_ClearError();
+        saltPile->render(renderer, 0, 0);
+        composed = SDL_GetError()[0] == '\0';
+    }
+
+    const bool targetRestored =
+        SDL_SetRenderTarget(renderer, previousTarget) == 0;
+    SDL_SetRenderDrawBlendMode(renderer, previousBlendMode);
+    SDL_SetRenderDrawColor(renderer, previousR, previousG,
+                           previousB, previousA);
+
+    if(!composed || !targetRestored) return fallback;
+
+    result->setOffset(fallback->offsetX(), fallback->offsetY());
+    return result;
+}
+
+}
+
 eBuildingTextures::eBuildingTextures(const int tileW, const int tileH,
                                      SDL_Renderer* const renderer) :
     fTileW(tileW), fTileH(tileH),
@@ -3177,20 +3236,6 @@ void eBuildingTextures::load() {
         for(int i = 37; i < 41; i++) {
             loader.load(1, i, fWarehouseMarble);
         }
-        for(int i = 0; i < 4; i++) {
-            const auto& fallback = fWarehouseMarble.getTexture(i);
-            auto& salt = fWarehouseSalt.addTexture();
-            const auto path = eGameDir::texturesDir() +
-                              "resources/salt/warehouse-salt-" +
-                              std::to_string(i + 1) + ".png";
-            if(!salt->loadScaled(fRenderer, path,
-                                 fallback->width(),
-                                 fallback->height())) {
-                printf("Unable to load Salt warehouse texture %d; "
-                       "using Marble fallback.\n", i + 1);
-                salt = fallback;
-            }
-        }
         for(int i = 41; i < 45; i++) {
             loader.load(1, i, fWarehouseGrapes);
         }
@@ -3238,6 +3283,24 @@ void eBuildingTextures::load() {
         }
 
         fWarehouseEmpty = loader.load(1, 115);
+
+        for(int i = 0; i < 4; i++) {
+            const auto& fallback = fWarehouseMarble.getTexture(i);
+            auto& salt = fWarehouseSalt.addTexture();
+            const auto path = eGameDir::texturesDir() +
+                              "resources/salt/warehouse-salt-" +
+                              std::to_string(i + 1) + ".png";
+            if(!salt->loadScaled(fRenderer, path,
+                                 fallback->width(),
+                                 fallback->height())) {
+                printf("Unable to load Salt warehouse texture %d; "
+                       "using Marble fallback.\n", i + 1);
+                salt = fallback;
+                continue;
+            }
+            salt = composeWarehouseSalt(fRenderer, fWarehouseEmpty,
+                                        salt, fallback);
+        }
     }
 
     {
