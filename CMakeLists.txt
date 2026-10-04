@@ -2902,6 +2902,8 @@ add_executable(eZeus
     widgets/etilepainter.h
     widgets/etopbarwidget.cpp
     widgets/etopbarwidget.h
+    widgets/etopmenudropdown.cpp
+    widgets/etopmenudropdown.h
     widgets/etradeeditwidget.cpp
     widgets/etradeeditwidget.h
     widgets/etriggerselectionwidget.cpp

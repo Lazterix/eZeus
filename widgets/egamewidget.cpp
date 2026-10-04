@@ -24,6 +24,7 @@
 #include "emainwindow.h"
 
 #include "eframedbutton.h"
+#include "etopmenudropdown.h"
 #include "widgets/eboardsettingsmenu.h"
 #include "widgets/eflatbutton.h"
 #include "widgets/infowidgets/einfowidget.h"
@@ -69,8 +70,55 @@
 
 #include <algorithm>
 
+class eTopMenuPopupHost : public eWidget {
+public:
+    using eOutsideReleaseAction = std::function<void(
+        const eMouseEvent&, int, int, eMouseButton)>;
+
+    eTopMenuPopupHost(eMainWindow* const window,
+                      const eOutsideReleaseAction& outsideReleaseAction) :
+        eWidget(window),
+        mOutsideReleaseAction(outsideReleaseAction) {}
+protected:
+    bool mousePressEvent(const eMouseEvent& e) override {
+        mPressX = e.x();
+        mPressY = e.y();
+        mPressButton = e.button();
+        return true;
+    }
+
+    bool mouseReleaseEvent(const eMouseEvent& e) override {
+        const auto action = mOutsideReleaseAction;
+        if(action) action(e, mPressX, mPressY, mPressButton);
+        return true;
+    }
+
+    bool keyPressEvent(const eKeyPressEvent& e) override {
+        if(e.key() != SDL_Scancode::SDL_SCANCODE_ESCAPE) return false;
+        const auto action = mCloseAction;
+        if(action) action();
+        return true;
+    }
+
+public:
+    void setCloseAction(const eAction& closeAction) {
+        mCloseAction = closeAction;
+    }
+private:
+    eOutsideReleaseAction mOutsideReleaseAction;
+    eAction mCloseAction;
+    int mPressX = 0;
+    int mPressY = 0;
+    eMouseButton mPressButton = eMouseButton::none;
+};
+
 eGameWidget::eGameWidget(eMainWindow* const window) :
     eMainWidget(window) {}
+
+void eGameWidget::addWidget(eWidget* const widget) {
+    if(mTopMenuHost && widget != mTopMenuHost) closeTopMenu();
+    eWidget::addWidget(widget);
+}
 
 eGameWidget::~eGameWidget() {
     setBoard(nullptr);
@@ -1220,6 +1268,7 @@ void eGameWidget::showMessage(eEventData& ed,
         smsg.fMsg = msg;
         return;
     }
+    closeTopMenu();
     const auto msgb = new eMessageBox(window());
     mMsgBox = msgb;
     msgb->setHeight(height()/3);
@@ -1775,6 +1824,10 @@ void eGameWidget::switchPause() {
 bool eGameWidget::keyPressEvent(const eKeyPressEvent& e) {
     if(mLocked) return true;
     const auto k = e.key();
+    if(k == SDL_Scancode::SDL_SCANCODE_ESCAPE && mTopMenuDropdown) {
+        closeTopMenu();
+        return true;
+    }
     if(k == SDL_Scancode::SDL_SCANCODE_KP_PLUS ||
        k == SDL_Scancode::SDL_SCANCODE_RIGHTBRACKET) {
         mSpeedId = std::clamp(mSpeedId + 1, 0, sMaxSpeedId);
@@ -1878,6 +1931,10 @@ bool eGameWidget::keyPressEvent(const eKeyPressEvent& e) {
 bool eGameWidget::mousePressEvent(const eMouseEvent& e) {
     mPressedButtons = mPressedButtons | e.button();
     if(mLocked) return true;
+    if(mTopMenuDropdown) {
+        closeTopMenu();
+        return true;
+    }
     mGm->closeBuildWidget();
     mMovedSincePress = false;
     const auto b = e.button();
@@ -2388,9 +2445,69 @@ void eGameWidget::centerDialog(eWidget* const d) {
 }
 
 void eGameWidget::openDialog(eWidget* const d) {
+    closeTopMenu();
     addWidget(d);
     centerDialog(d);
     window()->execDialog(d);
+}
+
+void eGameWidget::toggleTopMenu(
+        const eTopMenuId id,
+        eButton* const button,
+        const std::vector<eTopMenuAction>& actions) {
+    if(mTopMenuOpen && mOpenTopMenu == id) {
+        closeTopMenu();
+        return;
+    }
+
+    closeTopMenu();
+
+    mTopMenuHost = new eTopMenuPopupHost(
+        window(), [this](const eMouseEvent& e,
+                         const int pressX, const int pressY,
+                         const eMouseButton pressButton) {
+            if(pressButton == eMouseButton::left &&
+               e.button() == eMouseButton::left &&
+               mTopBar->triggerMenuClick(mTopMenuHost,
+                                         pressX, pressY,
+                                         e.x(), e.y())) return;
+            closeTopMenu();
+        });
+    mTopMenuHost->resize(width(), height());
+    mTopMenuHost->setCloseAction([this]() {
+        closeTopMenu();
+    });
+    addWidget(mTopMenuHost);
+    mTopMenuHost->grabKeyboard();
+
+    mTopMenuDropdown = new eTopMenuDropdown(window());
+    mTopMenuDropdown->initialize(actions, [this]() {
+        closeTopMenu();
+    });
+    mTopMenuHost->addWidget(mTopMenuDropdown);
+
+    int popupX = 0;
+    int popupY = button->height();
+    button->mapTo(mTopMenuHost, popupX, popupY);
+    popupX = std::clamp(popupX, 0,
+                        std::max(0, mTopMenuHost->width() -
+                                    mTopMenuDropdown->width()));
+    popupY = std::clamp(popupY, 0,
+                        std::max(0, mTopMenuHost->height() -
+                                    mTopMenuDropdown->height()));
+    mTopMenuDropdown->move(popupX, popupY);
+    mOpenTopMenu = id;
+    mTopMenuOpen = true;
+}
+
+void eGameWidget::closeTopMenu() {
+    if(mTopMenuHost) {
+        mTopMenuHost->releaseKeyboard();
+        mTopMenuHost->deleteLater();
+        mTopMenuHost = nullptr;
+    }
+    mTopMenuDropdown = nullptr;
+    mTopMenuOpen = false;
 }
 
 void eGameWidget::updateRequestButtons() {

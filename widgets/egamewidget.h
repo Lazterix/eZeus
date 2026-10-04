@@ -35,6 +35,11 @@ class eGameBoard;
 class eAgoraBase;
 class eInfoWidget;
 class eFramedButton;
+class eButton;
+class eTopMenuDropdown;
+class eTopMenuPopupHost;
+struct eTopMenuAction;
+enum class eTopMenuId;
 
 enum class eAgoraOrientation;
 enum class eGodType;
@@ -142,6 +147,12 @@ public:
 
     void centerDialog(eWidget* const d);
     void openDialog(eWidget* const d) override;
+
+    void toggleTopMenu(const eTopMenuId id,
+                       eButton* const button,
+                       const std::vector<eTopMenuAction>& actions);
+    void closeTopMenu();
+    void addWidget(eWidget* const widget);
 protected:
     void paintEvent(ePainter& p) override;
 
@@ -358,6 +369,10 @@ private:
     eFramedLabel* mPausedLabel = nullptr;
 
     eTopBarWidget* mTopBar = nullptr;
+    eTopMenuPopupHost* mTopMenuHost = nullptr;
+    eTopMenuDropdown* mTopMenuDropdown = nullptr;
+    eTopMenuId mOpenTopMenu;
+    bool mTopMenuOpen = false;
     eInfoWidget* mInfoWidget = nullptr;
     eMessageBox* mMsgBox = nullptr;
     std::deque<eSavedMessage> mSavedMsgs;
