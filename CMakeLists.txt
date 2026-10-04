@@ -3378,3 +3378,21 @@ target_link_libraries(eZeus PRIVATE SDL2::SDL2)
 target_link_libraries(eZeus PRIVATE SDL2_ttf::SDL2_ttf)
 target_link_libraries(eZeus PRIVATE SDL2_image::SDL2_image)
 target_link_libraries(eZeus PRIVATE SDL2_mixer::SDL2_mixer)
+
+enable_testing()
+
+add_executable(esettings_tests
+    tests/esettings_tests.cpp
+    esettings.cpp
+    egamedir.cpp
+    eloadtexthelper.cpp
+    widgets/eresolution.cpp
+)
+
+target_include_directories(esettings_tests PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}
+)
+
+target_link_libraries(esettings_tests PRIVATE SDL2::SDL2)
+
+add_test(NAME esettings_tests COMMAND esettings_tests)

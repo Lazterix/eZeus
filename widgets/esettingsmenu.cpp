@@ -4,6 +4,7 @@
 #include "elabeledwidget.h"
 #include "eframedwidget.h"
 #include "eframedbutton.h"
+#include "ecancelbutton.h"
 #include "eokbutton.h"
 
 #include "elanguage.h"
@@ -14,7 +15,6 @@
 eSettingsMenu::eSettingsMenu(const eSettings& iniSettings,
                              eMainWindow* const window) :
     eMainMenuBase(window),
-    mIniSettings(iniSettings),
     mSettings(iniSettings) {
 
 }
@@ -51,7 +51,8 @@ eWidget* createTextureBox(eMainWindow* const window,
 }
 
 void eSettingsMenu::initialize(const eApplyAction& settingsA,
-                               const eFullscreenA& fullscreenA) {
+                               const eAction& cancelA) {
+    mCancelAction = cancelA;
     eMainMenuBase::initialize();
 
     const auto frame = new eFramedWidget(window());
@@ -144,10 +145,9 @@ void eSettingsMenu::initialize(const eApplyAction& settingsA,
         fs->fitContent();
         col1->addWidget(fs);
 
-        fs->setPressAction([this, fs, fullscreenA]() {
+        fs->setPressAction([this, fs]() {
             const bool f = !mSettings.fFullscreen;
             mSettings.fFullscreen = f;
-            fullscreenA(f);
             fs->setText(f ? eLanguage::zeusText(42, 2) : // windowed screen
                             eLanguage::zeusText(42, 1)); // full screen
             fs->fitContent();
@@ -219,6 +219,16 @@ void eSettingsMenu::initialize(const eApplyAction& settingsA,
     col1->layoutVertically();
 
     {
+        const auto b = new eCancelButton(window());
+        frame->addWidget(b);
+        b->setPressAction([this]() {
+            cancel();
+        });
+        b->align(eAlignment::bottom | eAlignment::left);
+        b->move(b->x() + 2*p, b->y() - 2*p);
+    }
+
+    {
         const auto b = new eOkButton(window());
         frame->addWidget(b);
         b->setPressAction([this, settingsA]() {
@@ -227,4 +237,18 @@ void eSettingsMenu::initialize(const eApplyAction& settingsA,
         b->align(eAlignment::bottom | eAlignment::right);
         b->move(b->x() - 2*p, b->y() - 2*p);
     }
+}
+
+bool eSettingsMenu::keyPressEvent(const eKeyPressEvent& e) {
+    if(e.key() == SDL_SCANCODE_ESCAPE) cancel();
+    return true;
+}
+
+bool eSettingsMenu::mousePressEvent(const eMouseEvent& e) {
+    if(e.button() == eMouseButton::right) cancel();
+    return true;
+}
+
+void eSettingsMenu::cancel() {
+    if(mCancelAction) mCancelAction();
 }

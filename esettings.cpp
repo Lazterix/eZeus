@@ -23,10 +23,39 @@ std::vector<eTileSize> eSettings::availableSizes() const {
     return sizes;
 }
 
-void eSettings::write() const {
+bool eSettings::validateTexturePacks(
+        const std::array<bool, 4>& available) {
+    std::array<bool*, 4> enabled{
+        &fTinyTextures,
+        &fSmallTextures,
+        &fMediumTextures,
+        &fLargeTextures
+    };
+
+    bool found = false;
+    for(std::size_t i = 0; i < enabled.size(); i++) {
+        *enabled[i] = *enabled[i] && available[i];
+        found = found || *enabled[i];
+    }
+    if(found) return true;
+
+    constexpr std::array<std::size_t, 4> preference{1, 0, 2, 3};
+    for(const auto i : preference) {
+        if(!available[i]) continue;
+        *enabled[i] = true;
+        return true;
+    }
+    return false;
+}
+
+bool eSettings::write() const {
     const auto path = eGameDir::settingsPath();
-    std::ofstream file;
-    file.open(path);
+    std::ofstream file(path, std::ios::out | std::ios::trunc);
+    if(!file) {
+        std::cerr << "Failed to open settings file for writing: '"
+                  << path << "'.\n";
+        return false;
+    }
     file << "tiny_textures" << " " <<
             (fTinyTextures ? "\"true\"" : "\"false\"") << "\n";
     file << "small_textures" << " " <<
@@ -42,6 +71,11 @@ void eSettings::write() const {
     const auto hStr = std::to_string(fRes.height());
     file << "height" << " " << "\"" << hStr << "\"" << "\n";
     file.close();
+    if(file.fail()) {
+        std::cerr << "Failed to write settings file: '" << path << "'.\n";
+        return false;
+    }
+    return true;
 }
 
 void eSettings::read() {

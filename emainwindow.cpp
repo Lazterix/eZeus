@@ -19,8 +19,10 @@
 #include "fileIO/ereadstream.h"
 
 #include <chrono>
+#include <array>
 #include <filesystem>
 #include <fstream>
+#include <iostream>
 
 #include "widgets/efilewidget.h"
 #include "elanguage.h"
@@ -71,6 +73,7 @@ bool eMainWindow::initialize(const eSettings& settings) {
     setResolution(res);
     setFullscreen(settings.fFullscreen);
     mSettings = settings;
+    mConfiguredSettings = settings;
     SDL_SetWindowPosition(window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
 
     const std::string icoPath = eGameDir::path("zeus.ico");
@@ -374,7 +377,9 @@ void eMainWindow::showMainMenu() {
     };
 
     const auto settingsAction = [this]() {
-        showSettingsMenu();
+        showSettingsMenu([this]() {
+            showMainMenu();
+        });
     };
 
     const auto quitAction = [this]() {
@@ -393,31 +398,69 @@ void eMainWindow::showMainMenu() {
                    leaderAction);
 }
 
-void eMainWindow::showSettingsMenu() {
-    const auto esm = new eSettingsMenu(mSettings, this);
+void eMainWindow::showSettingsMenu(const eAction& returnAction) {
+    const bool activeGame = mGW && mWidget == mGW;
+    const auto esm = new eSettingsMenu(mConfiguredSettings, this);
     esm->resize(width(), height());
 
-    const auto applyA = [this](const eSettings& settings) {
-        const bool loadNeeded = settings.fRes != mSettings.fRes;
-        setResolution(settings.fRes);
-        setFullscreen(settings.fFullscreen);
-        mSettings = settings;
-        mSettings.write();
-        if(!mSettings.fTinyTextures &&
-           !mSettings.fSmallTextures &&
-           !mSettings.fMediumTextures &&
-           !mSettings.fLargeTextures) {
-            mSettings.fSmallTextures = true;
+    const auto applyA = [this, activeGame, returnAction](
+            const eSettings& selectedSettings) {
+        eSettings configuredSettings = selectedSettings;
+        const std::array<bool, 4> availableTextures{
+            std::filesystem::exists(eGameDir::i15BinaryPath()),
+            std::filesystem::exists(eGameDir::i30BinaryPath()),
+            std::filesystem::exists(eGameDir::i45BinaryPath()),
+            std::filesystem::exists(eGameDir::i60BinaryPath())
+        };
+        if(!configuredSettings.validateTexturePacks(availableTextures)) {
+            std::cerr << "Cannot apply settings: no installed texture pack is available.\n";
+            return;
         }
+
+        const auto previousSettings = mSettings;
+        eSettings runtimeSettings = configuredSettings;
+        if(activeGame) {
+            runtimeSettings.fTinyTextures = mSettings.fTinyTextures;
+            runtimeSettings.fSmallTextures = mSettings.fSmallTextures;
+            runtimeSettings.fMediumTextures = mSettings.fMediumTextures;
+            runtimeSettings.fLargeTextures = mSettings.fLargeTextures;
+        }
+
+        const bool resolutionChanged =
+            runtimeSettings.fRes != previousSettings.fRes;
+        eGameWidgetSettings gameSettings;
+        if(activeGame && resolutionChanged) {
+            gameSettings = mGW->settings();
+        }
+
+        setResolution(runtimeSettings.fRes);
+        setFullscreen(runtimeSettings.fFullscreen);
+        mSettings = runtimeSettings;
         eGameTextures::setSettings(mSettings);
-        if(loadNeeded) showMenuLoading();
-        else showMainMenu();
+
+        if(!configuredSettings.write()) {
+            setResolution(previousSettings.fRes);
+            setFullscreen(previousSettings.fFullscreen);
+            mSettings = previousSettings;
+            eGameTextures::setSettings(mSettings);
+            return;
+        }
+        mConfiguredSettings = configuredSettings;
+
+        if(activeGame && resolutionChanged) {
+            startGameAction(mBoard, gameSettings);
+        } else if(!activeGame && resolutionChanged) {
+            showMenuLoading();
+        } else if(returnAction) {
+            returnAction();
+        }
     };
-    const auto fullscrennA = [this](const bool f) {
-        setFullscreen(f);
-    };
-    esm->initialize(applyA, fullscrennA);
+    esm->initialize(applyA, returnAction);
     setWidget(esm);
+}
+
+void eMainWindow::returnToGame() {
+    if(mGW) setWidget(mGW);
 }
 
 void eMainWindow::showChooseGameMenu() {

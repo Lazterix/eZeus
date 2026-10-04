@@ -58,7 +58,8 @@ public:
     void showRosterOfLeaders();
     void showMenuLoading();
     void showMainMenu();
-    void showSettingsMenu();
+    void showSettingsMenu(const eAction& returnAction);
+    void returnToGame();
     void showChooseGameMenu();
     void showChooseGameEditMenu();
     void showGame(const stdsptr<eCampaign>& c,
@@ -87,6 +88,7 @@ private:
     void clearWidgets();
 
     eSettings mSettings;
+    eSettings mConfiguredSettings;
 
     std::string mLeader;
 

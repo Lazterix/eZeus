@@ -1,6 +1,8 @@
 #ifndef ESETTINGS_H
 #define ESETTINGS_H
 
+#include <array>
+
 #include "widgets/eresolution.h"
 #include "engine/etile.h"
 
@@ -13,8 +15,9 @@ struct eSettings {
     eResolution fRes = eResolution(1280, 720);
 
     std::vector<eTileSize> availableSizes() const;
+    bool validateTexturePacks(const std::array<bool, 4>& available);
 
-    void write() const;
+    bool write() const;
     void read();
 };
 

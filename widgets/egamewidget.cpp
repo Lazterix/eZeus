@@ -1866,7 +1866,13 @@ bool eGameWidget::keyPressEvent(const eKeyPressEvent& e) {
             const auto exitAct = [w]() {
                 w->closeGame();
             };
-            menu->initialize(resumeAct, saveAct, loadAct, exitAct);
+            const auto optionsAct = [w]() {
+                w->showSettingsMenu([w]() {
+                    w->returnToGame();
+                });
+            };
+            menu->initialize(resumeAct, saveAct, loadAct,
+                             optionsAct, exitAct);
             addWidget(menu);
             menu->align(eAlignment::center);
             w->execDialog(menu);
