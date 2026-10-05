@@ -81,6 +81,9 @@ bool eMainWindow::initialize(const eSettings& settings) {
 }
 
 void eMainWindow::setWidget(eWidget* const w) {
+    if(mWidget == mGW && w != mGW && mGW) {
+        mGW->closeTopMenu();
+    }
     if(mWidget) {
         if(mWidget != mGW && mWidget != mWW) {
             mWidget->deleteLater();

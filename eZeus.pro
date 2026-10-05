@@ -697,6 +697,7 @@ SOURCES += \
         widgets/etextscroller.cpp \
         widgets/etilepainter.cpp \
         widgets/etopbarwidget.cpp \
+        widgets/etopmenudropdown.cpp \
         widgets/etradeeditwidget.cpp \
         widgets/etriggerselectionwidget.cpp \
         widgets/etypebutton.cpp \
@@ -2907,6 +2908,7 @@ HEADERS += \
     widgets/etextscroller.h \
     widgets/etilepainter.h \
     widgets/etopbarwidget.h \
+    widgets/etopmenudropdown.h \
     widgets/etradeeditwidget.h \
     widgets/etriggerselectionwidget.h \
     widgets/etypebutton.h \

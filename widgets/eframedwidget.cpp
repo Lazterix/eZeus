@@ -51,7 +51,7 @@ void eFramedWidget::paintEvent(ePainter& p) {
     };
 
     if(mType == eFrameType::outer){
-        const auto& texs = intrfc.fComboBox[1];
+        const auto& texs = intrfc.fComboBox[mOuterFrameId];
 
         for(int i = 0; i < iMax; i++) {
             const int x = i == iMax - 1 ? lastX : dim*i;

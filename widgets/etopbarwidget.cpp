@@ -6,8 +6,34 @@
 #include "ebutton.h"
 #include "edatewidget.h"
 #include "egamewidget.h"
+#include "etopmenudropdown.h"
 
 #include "emainwindow.h"
+#include "elanguage.h"
+
+#include <algorithm>
+#include <filesystem>
+
+namespace {
+class eClippedButton : public eButton {
+public:
+    using eButton::eButton;
+protected:
+    void paintEvent(ePainter& p) override {
+        const auto clipRect = rect();
+        p.setClipRect(&clipRect);
+        eButton::paintEvent(p);
+        p.setClipRect(nullptr);
+    }
+};
+}
+
+void eTopBarClippedLabel::paintEvent(ePainter& p) {
+    const auto clipRect = rect();
+    p.setClipRect(&clipRect);
+    eLabel::paintEvent(p);
+    p.setClipRect(nullptr);
+}
 
 void eTopBarWidget::initialize() {
     const auto& intrfc = eGameTextures::interface();
@@ -17,30 +43,82 @@ void eTopBarWidget::initialize() {
     const auto& coll = intrfc[icoll];
     setPadding(0);
 
-    const auto s0 = new eWidget(window());
-    s0->setWidth(mult*20);
+    const auto createMenuButton = [this, mult](const std::string& text,
+                                               const eTopMenuId id) {
+        const auto button = new eButton(text, window());
+        button->setNoPadding();
+        button->setSmallFontSize();
+        button->fitContent();
+        button->setWidth(button->width() + 4*mult);
+        button->setPressAction([this, button, id]() {
+            if(!mGW) return;
+
+            std::vector<eTopMenuAction> actions;
+            switch(id) {
+            case eTopMenuId::file: {
+                const auto w = window();
+                const auto replayPath = w->leaderSaveDir() +
+                                        "autosave replay.ez";
+                actions = {
+                    {eLanguage::zeusText(1, 1), true, [w]() {
+                        w->showChooseGameMenu();
+                    }},
+                    {eLanguage::zeusText(1, 2),
+                     std::filesystem::exists(replayPath),
+                     [w, replayPath]() {
+                        w->loadGame(replayPath);
+                    }},
+                    {eLanguage::zeusText(1, 3), true, [this]() {
+                        mGW->showLoadGameDialog();
+                    }},
+                    {eLanguage::zeusText(1, 4), true, [this]() {
+                        mGW->showSaveGameDialog();
+                    }},
+                    {eLanguage::zeusText(1, 5), true, [w]() {
+                        w->closeGame();
+                    }},
+                    {eLanguage::zeusText(1, 6), false, nullptr}
+                };
+                break;
+            }
+            case eTopMenuId::options:
+                for(int i = 1; i <= 13; i++) {
+                    actions.push_back({eLanguage::zeusText(2, i),
+                                       false, nullptr});
+                }
+                break;
+            case eTopMenuId::help:
+                for(int i = 1; i <= 7; i++) {
+                    actions.push_back({eLanguage::zeusText(3, i),
+                                       false, nullptr});
+                }
+                break;
+            }
+            mGW->toggleTopMenu(id, button, actions);
+        });
+        addWidget(button);
+        return button;
+    };
+
+    mFileButton = createMenuButton(eLanguage::zeusText(1, 0),
+                                   eTopMenuId::file);
+    mOptionsButton = createMenuButton(eLanguage::zeusText(2, 0),
+                                      eTopMenuId::options);
+    mHelpButton = createMenuButton(eLanguage::zeusText(3, 0),
+                                   eTopMenuId::help);
 
     mDrachmasWidget = new eTopWidget(window());
     mDrachmasWidget->initialize(coll.fDrachmasTopMenu, "-");
 
-    const auto s1 = new eWidget(window());
-    s1->setWidth(mult*20);
-
-    mCityLabel = new eLabel("-", window());
+    mCityLabel = new eTopBarClippedLabel("-", window());
     mCityLabel->setSmallFontSize();
     mCityLabel->setNoPadding();
     mCityLabel->fitContent();
 
-    const auto s2 = new eWidget(window());
-    s2->setWidth(mult*20);
-
     mPopulationWidget = new eTopWidget(window());
     mPopulationWidget->initialize(coll.fPopulationTopMenu, "-");
 
-    const auto s3 = new eWidget(window());
-    s3->setWidth(mult*20);
-
-    mDateLabel = new eButton(window());
+    mDateLabel = new eClippedButton(window());
     mDateLabel->setPressAction([this]() {
         if(!mBoard) return;
         const auto dw = new eDateWidget(window());
@@ -58,27 +136,75 @@ void eTopBarWidget::initialize() {
     mDateLabel->fitContent();
     mDateLabel->setEnabled(false);
 
-    const auto s4 = new eWidget(window());
-    s4->setWidth(mult*15);
-
-    addWidget(s0);
     addWidget(mCityLabel);
-    addWidget(s1);
     addWidget(mDrachmasWidget);
-    addWidget(s2);
     addWidget(mPopulationWidget);
-    addWidget(s3);
     addWidget(mDateLabel);
-    addWidget(s4);
 
     setHeight(12*mult);
 
-    mCityLabel->align(eAlignment::vcenter);
-    mDrachmasWidget->align(eAlignment::vcenter);
-    mPopulationWidget->align(eAlignment::vcenter);
-    mDateLabel->align(eAlignment::vcenter);
+    layoutContents();
+}
 
-    layoutHorizontally();
+void eTopBarWidget::layoutContents() {
+    int iRes;
+    int mult;
+    iResAndMult(iRes, mult);
+
+    const int menuGap = 2*mult;
+    const int statusGap = 4*mult;
+    int x = 2*mult;
+    for(const auto button : {mFileButton, mOptionsButton, mHelpButton}) {
+        button->move(x, (height() - button->height())/2);
+        x += button->width() + menuGap;
+    }
+    x += statusGap - menuGap;
+
+    const int statusLeft = std::min(x, width());
+    const int statusRight = std::max(statusLeft, width() - 2*mult);
+    const int availableWidth = statusRight - statusLeft;
+    const int gap = std::min(statusGap, availableWidth/3);
+    const int contentWidth = std::max(0, availableWidth - 3*gap);
+
+    const int drachmasPreferred = mDrachmasWidget->preferredWidth();
+    const int populationPreferred = mPopulationWidget->preferredWidth();
+    mDateLabel->fitContent();
+    const int datePreferred = mDateLabel->width();
+    const int fixedPreferred = drachmasPreferred +
+                               populationPreferred +
+                               datePreferred;
+
+    int drachmasWidth = drachmasPreferred;
+    int populationWidth = populationPreferred;
+    int dateWidth = datePreferred;
+    int cityWidth = contentWidth - fixedPreferred;
+    if(cityWidth < 0) {
+        cityWidth = 0;
+        if(fixedPreferred > 0) {
+            drachmasWidth = contentWidth*drachmasPreferred/fixedPreferred;
+            populationWidth = contentWidth*populationPreferred/fixedPreferred;
+            dateWidth = contentWidth - drachmasWidth - populationWidth;
+        } else {
+            drachmasWidth = 0;
+            populationWidth = 0;
+            dateWidth = 0;
+        }
+    }
+
+    mCityLabel->move(statusLeft, (height() - mCityLabel->height())/2);
+    mCityLabel->setWidth(cityWidth);
+    x = statusLeft + cityWidth + gap;
+
+    mDrachmasWidget->move(x, (height() - mDrachmasWidget->height())/2);
+    mDrachmasWidget->constrainWidth(drachmasWidth);
+    x += drachmasWidth + gap;
+
+    mPopulationWidget->move(x, (height() - mPopulationWidget->height())/2);
+    mPopulationWidget->constrainWidth(populationWidth);
+    x += populationWidth + gap;
+
+    mDateLabel->move(x, (height() - mDateLabel->height())/2);
+    mDateLabel->setWidth(dateWidth);
 }
 
 void eTopBarWidget::setBoard(eGameBoard* const board) {
@@ -87,6 +213,27 @@ void eTopBarWidget::setBoard(eGameBoard* const board) {
 
 void eTopBarWidget::setGameWidget(eGameWidget* const gw) {
     mGW = gw;
+}
+
+bool eTopBarWidget::triggerMenuClick(
+        const eWidget* const from,
+        const int pressX, const int pressY,
+        const int releaseX, const int releaseY) {
+    for(const auto button : {mFileButton, mOptionsButton, mHelpButton}) {
+        int buttonPressX = pressX;
+        int buttonPressY = pressY;
+        button->mapFrom(from, buttonPressX, buttonPressY);
+        if(!button->contains(buttonPressX, buttonPressY)) continue;
+
+        int buttonReleaseX = releaseX;
+        int buttonReleaseY = releaseY;
+        button->mapFrom(from, buttonReleaseX, buttonReleaseY);
+        if(!button->contains(buttonReleaseX, buttonReleaseY)) continue;
+
+        button->trigger();
+        return true;
+    }
+    return false;
 }
 
 void eTopBarWidget::paintEvent(ePainter& p) {
@@ -115,6 +262,8 @@ void eTopBarWidget::paintEvent(ePainter& p) {
 
         mDateLabel->setText(mBoard->date().shortString());
         mDateLabel->setEnabled(mBoard->editorMode());
+
+        layoutContents();
 
         int iRes;
         int mult;
