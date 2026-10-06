@@ -1,0 +1,336 @@
+{
+  "source": "Perseus Statue Isometric Sprite Set (1).png",
+  "logical_name": "perseusMonument",
+  "frames": [
+    {
+      "res": 15,
+      "frame": 1,
+      "file": "perseusMonument_0.png",
+      "slot": [
+        0,
+        0,
+        59,
+        116
+      ],
+      "placed": [
+        5,
+        18,
+        48,
+        98
+      ]
+    },
+    {
+      "res": 15,
+      "frame": 2,
+      "file": "perseusMonument_0.png",
+      "slot": [
+        59,
+        0,
+        59,
+        100
+      ],
+      "placed": [
+        64,
+        3,
+        49,
+        97
+      ]
+    },
+    {
+      "res": 15,
+      "frame": 3,
+      "file": "perseusMonument_0.png",
+      "slot": [
+        118,
+        0,
+        59,
+        114
+      ],
+      "placed": [
+        123,
+        16,
+        49,
+        98
+      ]
+    },
+    {
+      "res": 15,
+      "frame": 4,
+      "file": "perseusMonument_0.png",
+      "slot": [
+        177,
+        0,
+        59,
+        118
+      ],
+      "placed": [
+        184,
+        19,
+        44,
+        99
+      ]
+    },
+    {
+      "res": 30,
+      "frame": 1,
+      "file": "perseusMonument_0.png",
+      "slot": [
+        0,
+        0,
+        118,
+        232
+      ],
+      "placed": [
+        11,
+        37,
+        95,
+        195
+      ]
+    },
+    {
+      "res": 30,
+      "frame": 2,
+      "file": "perseusMonument_0.png",
+      "slot": [
+        118,
+        0,
+        118,
+        200
+      ],
+      "placed": [
+        128,
+        7,
+        98,
+        193
+      ]
+    },
+    {
+      "res": 30,
+      "frame": 3,
+      "file": "perseusMonument_0.png",
+      "slot": [
+        236,
+        0,
+        118,
+        227
+      ],
+      "placed": [
+        246,
+        32,
+        98,
+        195
+      ]
+    },
+    {
+      "res": 30,
+      "frame": 4,
+      "file": "perseusMonument_0.png",
+      "slot": [
+        354,
+        0,
+        118,
+        236
+      ],
+      "placed": [
+        368,
+        38,
+        89,
+        198
+      ]
+    },
+    {
+      "res": 45,
+      "frame": 1,
+      "file": "perseusMonument_0.png",
+      "slot": [
+        0,
+        0,
+        177,
+        348
+      ],
+      "placed": [
+        17,
+        55,
+        143,
+        293
+      ]
+    },
+    {
+      "res": 45,
+      "frame": 2,
+      "file": "perseusMonument_0.png",
+      "slot": [
+        177,
+        0,
+        177,
+        300
+      ],
+      "placed": [
+        192,
+        10,
+        147,
+        290
+      ]
+    },
+    {
+      "res": 45,
+      "frame": 3,
+      "file": "perseusMonument_0.png",
+      "slot": [
+        354,
+        0,
+        177,
+        341
+      ],
+      "placed": [
+        369,
+        48,
+        147,
+        293
+      ]
+    },
+    {
+      "res": 45,
+      "frame": 4,
+      "file": "perseusMonument_0.png",
+      "slot": [
+        531,
+        0,
+        177,
+        354
+      ],
+      "placed": [
+        553,
+        57,
+        133,
+        297
+      ]
+    },
+    {
+      "res": 60,
+      "frame": 1,
+      "file": "perseusMonument_1.png",
+      "slot": [
+        0,
+        0,
+        236,
+        464
+      ],
+      "placed": [
+        22,
+        74,
+        191,
+        390
+      ]
+    },
+    {
+      "res": 60,
+      "frame": 2,
+      "file": "perseusMonument_0.png",
+      "slot": [
+        0,
+        0,
+        236,
+        400
+      ],
+      "placed": [
+        20,
+        13,
+        196,
+        387
+      ]
+    },
+    {
+      "res": 60,
+      "frame": 3,
+      "file": "perseusMonument_2.png",
+      "slot": [
+        0,
+        0,
+        236,
+        454
+      ],
+      "placed": [
+        20,
+        63,
+        196,
+        391
+      ]
+    },
+    {
+      "res": 60,
+      "frame": 4,
+      "file": "perseusMonument_3.png",
+      "slot": [
+        0,
+        0,
+        236,
+        472
+      ],
+      "placed": [
+        29,
+        76,
+        177,
+        396
+      ]
+    }
+  ],
+  "files": [
+    {
+      "path": "assets/overrides/15/perseusMonument_0.png",
+      "size": [
+        236,
+        118
+      ],
+      "sha256": "9c678a552b1b54784f1ecca33dc17cd22a6e5f61210b6e489f0d78768cb82444"
+    },
+    {
+      "path": "assets/overrides/30/perseusMonument_0.png",
+      "size": [
+        472,
+        236
+      ],
+      "sha256": "9fa6488f4ac5709a9109c4d729ab85a693e5847d2ac78585e0e9401cf3744ccc"
+    },
+    {
+      "path": "assets/overrides/45/perseusMonument_0.png",
+      "size": [
+        708,
+        354
+      ],
+      "sha256": "1cddfdac8ef6f9dd6195c32b19bf6f8e6a68957d8785792321268c1a5bea8e58"
+    },
+    {
+      "path": "assets/overrides/60/perseusMonument_0.png",
+      "size": [
+        236,
+        400
+      ],
+      "sha256": "4023938dd91af79c95a9121b35ceca9c4d21bc3ac2b78fc0ef816ad339c7a56e"
+    },
+    {
+      "path": "assets/overrides/60/perseusMonument_1.png",
+      "size": [
+        236,
+        464
+      ],
+      "sha256": "64583e992612a65680585832262bf339caefd65984cef718557ed8b98b0d8820"
+    },
+    {
+      "path": "assets/overrides/60/perseusMonument_2.png",
+      "size": [
+        236,
+        454
+      ],
+      "sha256": "86fc4960c891ee1f2d4d646bdeeef7d5bb3790c00036e5aaadc5f0b80c3b28fe"
+    },
+    {
+      "path": "assets/overrides/60/perseusMonument_3.png",
+      "size": [
+        236,
+        472
+      ],
+      "sha256": "c6bba1a69816d8d04ba0c4171ad7ebf78d851d79066c6e319b046612610f37e1"
+    }
+  ]
+}

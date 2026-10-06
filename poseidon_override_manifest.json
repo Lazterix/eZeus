@@ -1,0 +1,389 @@
+{
+  "asset_family": "Poseidon God Monument",
+  "loader_name": "poseidonStatue",
+  "incorrect_previous_target": "poseidonStatues2",
+  "frames": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "source_sheet": "poseidon_monument_four_view_sprite_sheet.png",
+  "same_scale_all_views": true,
+  "packed_originals_modified": false,
+  "resolutions": {
+    "15": {
+      "files": {
+        "poseidonStatue_0.png": {
+          "size": [
+            236,
+            118
+          ],
+          "sha256": "8b0d587f3efd2739838284653f15b43f0716ecb65f59f46cb804d79f0edcc64b"
+        }
+      },
+      "placements": [
+        {
+          "frame": 1,
+          "tex": 0,
+          "rect": [
+            0,
+            0,
+            59,
+            116
+          ],
+          "placed": [
+            4,
+            17,
+            51,
+            99
+          ]
+        },
+        {
+          "frame": 2,
+          "tex": 0,
+          "rect": [
+            59,
+            0,
+            59,
+            100
+          ],
+          "placed": [
+            62,
+            1,
+            52,
+            99
+          ]
+        },
+        {
+          "frame": 3,
+          "tex": 0,
+          "rect": [
+            118,
+            0,
+            59,
+            114
+          ],
+          "placed": [
+            121,
+            15,
+            52,
+            99
+          ]
+        },
+        {
+          "frame": 4,
+          "tex": 0,
+          "rect": [
+            177,
+            0,
+            59,
+            118
+          ],
+          "placed": [
+            181,
+            18,
+            51,
+            100
+          ]
+        }
+      ]
+    },
+    "30": {
+      "files": {
+        "poseidonStatue_0.png": {
+          "size": [
+            472,
+            236
+          ],
+          "sha256": "fc288c5da7bf1a4ec22c41ef371b73ea458174a23333dd86b5fdc55a5e7ee193"
+        }
+      },
+      "placements": [
+        {
+          "frame": 1,
+          "tex": 0,
+          "rect": [
+            0,
+            0,
+            118,
+            232
+          ],
+          "placed": [
+            8,
+            34,
+            102,
+            198
+          ]
+        },
+        {
+          "frame": 2,
+          "tex": 0,
+          "rect": [
+            118,
+            0,
+            118,
+            200
+          ],
+          "placed": [
+            125,
+            2,
+            104,
+            198
+          ]
+        },
+        {
+          "frame": 3,
+          "tex": 0,
+          "rect": [
+            236,
+            0,
+            118,
+            227
+          ],
+          "placed": [
+            243,
+            28,
+            104,
+            199
+          ]
+        },
+        {
+          "frame": 4,
+          "tex": 0,
+          "rect": [
+            354,
+            0,
+            118,
+            236
+          ],
+          "placed": [
+            362,
+            36,
+            102,
+            200
+          ]
+        }
+      ]
+    },
+    "45": {
+      "files": {
+        "poseidonStatue_0.png": {
+          "size": [
+            708,
+            354
+          ],
+          "sha256": "db82c974c0f640c4efe0fa0d07c711529890536ae113ccbb0ed0cafebd7d2449"
+        }
+      },
+      "placements": [
+        {
+          "frame": 1,
+          "tex": 0,
+          "rect": [
+            0,
+            0,
+            177,
+            348
+          ],
+          "placed": [
+            12,
+            51,
+            153,
+            297
+          ]
+        },
+        {
+          "frame": 2,
+          "tex": 0,
+          "rect": [
+            177,
+            0,
+            177,
+            300
+          ],
+          "placed": [
+            187,
+            3,
+            156,
+            297
+          ]
+        },
+        {
+          "frame": 3,
+          "tex": 0,
+          "rect": [
+            354,
+            0,
+            177,
+            341
+          ],
+          "placed": [
+            365,
+            43,
+            155,
+            298
+          ]
+        },
+        {
+          "frame": 4,
+          "tex": 0,
+          "rect": [
+            531,
+            0,
+            177,
+            354
+          ],
+          "placed": [
+            542,
+            55,
+            154,
+            299
+          ]
+        }
+      ]
+    },
+    "60": {
+      "files": {
+        "poseidonStatue_0.png": {
+          "size": [
+            236,
+            400
+          ],
+          "sha256": "f1b05879bd660a1fa69acbf2f67c845a76f85c1637073d601b08693aa9c23a1d"
+        },
+        "poseidonStatue_1.png": {
+          "size": [
+            236,
+            464
+          ],
+          "sha256": "030879772780b926dd93978d889e0303181eb8db343ba467f527acd5e1f547e3"
+        },
+        "poseidonStatue_2.png": {
+          "size": [
+            236,
+            454
+          ],
+          "sha256": "9e3a4763edcd132455e5483dee06ea59248df2eda6a3e8021c0ee04e8fdda96e"
+        },
+        "poseidonStatue_3.png": {
+          "size": [
+            236,
+            472
+          ],
+          "sha256": "b375c38efdf11c35632edd3aa165efd43ddf509b12d33529ff114031561c9a9c"
+        }
+      },
+      "placements": [
+        {
+          "frame": 1,
+          "tex": 1,
+          "rect": [
+            0,
+            0,
+            236,
+            464
+          ],
+          "placed": [
+            16,
+            68,
+            204,
+            396
+          ]
+        },
+        {
+          "frame": 2,
+          "tex": 0,
+          "rect": [
+            0,
+            0,
+            236,
+            400
+          ],
+          "placed": [
+            14,
+            4,
+            208,
+            396
+          ]
+        },
+        {
+          "frame": 3,
+          "tex": 2,
+          "rect": [
+            0,
+            0,
+            236,
+            454
+          ],
+          "placed": [
+            14,
+            57,
+            207,
+            397
+          ]
+        },
+        {
+          "frame": 4,
+          "tex": 3,
+          "rect": [
+            0,
+            0,
+            236,
+            472
+          ],
+          "placed": [
+            15,
+            73,
+            205,
+            399
+          ]
+        }
+      ]
+    }
+  },
+  "hard_alpha": true,
+  "hard_alpha_threshold": 170,
+  "hard_alpha_notes": "Binary alpha cleanup for eZeus to suppress persistent dark fringe.",
+  "processed_files": [
+    {
+      "file": "assets/overrides/15/poseidonStatue_0.png",
+      "ring_px": 1,
+      "sha256": "54446dbd4b5d9bfcaa895eddbe5d79926a86a075d904b2f74778dded188dbe40"
+    },
+    {
+      "file": "assets/overrides/30/poseidonStatue_0.png",
+      "ring_px": 1,
+      "sha256": "d40eb0c25d57b22b737f0e58c8832d2dc81877361d01f454b515bb8b862cbbf8"
+    },
+    {
+      "file": "assets/overrides/45/poseidonStatue_0.png",
+      "ring_px": 2,
+      "sha256": "17c06d856e795a88004c73699c22f3576ab41c1aa5d2a29c74747618eb3a2af4"
+    },
+    {
+      "file": "assets/overrides/60/poseidonStatue_0.png",
+      "ring_px": 2,
+      "sha256": "d5ce7fdf6680bb2d58523c146573110e94a61cd57245bdf6e2287148ec13f0f1"
+    },
+    {
+      "file": "assets/overrides/60/poseidonStatue_1.png",
+      "ring_px": 2,
+      "sha256": "140466e5ff1680e6d3edde62b32c678154003f195fcf26ed97d52050f9d09c3e"
+    },
+    {
+      "file": "assets/overrides/60/poseidonStatue_2.png",
+      "ring_px": 2,
+      "sha256": "d62732c796b0e3181ef3f29925d276f5cb1336fdc17e6195d90c18cd2f2ab72f"
+    },
+    {
+      "file": "assets/overrides/60/poseidonStatue_3.png",
+      "ring_px": 2,
+      "sha256": "33885e60210b43944f3a90fcb394d4ec87eaab8a4433da0367d9a44e907270f9"
+    }
+  ],
+  "no_outline_pass": true,
+  "no_outline_method": "Targeted baked-dark-outline removal: recolor only suspicious dark opaque boundary pixels from nearest clean interior colour; alpha silhouette preserved.",
+  "edge_repaint_pass": true,
+  "edge_repaint_notes": "Final targeted pass: repaints only the outermost dark opaque contour from nearby interior colours; silhouette/alpha is preserved."
+}
