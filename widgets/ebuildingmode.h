@@ -239,7 +239,10 @@ enum class eBuildingMode {
 
     laurelGarden,
 
-    saltWorks
+    saltWorks,
+
+    // Always-available custom monument collection.
+    perseusMonument
 };
 
 namespace eBuildingModeHelpers {

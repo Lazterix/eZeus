@@ -324,6 +324,7 @@ int costBase(const eBuildingType type) {
     case eBuildingType::horseRanchEnclosure:
     case eBuildingType::commemorative:
     case eBuildingType::palaceTile:
+    case eBuildingType::customMonument:
     case eBuildingType::godMonument:
     case eBuildingType::godMonumentTile:
 

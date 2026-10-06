@@ -1,4 +1,4 @@
-﻿#include "ethreadbuilding.h"
+#include "ethreadbuilding.h"
 
 #include "buildings/esmallhouse.h"
 #include "buildings/eelitehousing.h"
@@ -43,6 +43,7 @@ void eThreadBuilding::load(eBuilding* const src) {
         case eBuildingType::avenue:
 
         case eBuildingType::commemorative:
+        case eBuildingType::customMonument:
         case eBuildingType::godMonument:
         case eBuildingType::godMonumentTile:
 

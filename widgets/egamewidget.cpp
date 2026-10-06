@@ -1843,7 +1843,77 @@ bool eGameWidget::keyPressEvent(const eKeyPressEvent& e) {
         if(mRotateId > 3) mRotateId = 0;
     } else if(k == SDL_Scancode::SDL_SCANCODE_P) {
         switchPause();
-    } else if(k == SDL_Scancode::SDL_SCANCODE_LEFT) {
+    } else if(k == SDL_Scancode::SDL_SCANCODE_F9 && e.ctrlPressed()) {
+        mGm->setDevBuildingMode(eBuildingMode::poseidonMonument);
+    } else if(k == SDL_Scancode::SDL_SCANCODE_F10 && e.ctrlPressed()) {
+        if(!mBoard) return true;
+
+        const auto dir = mBoard->direction();
+        eWorldDirection nextDir = eWorldDirection::N;
+
+        switch(dir) {
+        case eWorldDirection::N:
+            nextDir = eWorldDirection::W;
+            break;
+        case eWorldDirection::W:
+            nextDir = eWorldDirection::S;
+            break;
+        case eWorldDirection::S:
+            nextDir = eWorldDirection::E;
+            break;
+        case eWorldDirection::E:
+            nextDir = eWorldDirection::N;
+            break;
+        }
+
+        setWorldDirection(nextDir);
+     } else if((k == SDL_Scancode::SDL_SCANCODE_Q ||
+              k == SDL_Scancode::SDL_SCANCODE_E) &&
+              mGm->mode() != eBuildingMode::none) {
+        // BUILD PREVIEW ROTATION Q/E
+        // eZeus uses four pre-rendered directional sprites. Rotating the
+        // world direction while a building tool is active lets us inspect
+        // the correct N/W/S/E preview before placing the building.
+        if(!mBoard) return true;
+
+        const auto dir = mBoard->direction();
+        const bool clockwise = k == SDL_Scancode::SDL_SCANCODE_E;
+        eWorldDirection nextDir = dir;
+
+        if(clockwise) {
+            switch(dir) {
+            case eWorldDirection::N:
+                nextDir = eWorldDirection::W;
+                break;
+            case eWorldDirection::W:
+                nextDir = eWorldDirection::S;
+                break;
+            case eWorldDirection::S:
+                nextDir = eWorldDirection::E;
+                break;
+            case eWorldDirection::E:
+                nextDir = eWorldDirection::N;
+                break;
+            }
+        } else {
+            switch(dir) {
+            case eWorldDirection::N:
+                nextDir = eWorldDirection::E;
+                break;
+            case eWorldDirection::E:
+                nextDir = eWorldDirection::S;
+                break;
+            case eWorldDirection::S:
+                nextDir = eWorldDirection::W;
+                break;
+            case eWorldDirection::W:
+                nextDir = eWorldDirection::N;
+                break;
+            }
+        }
+
+        setWorldDirection(nextDir);
+   } else if(k == SDL_Scancode::SDL_SCANCODE_LEFT) {
         setDX(mDX + 35);
     } else if(k == SDL_Scancode::SDL_SCANCODE_RIGHT) {
         setDX(mDX - 35);

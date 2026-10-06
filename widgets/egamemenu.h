@@ -1,4 +1,4 @@
-﻿#ifndef EGAMEMENU_H
+#ifndef EGAMEMENU_H
 #define EGAMEMENU_H
 
 #include "egamemenubase.h"
@@ -41,6 +41,7 @@ struct eSPR {
     std::string fName;
     int fMarbleCost = 0;
     int fCity = -1;
+    bool fAlwaysAvailable = false;
 };
 
 class eGameMenu : public eGameMenuBase {
@@ -80,6 +81,9 @@ public:
     void update();
 
     void setShowAllPossibleBuildings(const bool b);
+void setDevBuildingMode(const eBuildingMode mode) {
+    setMode(mode);
+}
 protected:
     bool mousePressEvent(const eMouseEvent& e);
 private:

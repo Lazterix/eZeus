@@ -413,6 +413,8 @@ eBuildingType eBuildingModeHelpers::toBuildingType(const eBuildingMode mode) {
         return eBuildingType::hippodromePiece;
     case eBuildingMode::crosswalk:
         return eBuildingType::crosswalk;
+    case eBuildingMode::perseusMonument:
+        return eBuildingType::customMonument;
     }
 }
 

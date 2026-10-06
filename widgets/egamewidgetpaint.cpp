@@ -1,4 +1,4 @@
-﻿#include "egamewidget.h"
+#include "egamewidget.h"
 
 #include "eterraineditmenu.h"
 
@@ -914,7 +914,10 @@ void eGameWidget::paintEvent(ePainter& p) {
         };
 
         if(ub && !v) {
-            if(!isPatrolSelected(ub) && mViewMode != eViewMode::appeal) {
+            if(ub->type() != eBuildingType::godMonument &&
+               ub->type() != eBuildingType::customMonument &&
+               !isPatrolSelected(ub) &&
+               mViewMode != eViewMode::appeal) {
                 const auto tex = getBasementTexture(rtx, rty, ub, trrTexs,
                                                     dir, boardw, boardh);
                 tp.drawTexture(rx, ry, tex, eAlignment::top);
@@ -1636,6 +1639,8 @@ void eGameWidget::paintEvent(ePainter& p) {
             const auto terr = tile->terrain();
             const bool drawTerrainUnderBuilding =
                     eBuilding::sFlatBuilding(terrBt) ||
+                    terrBt == eBuildingType::godMonument ||
+                    terrBt == eBuildingType::customMonument ||
                     terrBt == eBuildingType::laurelGarden ||
                     terrBt == eBuildingType::saltWorks;
 
@@ -3738,15 +3743,32 @@ void eGameWidget::paintEvent(ePainter& p) {
             const auto b1 = e::make_shared<eGodMonument>(
                                 gt, eGodQuestId::godQuest1, *mBoard, mViewedCityId);
 
-            for(int x = tminX; x < tmaxX; x++) {
-                for(int y = tminY; y < tmaxY; y++) {
-                    const auto b0 = e::make_shared<eGodMonumentTile>(
-                                        *mBoard, mViewedCityId);
-                    b0->setMonument(b1.get());
-                    ebs.emplace_back(x, y, b0);
+            // POSEIDON DEV PREVIEW: NO AUXILIARY TILES
+            // Ctrl+F9 forces Poseidon even when the scenario does not
+            // normally expose that build mode. Its real dev placement
+            // intentionally skips eGodMonumentTile, so the preview must
+            // skip those tiles too.
+            const bool devForcedPoseidon =
+                mode == eBuildingMode::poseidonMonument &&
+                !mBoard->supportsBuilding(mViewedCityId, mode);
+
+            if(!devForcedPoseidon) {
+                for(int x = tminX; x < tmaxX; x++) {
+                    for(int y = tminY; y < tmaxY; y++) {
+                        const auto b0 = e::make_shared<eGodMonumentTile>(
+                                            *mBoard, mViewedCityId);
+                        b0->setMonument(b1.get());
+                        ebs.emplace_back(x, y, b0);
+                    }
                 }
             }
 
+            ebs.emplace_back(mHoverTX, mHoverTY, b1);
+        } break;
+
+        case eBuildingMode::perseusMonument: {
+            const auto b1 = e::make_shared<eCustomMonument>(
+                                0, *mBoard, mViewedCityId);
             ebs.emplace_back(mHoverTX, mHoverTY, b1);
         } break;
 

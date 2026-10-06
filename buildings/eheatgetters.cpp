@@ -72,6 +72,7 @@ eHeat eHeatGetters::appeal(const eBuildingType type) {
 
     case eBuildingType::commemorative: return {30, 6};
     case eBuildingType::godMonument: return {35, 7};
+    case eBuildingType::customMonument: return {35, 7};
 
     case eBuildingType::park: return {3, 3};
 

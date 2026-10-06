@@ -360,6 +360,12 @@ stdsptr<eBuilding> eBuildingReader::sRead(
         b = e::make_shared<eCommemorative>(id, board, cid);
     } break;
 
+    case eBuildingType::customMonument: {
+        int id;
+        src >> id;
+        b = e::make_shared<eCustomMonument>(id, board, cid);
+    } break;
+
     case eBuildingType::godMonument: {
         eGodType type;
         src >> type;

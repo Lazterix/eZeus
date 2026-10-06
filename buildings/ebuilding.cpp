@@ -134,7 +134,7 @@ bool eBuilding::sAestheticsBuilding(const eBuildingType bt) {
     const int max = static_cast<int>(eBuildingType::stoneCircle);
     const int bi = static_cast<int>(bt);
     const bool r = bi >= min && bi <= max;
-    return r;
+    return r || bt == eBuildingType::customMonument;
 }
 
 bool eBuilding::sHeroHall(const eBuildingType bt) {
@@ -269,6 +269,11 @@ std::string eBuilding::sNameForBuilding(eBuilding* const b) {
     if(!b) return "";
     const auto type = b->type();
     switch(type) {
+    case eBuildingType::customMonument: {
+        const auto c = static_cast<eCustomMonument*>(b);
+        if(c->id() == 0) return "Perseus Monument";
+        return "Custom Monument";
+    } break;
     case eBuildingType::commemorative: {
         const auto c = static_cast<eCommemorative*>(b);
         const int id = c->id();
@@ -784,6 +789,8 @@ std::string eBuilding::sNameForBuilding(const eBuildingType type) {
     case eBuildingType::commemorative:
         string = 119;
         break;
+    case eBuildingType::customMonument:
+        return "Custom Monument";
 
     case eBuildingType::hippodromePiece:
         string = 200;
@@ -2235,6 +2242,12 @@ void eBuilding::sInfoText(eBuilding* const b,
             employmentInfoString = 6;
         }
     } break;
+    case eBuildingType::customMonument:
+        group = 185;
+        titleString = 12; // Perseus
+        infoString = -1;
+        employmentInfoString = -1;
+        break;
     case eBuildingType::achillesHall:
         group = 185;
         titleString = 8;

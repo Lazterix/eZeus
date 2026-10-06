@@ -1,4 +1,4 @@
-﻿#ifndef EGAMETEXTURES_H
+#ifndef EGAMETEXTURES_H
 #define EGAMETEXTURES_H
 
 #include "eterraintextures.h"
@@ -269,6 +269,7 @@ public:
 
     static void loadZeusMonuments();
     static void loadPoseidonMonuments();
+    static void loadPerseusMonument();
     static void loadHadesMonuments();
     static void loadDemeterMonuments();
     static void loadAthenaMonuments();

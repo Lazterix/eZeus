@@ -182,6 +182,8 @@ public:
     void loadZeusMonuments();
     bool fPoseidonMonumentsLoaded = false;
     void loadPoseidonMonuments();
+    bool fPerseusMonumentLoaded = false;
+    void loadPerseusMonument();
     bool fHadesMonumentsLoaded = false;
     void loadHadesMonuments();
     bool fDemeterMonumentsLoaded = false;
@@ -644,6 +646,7 @@ public:
 
     eTextureCollection fZeusMonuments;
     eTextureCollection fPoseidonMonuments;
+    eTextureCollection fPerseusMonument;
     eTextureCollection fHadesMonuments;
     eTextureCollection fDemeterMonuments;
     eTextureCollection fAthenaMonuments;

@@ -1795,17 +1795,23 @@ bool eGameWidget::buildMouseRelease() {
             const bool b = mBoard->build(tminX + 1, tminY + 2, 2, 2, cid, pid, mEditorMode, [&]() {
                 return s;
             });
-            for(int x = tminX; x < tmaxX; x++) {
-                for(int y = tminY; y < tmaxY; y++) {
-                    const bool cb = mBoard->canBuild(x, y, 1, 1, mEditorMode, cid, pid);
-                    if(!cb) continue;
-                    mBoard->build(x, y, 1, 1, cid, pid, mEditorMode, [&]() {
-                        const auto t = e::make_shared<eGodMonumentTile>(
-                                           *mBoard, mViewedCityId);
-                        t->setMonument(s.get());
-                        s->addTile(t.get());
-                        return t;
-                    });
+            const bool devForcedPoseidon =
+                mode == eBuildingMode::poseidonMonument &&
+                !mBoard->supportsBuilding(mViewedCityId, mode);
+
+            if(b && !devForcedPoseidon) {
+                for(int x = tminX; x < tmaxX; x++) {
+                    for(int y = tminY; y < tmaxY; y++) {
+                        const bool cb = mBoard->canBuild(x, y, 1, 1, mEditorMode, cid, pid);
+                        if(!cb) continue;
+                        mBoard->build(x, y, 1, 1, cid, pid, mEditorMode, [&]() {
+                            const auto t = e::make_shared<eGodMonumentTile>(
+                                               *mBoard, mViewedCityId);
+                            t->setMonument(s.get());
+                            s->addTile(t.get());
+                            return t;
+                        });
+                    }
                 }
             }
             if(b) {
@@ -1813,6 +1819,16 @@ bool eGameWidget::buildMouseRelease() {
                 const bool ss = mBoard->supportsBuilding(mViewedCityId, mode);
                 if(!ss) mGm->clearMode();
             }
+        } break;
+
+        case eBuildingMode::perseusMonument: {
+            r = mBoard->build(
+                    mHoverTX, mHoverTY, 2, 2,
+                    cid, pid, mEditorMode,
+                    [this]() {
+                        return e::make_shared<eCustomMonument>(
+                            0, *mBoard, mViewedCityId);
+                    });
         } break;
 
         case eBuildingMode::bench: {

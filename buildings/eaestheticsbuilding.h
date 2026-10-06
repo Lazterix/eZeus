@@ -150,6 +150,21 @@ private:
     const int mId = 0;
 };
 
+class eCustomMonument : public eBuilding {
+public:
+    // id 0 = Perseus. Future custom monuments extend this id table.
+    eCustomMonument(const int id,
+                    eGameBoard& board, const eCityId cid);
+
+    std::shared_ptr<eTexture>
+    getTexture(const eTileSize size) const override;
+
+    int id() const { return mId; }
+
+private:
+    const int mId;
+};
+
 class eGodMonumentTile;
 
 class eGodMonument : public eBuilding {

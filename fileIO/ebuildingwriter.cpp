@@ -172,6 +172,11 @@ void eBuildingWriter::sWrite(const eBuilding* const b,
         dst << p->id();
     } break;
 
+    case eBuildingType::customMonument: {
+        const auto cm = static_cast<const eCustomMonument*>(b);
+        dst << cm->id();
+    } break;
+
     case eBuildingType::godMonument: {
         const auto gm = static_cast<const eGodMonument*>(b);
         dst << gm->god();

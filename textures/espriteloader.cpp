@@ -1,5 +1,24 @@
 #include "espriteloader.h"
 
+#include <cstdlib>
+#include <filesystem>
+
+namespace {
+
+bool textureOverridesDisabled() {
+    const char* const value = std::getenv("EZEUS_DISABLE_TEXTURE_OVERRIDES");
+    if(!value) return false;
+
+    const std::string v(value);
+    return v == "1" ||
+           v == "true" ||
+           v == "TRUE" ||
+           v == "yes" ||
+           v == "YES";
+}
+
+}
+
 void eSpriteLoader::loadTrailer(const int doff,
                                 const int min, const int max,
                                 eTextureCollection& coll, const int dy) {
@@ -162,17 +181,32 @@ std::shared_ptr<eTexture> eSpriteLoader::load(
 }
 
 void eSpriteLoader::loadTex(const int i) {
-    const bool binary = true;
+    const std::string relativePath =
+            mSize + "/" + mName + "_" + std::to_string(i) + ".png";
+
     std::shared_ptr<eTexture> tex;
-    if(binary) {
-        const auto path = mSize + "/" + mName + "_" + std::to_string(i) + ".png";
-        tex = eBinaryImageLoader::load(mRenderer, path);
-    } else {
-        tex = std::make_shared<eTexture>();
-        const std::string dir = eGameDir::texturesDir() + mSize + "/";
-        const auto path = dir + mName + "_" + std::to_string(i) + ".png";
-        tex->load(mRenderer, path);
+
+    if(!textureOverridesDisabled()) {
+        const std::string overridePath =
+                eGameDir::texturesDir() + relativePath;
+
+        std::error_code ec;
+        if(std::filesystem::is_regular_file(overridePath, ec) && !ec) {
+            const auto overrideTex = std::make_shared<eTexture>();
+            if(overrideTex->load(mRenderer, overridePath)) {
+                printf("Texture override: %s\n", overridePath.c_str());
+                tex = overrideTex;
+            } else {
+                printf("Texture override failed, using packed asset: %s\n",
+                       overridePath.c_str());
+            }
+        }
     }
+
+    if(!tex) {
+        tex = eBinaryImageLoader::load(mRenderer, relativePath);
+    }
+
     mTexs[i] = tex;
 }
 

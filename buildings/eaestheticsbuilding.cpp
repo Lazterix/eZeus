@@ -1,6 +1,7 @@
 #include "eaestheticsbuilding.h"
 
 #include "textures/egametextures.h"
+#include "engine/egameboard.h"
 
 #include "sanctuaries/esanctuary.h"
 
@@ -232,6 +233,53 @@ eCommemorative::getTexture(const eTileSize size) const {
     return texs.fCommemorative.getTexture(mId);
 }
 
+eCustomMonument::eCustomMonument(
+        const int id,
+        eGameBoard& board, const eCityId cid) :
+    eBuilding(board, eBuildingType::customMonument, 2, 2, cid),
+    mId(id) {
+    switch(mId) {
+    case 0:
+        eGameTextures::loadPerseusMonument();
+        break;
+    default:
+        break;
+    }
+}
+
+std::shared_ptr<eTexture>
+eCustomMonument::getTexture(const eTileSize size) const {
+    const int sizeId = static_cast<int>(size);
+    const auto& texs = eGameTextures::buildings()[sizeId];
+
+    const eTextureCollection* coll = nullptr;
+    switch(mId) {
+    case 0:
+        coll = &texs.fPerseusMonument;
+        break;
+    default:
+        return nullptr;
+    }
+
+    int dirId = 0;
+    switch(getBoard().direction()) {
+    case eWorldDirection::N:
+        dirId = 0;
+        break;
+    case eWorldDirection::W:
+        dirId = 1;
+        break;
+    case eWorldDirection::S:
+        dirId = 2;
+        break;
+    case eWorldDirection::E:
+        dirId = 3;
+        break;
+    }
+
+    return coll->getTexture(dirId);
+}
+
 eGodMonument::eGodMonument(const eGodType god,
                            const eGodQuestId id,
                            eGameBoard& board, const eCityId cid) :
@@ -249,9 +297,32 @@ void eGodMonument::erase() {
 
 #include "buildings/sanctuaries/etemplemonumentbuilding.h"
 
-std::shared_ptr<eTexture> eGodMonument::getTexture(const eTileSize size) const {
-    const auto coll = eTempleMonumentBuilding::sGodMonumentTextureCollection(size, mGod);
-    return coll->getTexture(1);
+std::shared_ptr<eTexture>
+eGodMonument::getTexture(const eTileSize size) const {
+    const auto coll =
+        eTempleMonumentBuilding::sGodMonumentTextureCollection(
+            size, mGod);
+
+    if(!coll) return nullptr;
+
+    int dirId = 0;
+
+    switch(getBoard().direction()) {
+    case eWorldDirection::N:
+        dirId = 0;
+        break;
+    case eWorldDirection::W:
+        dirId = 1;
+        break;
+    case eWorldDirection::S:
+        dirId = 2;
+        break;
+    case eWorldDirection::E:
+        dirId = 3;
+        break;
+    }
+
+    return coll->getTexture(dirId);
 }
 
 void eGodMonument::addTile(eGodMonumentTile* const tile) {

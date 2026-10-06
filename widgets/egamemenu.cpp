@@ -1,4 +1,4 @@
-﻿#include "egamemenu.h"
+#include "egamemenu.h"
 
 #include "textures/egametextures.h"
 #include "emainwindow.h"
@@ -109,7 +109,8 @@ public:
             vis = mBoard.atlantean(cid) && !mBoard.hasMuseum(cid);
         } else if(mMode == eBuildingMode::none) {
             for(const auto& c : mChildren) {
-                const bool s = showAllPossibleBuildings ||
+                const bool s = c.fAlwaysAvailable ||
+                               showAllPossibleBuildings ||
                                mBoard.supportsBuilding(cid, c.fMode);
                 if(s) {
                     vis = true;
@@ -228,7 +229,8 @@ void eGameMenu::openBuildWidget(const int cmx, const int cmy,
     if(pid != ppid && !mShowAllPossibleBuildings) return;
     std::vector<eBuildButton*> ws;
     for(const auto& c : cs) {
-        if(!mBoard->supportsBuilding(cid, c.fMode) &&
+        if(!c.fAlwaysAvailable &&
+           !mBoard->supportsBuilding(cid, c.fMode) &&
            !mShowAllPossibleBuildings) continue;
         const auto bb = createBuildButton(c);
         ws.push_back(bb);
@@ -838,7 +840,8 @@ void eGameMenu::initialize(eGameBoard* const b,
                                      eSPR{eBuildingMode::hephaestusMonument, eLanguage::zeusText(198, 19)},
                                      eSPR{eBuildingMode::heraMonument, eLanguage::zeusText(198, 34)},
                                      eSPR{eBuildingMode::hermesMonument, eLanguage::zeusText(198, 17)},
-                                     eSPR{eBuildingMode::poseidonMonument, eLanguage::zeusText(198, 11)},
+                                     eSPR{eBuildingMode::poseidonMonument, eLanguage::zeusText(198, 11), 0, -1, true},
+                                     eSPR{eBuildingMode::perseusMonument, "Perseus Monument", 0, -1, true},
                                      eSPR{eBuildingMode::zeusMonument, eLanguage::zeusText(198, 10)}};
     const auto m9 = [this, cmx, cmy, m9spr]() {
         openBuildWidget(cmx, cmy, m9spr);

@@ -444,6 +444,11 @@
 #include "spriteData/poseidonStatue45.h"
 #include "spriteData/poseidonStatue60.h"
 
+#include "spriteData/perseusMonument15.h"
+#include "spriteData/perseusMonument30.h"
+#include "spriteData/perseusMonument45.h"
+#include "spriteData/perseusMonument60.h"
+
 #include "spriteData/hadesStatue15.h"
 #include "spriteData/hadesStatue30.h"
 #include "spriteData/hadesStatue45.h"
@@ -888,6 +893,7 @@ eBuildingTextures::eBuildingTextures(const int tileW, const int tileH,
 
     fZeusMonuments(renderer),
     fPoseidonMonuments(renderer),
+    fPerseusMonument(renderer),
     fHadesMonuments(renderer),
     fDemeterMonuments(renderer),
     fAthenaMonuments(renderer),
@@ -2817,6 +2823,18 @@ void eBuildingTextures::loadPoseidonMonuments() {
                      ePoseidonStatueSpriteData60,
                      "poseidonStatue",
                      fPoseidonMonuments);
+}
+
+
+void eBuildingTextures::loadPerseusMonument() {
+    if(fPerseusMonumentLoaded) return;
+    fPerseusMonumentLoaded = true;
+    loadGodMonuments(ePerseusMonumentSpriteData15,
+                     ePerseusMonumentSpriteData30,
+                     ePerseusMonumentSpriteData45,
+                     ePerseusMonumentSpriteData60,
+                     "perseusMonument",
+                     fPerseusMonument);
 }
 
 void eBuildingTextures::loadHadesMonuments() {

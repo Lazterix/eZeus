@@ -251,7 +251,10 @@ enum class eBuildingType {
 
     laurelGarden,
 
-    saltWorks
+    saltWorks,
+
+    // Custom/remastered monuments. Appended to preserve existing enum values.
+    customMonument
 };
 
 struct eTextureSpace {

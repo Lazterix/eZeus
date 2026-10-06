@@ -1599,6 +1599,14 @@ void eGameTextures::loadPoseidonMonuments() {
     });
 }
 
+
+void eGameTextures::loadPerseusMonument() {
+    loadTexture([](const int i) {
+        auto& c = sBuildingTextures[i];
+        c.loadPerseusMonument();
+    });
+}
+
 void eGameTextures::loadHadesMonuments() {
     loadTexture([](const int i) {
         auto& c = sBuildingTextures[i];
