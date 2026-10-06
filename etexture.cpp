@@ -89,6 +89,8 @@ bool eTexture::load(SDL_Renderer* const r,
         return false;
     }
 
+    SDL_SetTextureBlendMode(mTex, SDL_BLENDMODE_BLEND);
+
     return true;
 }
 
