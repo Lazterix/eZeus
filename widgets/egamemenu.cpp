@@ -21,6 +21,9 @@
 #include "eminimap.h"
 
 #include "eeventwidget.h"
+#include "emessagehistory.h"
+#include "emessagehistorywidget.h"
+#include "esidebarnotificationstate.h"
 
 #include "egamewidget.h"
 
@@ -40,6 +43,20 @@ struct eSubButtonData {
     const eTextureCollection* fAColl;
     std::vector<eSPR> fSpr = {};
 };
+
+namespace {
+class eSidebarMessagePreview : public eButton {
+public:
+    using eButton::eButton;
+protected:
+    void paintEvent(ePainter& p) override {
+        const auto clip = rect();
+        p.setClipRect(&clip);
+        eButton::paintEvent(p);
+        p.setClipRect(nullptr);
+    }
+};
+}
 
 void tradePosts(const eCityId cid, std::vector<eSPR>& cs,
                 eGameBoard& board, const bool showAllPossibleBuildings) {
@@ -255,7 +272,51 @@ void eGameMenu::setWorldDirection(const eWorldDirection dir) {
 }
 
 void eGameMenu::update() {
+    if(mEventW) mEventW->incUiFrame();
+}
 
+void eGameMenu::updateMessagePresentation() {
+    if(!mGW || !mMessagePreview || !mMessageCount) return;
+
+    const auto state = mGW->messageHistory().sidebarState();
+    mMessageCount->setText(std::to_string(state.fCount));
+    mMessageCount->fitContent();
+    if(mMessageButton) {
+        mMessageCount->move(
+            mMessageButton->x() +
+                (mMessageButton->width() - mMessageCount->width())/2,
+            mMessageButton->y() +
+                (mMessageButton->height() - mMessageCount->height())/2);
+    }
+
+    if(!state.fLatest) {
+        mMessagePreview->setText("");
+        mMessagePreview->hide();
+        return;
+    }
+
+    // Zeus/Poseidon ships separate PHRASE_CONDENSED_* strings for the
+    // condensed-message box. Do not manufacture an excerpt from the full
+    // dialog: it can have a different meaning and is often much too long.
+    const auto& last = *state.fLatest;
+    const auto& shortMsg = last.fCondensed;
+    std::string preview;
+    if(!shortMsg.fTitle.empty()) preview = shortMsg.fTitle;
+    else if(!shortMsg.fText.empty()) preview = last.fMsg.fTitle;
+
+    if(!shortMsg.fText.empty()) {
+        if(!preview.empty()) preview += "\n";
+        preview += shortMsg.fText;
+    }
+    if(preview.empty()) {
+        // A few code paths receive plain eMessage rather than eMessageType.
+        // Keep their date/subject visible, without inventing a truncated body.
+        preview = last.fEd.fDate.shortString() + "\n" +
+                  eMessageSubject(last);
+    }
+    mMessagePreview->setText(preview);
+    mMessagePreview->setVisible(eSidebarMessagePreviewVisible(
+        true, mEventW ? mEventW->size() : 0));
 }
 
 void eGameMenu::setShowAllPossibleBuildings(const bool b) {
@@ -1061,7 +1122,25 @@ void eGameMenu::initialize(eGameBoard* const b,
 
     {
         const auto m = eCheckableButton::sCreate(coll.fMessages, window(), this);
+        mMessageButton = m;
         m->move(mult*73, mult*239);
+        m->setTooltip(eLanguage::zeusText(68, 11));
+        m->setCheckAction([this, m](const bool checked) {
+            if(!checked) return;
+            if(!mGW) {
+                m->setChecked(false);
+                return;
+            }
+            mGW->showMessageHistory([m]() {
+                m->setChecked(false);
+            });
+        });
+
+        mMessageCount = new eLabel(window());
+        mMessageCount->setNoPadding();
+        mMessageCount->setTinyFontSize();
+        mMessageCount->setYellowFontColor();
+        addWidget(mMessageCount);
     }
     {
         const auto butts = new eWidget(window());
@@ -1083,11 +1162,31 @@ void eGameMenu::initialize(eGameBoard* const b,
     }
 
     {
+        mMessagePreview = new eSidebarMessagePreview(window());
+        mMessagePreview->setNoPadding();
+        mMessagePreview->setUnderline(false);
+        mMessagePreview->setTinyFontSize();
+        mMessagePreview->setWrapWidth(dataWidWidth - 2*mult);
+        mMessagePreview->setTextAlignment(eAlignment::left | eAlignment::top);
+        const auto messageLayout = eSidebarMessageLayoutFor(
+            mMessageButton->y(), mMessageButton->height(),
+            std::round(mult*282.5));
+        mMessagePreview->resize(dataWidWidth - 2*mult, messageLayout.fHeight - 2*mult);
+        mMessagePreview->move(mult*6, messageLayout.fY + mult);
+        mMessagePreview->setPressAction([this]() {
+            if(mGW) mGW->showHistoryMessage(0);
+        });
+        mMessagePreview->hide();
+        addWidget(mMessagePreview);
+
         mEventW = new eEventWidget(window());
         mEventW->setNoPadding();
         mEventW->setX(mult*5);
         mEventW->setY(mult*240);
         mEventW->setWidth(dataWidWidth);
+        mEventW->setEmptyChangedAction([this](const bool) {
+            updateMessagePresentation();
+        });
         addWidget(mEventW);
     }
 
@@ -1118,6 +1217,7 @@ void eGameMenu::setGameWidget(eGameWidget* const gw) {
     mRotateButton->setDirectionSetter([gw](const eWorldDirection dir) {
         gw->setWorldDirection(dir);
     });
+    updateMessagePresentation();
     updateButtonsVisibility();
 }
 

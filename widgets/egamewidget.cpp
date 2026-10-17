@@ -29,6 +29,8 @@
 #include "widgets/eflatbutton.h"
 #include "widgets/infowidgets/einfowidget.h"
 #include "emessagebox.h"
+#include "emessagehistorywidget.h"
+#include "emessagewidget.h"
 
 #include "buildings/eagoraspace.h"
 #include "buildings/eagorabase.h"
@@ -53,6 +55,8 @@
 #include "evectorhelpers.h"
 #include "etilehelper.h"
 #include "widgets/equestionwidget.h"
+#include "widgets/esavepath.h"
+#include "widgets/echoosebutton.h"
 
 #include "widgets/eenlistforcesdialog.h"
 #include "widgets/eepisodeintroductionwidget.h"
@@ -67,8 +71,11 @@
 #include "edistrictconditionswidget.h"
 #include "buildings/ehippodromepiece.h"
 #include "estringhelpers.h"
+#include "engine/eworldcity.h"
+#include "engine/egifthelpers.h"
 
 #include <algorithm>
+#include <filesystem>
 
 class eTopMenuPopupHost : public eWidget {
 public:
@@ -190,8 +197,9 @@ void eGameWidget::setBoard(eGameBoard* const board) {
         e->setX(x() + (width() - e->width() - mGm->width())/2);
     });
     mBoard->setAutosaver([this]() {
-        mBoard->waitUntilFinished();
         const auto w = window();
+        if(!w->settings().fAutosave) return;
+        mBoard->waitUntilFinished();
         const auto dir = w->leaderSaveDir();
         w->saveGame(dir + "autosave history.ez");
     });
@@ -237,8 +245,7 @@ eGameWidgetSettings eGameWidget::settings() const {
 
 void eGameWidget::setSettings(const eGameWidgetSettings& s) {
     if(mPaused != s.fPaused) switchPause();
-    mSpeedId = s.fSpeedId;
-    mSpeed = s.fSpeed;
+    setSpeedId(s.fSpeedId);
     setTileSize(s.fTileSize);
     if(mBoard) mBoard->setWorldDirection(s.fDir);
     setDX(s.fDX);
@@ -578,7 +585,9 @@ void eGameWidget::initialize() {
 
     const auto& setts = window()->settings();
     const auto sizes = setts.availableSizes();
-    setTileSize(sizes.front());
+    if(!sizes.empty()) {
+        setTileSize(sizes.front());
+    }
 }
 
 void eGameWidget::pixToId(const int pixX, const int pixY,
@@ -1147,7 +1156,7 @@ void eGameWidget::updateHippodromeIds() {
 void eGameWidget::showMessage(eEventData& ed,
                               const eMessageType& msg,
                               const bool prepend) {
-    showMessage(ed, msg.fFull, prepend);
+    showMessagePair(ed, msg.fFull, msg.fCondensed, prepend);
 }
 
 void eGameWidget::showMessage(eEventData& ed,
@@ -1159,7 +1168,8 @@ void eGameWidget::showMessage(eEventData& ed,
         reason = msg.fNoReason;
     }
     eStringHelpers::replace(m.fFull.fText, "[reason_phrase]", reason);
-    showMessage(ed, m.fFull, prepend);
+    eStringHelpers::replace(m.fCondensed.fText, "[reason_phrase]", reason);
+    showMessagePair(ed, m.fFull, m.fCondensed, prepend);
 }
 
 void eGameWidget::showTip(const ePlayerCityTarget& target,
@@ -1251,6 +1261,63 @@ void eGameWidget::updateTipPositions() {
 void eGameWidget::showMessage(eEventData& ed,
                               const eMessage& msg,
                               const bool prepend) {
+    // Messages without an authored condensed variant keep their full form.
+    showMessagePair(ed, msg, {}, prepend);
+}
+
+namespace {
+eMessage resolvedCondensedMessage(eMessage condensed,
+                                  const eEventData& ed) {
+    if(condensed.fTitle.empty() && condensed.fText.empty()) return condensed;
+
+    // Resolve the original PHRASE_CONDENSED_* placeholders just as the
+    // full-message dialog resolves its PHRASE_* counterparts. Store only
+    // finished strings in the sidebar; never retain widget/event callbacks.
+    const auto resolve = [&ed](std::string& s) {
+        if(s.empty()) return;
+        const auto replace = [&s](const char* key, const std::string& value) {
+            eStringHelpers::replaceAll(s, key, value);
+        };
+        replace("[greeting]", eLanguage::text("greetings"));
+        replace("[player_name]", ed.fPlayerName);
+        replace("[god]", eGod::sGodName(ed.fGod));
+        replace("[monster]", eMonster::sMonsterName(ed.fMonster));
+        const auto resource = ed.fResourceType;
+        replace("[amount]", std::to_string(ed.fResourceCount));
+        replace("[item]", eResourceTypeHelpers::typeLongName(resource));
+        replace("[itemshort]", eResourceTypeHelpers::typeName(resource));
+        const int giftCount = eGiftHelpers::giftCount(resource);
+        if(giftCount > 0) {
+            const int giftSize = ed.fResourceCount/giftCount;
+            replace("[gift_size]", eLanguage::zeusText(
+                162, giftSize < 2 ? 0 : (giftSize < 3 ? 1 : 2)));
+        }
+        if(const auto& city = ed.fCity) {
+            replace("[nationality]", eWorldCity::sNationalityName(
+                city->nationality()));
+            replace("[city_name]", city->name());
+            replace("[last_colony]", city->name());
+            replace("[leader_name]", city->leader());
+            replace("[a_foreign_army]", city->anArmy());
+        }
+        const auto& rival = ed.fRivalCity ? ed.fRivalCity : ed.fCity;
+        if(rival) {
+            replace("[rival_nationality]", eWorldCity::sNationalityName(
+                rival->nationality()));
+            replace("[rival_city_name]", rival->name());
+        }
+        replace("[time_until_attack]", std::to_string(ed.fTime));
+    };
+    resolve(condensed.fTitle);
+    resolve(condensed.fText);
+    return condensed;
+}
+} // namespace
+
+void eGameWidget::showMessagePair(eEventData& ed,
+                                  const eMessage& full,
+                                  const eMessage& condensed,
+                                  const bool prepend) {
     const auto& target = ed.fTarget;
     const auto ppid = mBoard->personPlayer();
     if(target.isPlayerTarget()) {
@@ -1261,7 +1328,22 @@ void eGameWidget::showMessage(eEventData& ed,
         const auto pid = mBoard->cityIdToPlayerId(cid);
         if(pid != ppid) return;
     }
+
+    // Stamp queued messages when the event occurs, not when the dialog
+    // eventually reaches the front of the UI queue.
+    ed.fDate = mBoard->date();
+    ed.fPlayerName = window()->leader();
+    mMessageHistory.add(ed, full, resolvedCondensedMessage(condensed, ed));
+    if(mGm) mGm->updateMessagePresentation();
+    presentMessage(ed, full, prepend);
+}
+
+void eGameWidget::presentMessage(const eEventData& ed,
+                                 const eMessage& msg,
+                                 const bool prepend,
+                                 const bool readOnly) {
     if(mMsgBox) {
+        if(readOnly) return;
         auto& smsg = prepend ? mSavedMsgs.emplace_front() :
                                mSavedMsgs.emplace_back();
         smsg.fEd = ed;
@@ -1291,23 +1373,88 @@ void eGameWidget::showMessage(eEventData& ed,
             viewTile(tile);
         };
     }
-    ed.fDate = mBoard->date();
-    ed.fPlayerName = window()->leader();
 
     const auto close = [this]() {
         mMsgBox = nullptr;
         if(mSavedMsgs.empty()) return;
-        auto& msg = mSavedMsgs.front();
-        showMessage(msg.fEd, msg.fMsg);
+        const auto msg = mSavedMsgs.front();
         mSavedMsgs.pop_front();
+        presentMessage(msg.fEd, msg.fMsg);
     };
 
-    msgb->initialize(*mBoard, ed, a, close, msg);
+    msgb->initialize(*mBoard, ed, a, close, msg, readOnly);
 
     window()->execDialog(msgb, msgb->closable(), close, this);
     msgb->align(eAlignment::bottom | eAlignment::hcenter);
     msgb->setY(msgb->y() - mGm->width()/10);
     msgb->setX(msgb->x() - mGm->width()/2);
+}
+
+void eGameWidget::showMessageHistory(const eAction& closeAction) {
+    closeTopMenu();
+    const auto history = new eMessageHistoryWidget(window());
+    const auto close = [history, closeAction]() {
+        history->deleteLater();
+        if(closeAction) closeAction();
+    };
+    const auto open = [this, close](const std::size_t index) {
+        close();
+        showHistoryMessage(index);
+    };
+    history->initialize(mMessageHistory, open, close);
+    addWidget(history);
+    history->align(eAlignment::center);
+    window()->execDialog(history, true, close, this);
+}
+
+void eGameWidget::showHistoryMessage(const std::size_t index) {
+    const auto saved = mMessageHistory.newest(index);
+    if(!saved) return;
+    const auto ed = saved->fEd;
+    const auto msg = saved->fMsg;
+    presentMessage(ed, msg, false, true);
+}
+
+void eGameWidget::showAboutDialog() {
+    const auto about = new eMessageWidget(window());
+    const auto text = eLanguage::zeusText(9, 0) + "\n" +
+                      eLanguage::zeusText(9, 1) + "\n" +
+                      eLanguage::zeusText(9, 2);
+    about->initialize(eLanguage::zeusText(3, 7), text);
+    addWidget(about);
+    window()->execDialog(about, true, nullptr, this);
+    about->align(eAlignment::center);
+}
+
+void eGameWidget::showSpeedOptions() {
+    std::vector<std::string> labels;
+    labels.reserve(std::size(sSpeeds));
+    const auto gameSpeed = eLanguage::zeusText(45, 2);
+    for(int i = 0; i <= sMaxSpeedId; ++i) {
+        labels.push_back(gameSpeed + " " + std::to_string(i + 1));
+    }
+    const auto choose = new eChooseButton(window());
+    choose->initialize(static_cast<int>(labels.size()), labels,
+                       [this](const int id) { setSpeedId(id); }, true);
+    window()->execDialog(choose, true, nullptr, this);
+    choose->align(eAlignment::center);
+}
+
+void eGameWidget::showDifficultyOptions() {
+    std::vector<std::string> labels;
+    for(int i = 1; i <= 5; ++i) {
+        labels.push_back(eLanguage::zeusText(153, i));
+    }
+    const auto choose = new eChooseButton(window());
+    choose->initialize(static_cast<int>(labels.size()), labels,
+                       [this](const int id) {
+        const auto difficulty = static_cast<eDifficulty>(id);
+        const auto campaign = window()->campaign();
+        if(campaign) campaign->setDifficulty(difficulty);
+        else if(mBoard) mBoard->setDifficulty(difficulty);
+    }, true);
+    window()->execDialog(choose, true, nullptr, this);
+    choose->align(eAlignment::center);
 }
 
 bool eGameWidget::roadPath(std::vector<eOrientation>& path) {
@@ -1483,14 +1630,19 @@ void eGameWidget::updatePatrolPath() {
         mExcessPatrolPath1.clear();
         if(!mPatrolBuilding) return;
         const auto startTile = mPatrolBuilding->centerTile();
+        if(!startTile) return;
         {
             const auto& path = mPatrolBuilding->path();
             auto lastTile = startTile;
             mPatrolPath.push_back(lastTile);
-            const int iMin = path.size() - 1;
+            const int iMin = static_cast<int>(path.size()) - 1;
             for(int i = iMin; i >= 0; i--) {
                 const auto o = path[i];
                 lastTile = lastTile->neighbour<eTile>(o);
+                if(!lastTile) {
+                    mPatrolPath.clear();
+                    break;
+                }
                 mPatrolPath.push_back(lastTile);
             }
         }
@@ -1498,10 +1650,14 @@ void eGameWidget::updatePatrolPath() {
             const auto& path = mPatrolBuilding->reversePath();
             auto lastTile = startTile;
             mPatrolPath1.push_back(lastTile);
-            const int iMin = path.size() - 1;
+            const int iMin = static_cast<int>(path.size()) - 1;
             for(int i = iMin; i >= 0; i--) {
                 const auto o = path[i];
                 lastTile = lastTile->neighbour<eTile>(o);
+                if(!lastTile) {
+                    mPatrolPath1.clear();
+                    break;
+                }
                 mPatrolPath1.push_back(lastTile);
             }
         }
@@ -1821,6 +1977,11 @@ void eGameWidget::switchPause() {
     updateTipPositions();
 }
 
+void eGameWidget::setSpeedId(const int id) {
+    mSpeedId = std::clamp(id, 0, sMaxSpeedId);
+    mSpeed = sSpeeds[mSpeedId];
+}
+
 bool eGameWidget::keyPressEvent(const eKeyPressEvent& e) {
     if(mLocked) return true;
     const auto k = e.key();
@@ -1830,12 +1991,10 @@ bool eGameWidget::keyPressEvent(const eKeyPressEvent& e) {
     }
     if(k == SDL_Scancode::SDL_SCANCODE_KP_PLUS ||
        k == SDL_Scancode::SDL_SCANCODE_RIGHTBRACKET) {
-        mSpeedId = std::clamp(mSpeedId + 1, 0, sMaxSpeedId);
-        mSpeed = sSpeeds[mSpeedId];
+        setSpeedId(mSpeedId + 1);
     } else if(k == SDL_Scancode::SDL_SCANCODE_KP_MINUS ||
               k == SDL_Scancode::SDL_SCANCODE_LEFTBRACKET) {
-        mSpeedId = std::clamp(mSpeedId - 1, 0, sMaxSpeedId);
-        mSpeed = sSpeeds[mSpeedId];
+        setSpeedId(mSpeedId - 1);
     } else if(k == SDL_Scancode::SDL_SCANCODE_R) {
         mRotate = !mRotate;
         mRotateFrame = (mRotateFrame/gRotateFrames + 1)*gRotateFrames;
@@ -1963,7 +2122,13 @@ bool eGameWidget::keyPressEvent(const eKeyPressEvent& e) {
             const auto exitAct = [w]() {
                 w->closeGame();
             };
-            menu->initialize(resumeAct, saveAct, loadAct, exitAct);
+            const auto optionsAct = [w]() {
+                w->showSettingsMenu([w]() {
+                    w->returnToGame();
+                }, true);
+            };
+            menu->initialize(resumeAct, saveAct, loadAct,
+                             optionsAct, exitAct);
             addWidget(menu);
             menu->align(eAlignment::center);
             w->execDialog(menu);
@@ -2296,13 +2461,15 @@ void eGameWidget::renderTargetsReset() {
 void eGameWidget::showGoals() {
     const auto w = window();
     const auto c = w->campaign();
+    if(!c) return;
+    const auto ee = c->currentEpisode();
+    if(!ee) return;
 
     const auto e = new eEpisodeIntroductionWidget(w);
     const auto proceedA = [e]() {
         e->deleteLater();
     };
     e->resize(width(), height());
-    const auto ee = c->currentEpisode();
     e->initialize(c,
                   c->titleText(),
                   ee->fIntroduction,
@@ -2428,6 +2595,7 @@ void eGameWidget::updateCitiesOnBoard() {
 void eGameWidget::setTileSize(const eTileSize size) {
     const auto& setts = window()->settings();
     const auto sizes = setts.availableSizes();
+    if(sizes.empty()) return;
     if(eVectorHelpers::contains(sizes, size)) {
         mTileSize = size;
     } else {
@@ -2583,6 +2751,34 @@ void eGameWidget::showLoadGameDialog() {
     };
     fw->intialize(eLanguage::zeusText(1, 3),
                   w->leaderSaveDir(), func, closeAct);
+    addWidget(fw);
+    fw->align(eAlignment::center);
+    w->execDialog(fw);
+}
+
+void eGameWidget::showDeleteGameDialog() {
+    const auto w = window();
+    const auto fw = new eFileWidget(w);
+    const auto func = [w, fw](const std::string& path) {
+        const auto folder = w->leaderSaveDir();
+        if(!eSavePath::isDeletable(folder, path)) return false;
+
+        const auto question = new eQuestionWidget(w);
+        const auto accept = [fw, path]() {
+            std::error_code error;
+            const bool removed = std::filesystem::remove(path, error);
+            if(removed && !error) fw->deleteLater();
+        };
+        question->initialize(eLanguage::zeusText(43, 6),
+                             eLanguage::zeusText(43, 5),
+                             accept, nullptr);
+        w->execDialog(question);
+        question->align(eAlignment::center);
+        return false;
+    };
+    const auto close = [fw]() { fw->deleteLater(); };
+    fw->intialize(eLanguage::zeusText(1, 6),
+                  w->leaderSaveDir(), func, close);
     addWidget(fw);
     fw->align(eAlignment::center);
     w->execDialog(fw);

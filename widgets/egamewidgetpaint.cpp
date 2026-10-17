@@ -274,6 +274,7 @@ void eGameWidget::scheduleConnectedTerrainUpdate(eTile* const startTile) {
             return t1dy > t2dy;
         } break;
         }
+        return false;
     });
 
     const int tid = static_cast<int>(mTileSize);
@@ -367,6 +368,7 @@ void eGameWidget::paintEvent(ePainter& p) {
     }
     mFrame++;
     mRotateFrame++;
+    if(mGm) mGm->update();
     bool updateTips = false;
     for(int i = 0; i < int(mTips.size()); i++) {
         const auto& tip = mTips[i];

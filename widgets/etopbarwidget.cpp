@@ -7,6 +7,7 @@
 #include "edatewidget.h"
 #include "egamewidget.h"
 #include "etopmenudropdown.h"
+#include "etopmenumodel.h"
 
 #include "emainwindow.h"
 #include "elanguage.h"
@@ -74,25 +75,69 @@ void eTopBarWidget::initialize() {
                     {eLanguage::zeusText(1, 4), true, [this]() {
                         mGW->showSaveGameDialog();
                     }},
+                    {eLanguage::zeusText(1, 6), true, [this]() {
+                        mGW->showDeleteGameDialog();
+                    }},
                     {eLanguage::zeusText(1, 5), true, [w]() {
                         w->closeGame();
-                    }},
-                    {eLanguage::zeusText(1, 6), false, nullptr}
+                    }}
                 };
                 break;
             }
-            case eTopMenuId::options:
-                for(int i = 1; i <= 13; i++) {
-                    actions.push_back({eLanguage::zeusText(2, i),
-                                       false, nullptr});
+            case eTopMenuId::options: {
+                const auto entries = eTopMenuModel::options(
+                    window()->settings().fAutosave);
+                for(const auto& entry : entries) {
+                    eAction callback;
+                    switch(entry.fAction) {
+                    case eTopMenuModel::eAction::display:
+                        callback = [this]() {
+                            const auto w = window();
+                            w->showSettingsMenu([w]() {
+                                w->returnToGame();
+                            }, true);
+                        };
+                        break;
+                    case eTopMenuModel::eAction::sound:
+                        callback = [this]() {
+                            window()->showSoundSettings();
+                        };
+                        break;
+                    case eTopMenuModel::eAction::speed:
+                        callback = [this]() { mGW->showSpeedOptions(); };
+                        break;
+                    case eTopMenuModel::eAction::difficulty:
+                        callback = [this]() { mGW->showDifficultyOptions(); };
+                        break;
+                    case eTopMenuModel::eAction::autosave:
+                        callback = [this]() {
+                            const bool enabled = window()->settings().fAutosave;
+                            window()->setAutosave(!enabled);
+                        };
+                        break;
+                    case eTopMenuModel::eAction::messages:
+                        callback = [this]() { mGW->showMessageHistory(); };
+                        break;
+                    case eTopMenuModel::eAction::about:
+                    case eTopMenuModel::eAction::none:
+                        break;
+                    }
+                    actions.push_back({eLanguage::zeusText(2, entry.fTextId),
+                                       entry.fEnabled, callback});
                 }
                 break;
-            case eTopMenuId::help:
-                for(int i = 1; i <= 7; i++) {
-                    actions.push_back({eLanguage::zeusText(3, i),
-                                       false, nullptr});
+            }
+            case eTopMenuId::help: {
+                for(const auto& entry : eTopMenuModel::help()) {
+                    eAction callback;
+                    if(entry.fAction == eTopMenuModel::eAction::about) {
+                        callback = [this]() { mGW->showAboutDialog(); };
+                    }
+                    actions.push_back({eLanguage::zeusText(3, entry.fTextId),
+                                       entry.fEnabled, callback});
                 }
                 break;
+            }
             }
             mGW->toggleTopMenu(id, button, actions);
         });
@@ -270,7 +315,10 @@ void eTopBarWidget::paintEvent(ePainter& p) {
         iResAndMult(iRes, mult);
         const auto& intrfc = eGameTextures::interface()[iRes];
         const auto& tex = intrfc.fGameTopBar;
+        if(!tex || tex->isNull()) return;
+
         const int texWidth = tex->width();
+        if(texWidth <= 0) return;
         const auto& rend = p.renderer();
         bool flip = false;
         for(int x = width() - texWidth; x > -texWidth; x -= texWidth) {

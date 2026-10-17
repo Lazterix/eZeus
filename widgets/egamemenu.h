@@ -27,10 +27,12 @@ class eEventWidget;
 class eBuildButton;
 class eBuildWidget;
 class eFramedLabel;
+class eLabel;
 enum class eEvent;
 struct eEventData;
 class eRotateButton;
 class eDataWidget;
+class eMessageHistory;
 
 struct eSubButtonData;
 
@@ -79,6 +81,8 @@ public:
     void setWorldDirection(const eWorldDirection dir);
 
     void update();
+
+    void updateMessagePresentation();
 
     void setShowAllPossibleBuildings(const bool b);
 void setDevBuildingMode(const eBuildingMode mode) {
@@ -140,6 +144,9 @@ private:
     std::vector<eWid> mWidgets;
 
     eEventWidget* mEventW = nullptr;
+    eButton* mMessageButton = nullptr;
+    eButton* mMessagePreview = nullptr;
+    eLabel* mMessageCount = nullptr;
 
     std::vector<eWidget*> mPriceWidgets;
     std::vector<eLabel*> mPriceLabels;
