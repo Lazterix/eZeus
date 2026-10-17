@@ -153,28 +153,37 @@ void eGameBoard::resize(const int w, const int h) {
     waitUntilFinished();
     mThreadPool.initialize(w, h);
 
-    mTiles.reserve(w);
+    // Keep the tile objects inside the overlapping area. The vector stores
+    // owning raw pointers, so every tile leaving the board must be deleted.
+    const int keptWidth = std::min(w, mWidth);
+    const int keptHeight = std::min(h, mHeight);
 
-    for(int x = w; x < mWidth; x++) {
-        mTiles.pop_back();
-    }
-    for(int x = 0; x < w; x++) {
-        auto& yArr = mTiles[x];
-        for(int y = h; y < mHeight; y++) {
-            yArr.pop_back();
+    for(int x = 0; x < mWidth; ++x) {
+        auto& column = mTiles[x];
+        if(x >= keptWidth) {
+            for(const auto tile : column) {
+                delete tile;
+            }
+        } else {
+            for(int y = keptHeight; y < mHeight; ++y) {
+                delete column[y];
+            }
+            column.resize(keptHeight);
         }
     }
+    mTiles.resize(keptWidth);
+    mTiles.reserve(w);
 
-    for(int x = 0; x < w; x++) {
-        auto& yArr = x < mWidth ? mTiles[x] : mTiles.emplace_back();
-        yArr.reserve(h);
-        for(int y = 0; y < h; y++) {
-            if(x < mWidth && y < mHeight) continue;
+    for(int x = 0; x < w; ++x) {
+        auto& column = x < keptWidth ? mTiles[x] : mTiles.emplace_back();
+        column.reserve(h);
+        const int firstNewY = x < keptWidth ? keptHeight : 0;
+        for(int y = firstNewY; y < h; ++y) {
             int tx;
             int ty;
             eTileHelper::dtileIdToTileId(x, y, tx, ty);
             const auto tile = new eTile(tx, ty, x, y, *this);
-            yArr.push_back(tile);
+            column.push_back(tile);
         }
     }
     mWidth = w;
@@ -189,6 +198,9 @@ void eGameBoard::resize(const int w, const int h) {
 }
 
 void eGameBoard::clear() {
+    // Finish asynchronous work and its main-thread callbacks before
+    // releasing characters, tiles, and board cities.
+    waitUntilFinished();
     for(const auto c : mCharacters) {
         c->kill();
     }
@@ -277,6 +289,7 @@ void eGameBoard::updateAppealMapIfNeeded() {
         const auto cid = c.first;
         const auto finish = [this, cid](eHeatMap& map) {
             const auto c = boardCityWithId(cid);
+            if(!c) return;
             const auto& tiles = c->tiles();
             for(const auto t : tiles) {
                 const int dx = t->dx();
@@ -287,6 +300,7 @@ void eGameBoard::updateAppealMapIfNeeded() {
             }
         };
         const auto cc = boardCityWithId(cid);
+        if(!cc) continue;
         const auto rect = cc->tileBRect();
         const auto task = new eHeatMapTask(cid, rect,
                                            eHeatGetters::appeal, finish);
@@ -317,11 +331,14 @@ void eGameBoard::clearBannerSelection() {
 }
 
 void eGameBoard::deselectBanner(eSoldierBanner* const c) {
+    if(!c) return;
     eVectorHelpers::remove(mSelectedBanners, c);
     c->setSelected(false);
 }
 
 void eGameBoard::selectBanner(eSoldierBanner* const c) {
+    if(!c) return;
+    if(eVectorHelpers::contains(mSelectedBanners, c)) return;
     mSelectedBanners.push_back(c);
     c->setSelected(true);
 }
@@ -334,12 +351,15 @@ void eGameBoard::clearTriremeSelection() {
 }
 
 void eGameBoard::deselectTrireme(eTrireme * const c) {
+    if(!c) return;
     eVectorHelpers::remove(mSelectedTriremes, c);
     c->setSelected(false);
 }
 
 void eGameBoard::selectTrireme(eTrireme * const c) {
+    if(!c) return;
     if(!c->selectable()) return;
+    if(eVectorHelpers::contains(mSelectedTriremes, c)) return;
     mSelectedTriremes.push_back(c);
     c->setSelected(true);
 }
@@ -565,16 +585,30 @@ void eGameBoard::eMarbleTiles::add(eTile* const tile) {
     fTiles.push_back(tile);
 }
 
-void eGameBoard::eMarbleTiles::addWithNeighbours(eTile* const tile) {
-    for(int x = -1; x <= 1; x++) {
-        for(int y = -1; y <= 1; y++) {
-            const auto n = tile->tileRel<eTile>(x, y);
-            const auto terr = n->terrain();
-            if(terr != eTerrain::marble) return;
-            const bool c = contains(n);
-            if(c) continue;
-            add(n);
-            addWithNeighbours(n);
+void eGameBoard::eMarbleTiles::addWithNeighbours(
+        eTile* const tile, const eTerrain terrain) {
+    if(!tile) return;
+    if(tile->terrain() != terrain) return;
+
+    std::vector<eTile*> pending{tile};
+    while(!pending.empty()) {
+        const auto current = pending.back();
+        pending.pop_back();
+        if(!current) continue;
+        if(contains(current)) continue;
+        if(current->terrain() != terrain) continue;
+
+        add(current);
+
+        for(int x = -1; x <= 1; x++) {
+            for(int y = -1; y <= 1; y++) {
+                if(x == 0 && y == 0) continue;
+                const auto n = current->tileRel<eTile>(x, y);
+                if(!n) continue;
+                if(contains(n)) continue;
+                if(n->terrain() != terrain) continue;
+                pending.push_back(n);
+            }
         }
     }
 }
@@ -609,12 +643,12 @@ void eGameBoard::updateMarbleTiles() {
             if(c) return;
         }
         auto& mt = mMarbleTiles.emplace_back();
-        mt.addWithNeighbours(t);
+        mt.addWithNeighbours(t, eTerrain::marble);
     });
 }
 
 void eGameBoard::restockBlackMarbleTiles() {
-    for(const auto& mt : mMarbleTiles) {
+    for(const auto& mt : mBlackMarbleTiles) {
         mt.restock();
     }
 }
@@ -629,7 +663,7 @@ void eGameBoard::updateBlackMarbleTiles() {
             if(c) return;
         }
         auto& mt = mBlackMarbleTiles.emplace_back();
-        mt.addWithNeighbours(t);
+        mt.addWithNeighbours(t, eTerrain::blackMarble);
     });
 }
 
@@ -931,6 +965,7 @@ void eGameBoard::giftToReceived(const stdsptr<eWorldCity>& c,
                                 const eResourceType type,
                                 const int count,
                                 const ePlayerId pid) {
+    if(!c) return;
     const int giftCount = eGiftHelpers::giftCount(type);
     if(giftCount <= 0) return;
     const bool a = c->acceptsGift(type, count);
@@ -1467,7 +1502,7 @@ eGameBoard::eChars eGameBoard::attackingGods(
 void eGameBoard::registerAttackingGod(const eCityId cid,
                                       eCharacter* const c) {
     const auto cc = boardCityWithId(cid);
-    if(!c) return;
+    if(!cc || !c) return;
     cc->registerAttackingGod(c);
     updateMusic();
 }
@@ -1626,6 +1661,7 @@ bool eGameBoard::setAtlantean(const eCityId cid, const bool a) {
 }
 
 void eGameBoard::registerSoldierBanner(const stdsptr<eSoldierBanner>& b) {
+    if(!b) return;
     if(b->militaryAid()) return;
     const auto cid = b->cityId();
     const auto c = boardCityWithId(cid);
@@ -1634,6 +1670,7 @@ void eGameBoard::registerSoldierBanner(const stdsptr<eSoldierBanner>& b) {
 }
 
 bool eGameBoard::unregisterSoldierBanner(const stdsptr<eSoldierBanner>& b) {
+    if(!b) return false;
     eVectorHelpers::remove(mSelectedBanners, b.get());
     const auto cid = b->cityId();
     const auto c = boardCityWithId(cid);
@@ -1642,18 +1679,23 @@ bool eGameBoard::unregisterSoldierBanner(const stdsptr<eSoldierBanner>& b) {
 }
 
 void eGameBoard::addRootGameEvent(const stdsptr<eGameEvent>& e) {
+    if(!e) return;
     const auto cid = e->cityId();
     const auto c = boardCityWithId(cid);
+    if(!c) return;
     c->addRootGameEvent(e);
 }
 
 void eGameBoard::removeRootGameEvent(const stdsptr<eGameEvent>& e) {
+    if(!e) return;
     const auto cid = e->cityId();
     const auto c = boardCityWithId(cid);
+    if(!c) return;
     c->removeRootGameEvent(e);
 }
 
 void eGameBoard::addGameEvent(eGameEvent* const e) {
+    if(!e) return;
     mAllGameEvents.push_back(e);
 }
 
@@ -1677,10 +1719,12 @@ void eGameBoard::handleGamesBegin(const eGames game) {
         msgs = &eMessages::instance.fOlympianGames;
         break;
     }
+    if(!msgs) return;
 
     const auto pcids = personPlayerCitiesOnBoard();
     for(const auto cid : pcids) {
         const auto c = boardCityWithId(cid);
+        if(!c) continue;
         if(c->atlantean()) continue;
         const double chance = c->winningChance(game);
         eEventData ed(cid);
@@ -1708,10 +1752,12 @@ void eGameBoard::handleGamesEnd(const eGames game) {
         msgs = &eMessages::instance.fOlympianGames;
         break;
     }
+    if(!msgs) return;
 
     using eCityChance = std::pair<eCityId, double>;
     std::vector<eCityChance> chances;
     for(const auto c : mActiveCitiesOnBoard) {
+        if(!c) continue;
         if(c->atlantean()) continue;
         const auto id = c->id();
         const double chance = c->winningChance(game);
@@ -1726,6 +1772,7 @@ void eGameBoard::handleGamesEnd(const eGames game) {
         if(!won) continue;
         const auto cid = c.first;
         const auto city = boardCityWithId(cid);
+        if(!city) continue;
         if(won) {
             winner = cid;
             eEventData ed(cid);
@@ -1746,6 +1793,7 @@ void eGameBoard::handleGamesEnd(const eGames game) {
                 const auto pid = cityIdToPlayerId(cid);
                 const auto& cs = mWorld.cities();
                 for(const auto& c : cs) {
+                    if(!c) continue;
                     c->incAttitude(10., pid);
                 }
                 id = 8;
@@ -1830,19 +1878,19 @@ int eGameBoard::taxesPaidThisYear(const eCityId cid) const {
 int eGameBoard::taxesPaidLastYear(const eCityId cid) const {
     const auto city = boardCityWithId(cid);
     if(!city) return 0;
-    return city->taxesPaidThisYear();
+    return city->taxesPaidLastYear();
 }
 
 int eGameBoard::peoplePaidTaxesThisYear(const eCityId cid) const {
     const auto city = boardCityWithId(cid);
     if(!city) return 0;
-    return city->taxesPaidThisYear();
+    return city->peoplePaidTaxesThisYear();
 }
 
 int eGameBoard::peoplePaidTaxesLastYear(const eCityId cid) const {
     const auto city = boardCityWithId(cid);
     if(!city) return 0;
-    return city->taxesPaidThisYear();
+    return city->peoplePaidTaxesLastYear();
 }
 
 int eGameBoard::philosophyResearchCoverage(const eCityId cid) const {
@@ -1930,12 +1978,19 @@ void eGameBoard::registerCharacter(eCharacter* const c) {
 }
 
 bool eGameBoard::unregisterCharacter(eCharacter* const c) {
+    if(!c) return false;
+
     bool updateMusic = false;
     for(const auto& cc : mCitiesOnBoard) {
         const bool r = cc->unregisterAttackingGod(c);
         updateMusic = updateMusic || r;
     }
-    eVectorHelpers::remove(mSelectedTriremes, static_cast<eTrireme*>(c));
+    mSelectedTriremes.erase(
+        std::remove_if(mSelectedTriremes.begin(), mSelectedTriremes.end(),
+                       [c](eTrireme* const trireme) {
+                           return static_cast<eCharacter*>(trireme) == c;
+                       }),
+        mSelectedTriremes.end());
     if(updateMusic) this->updateMusic();
     return eVectorHelpers::remove(mCharacters, c);
 }
@@ -1972,12 +2027,13 @@ void eGameBoard::registerBuilding(eBuilding* const b) {
 
 bool eGameBoard::unregisterBuilding(eBuilding* const b) {
     if(!mRegisterBuildingsEnabled) return false;
+    if(!b) return false;
     eVectorHelpers::remove(mAllBuildings, b);
+    eVectorHelpers::remove(mTimedBuildings, b);
     const auto cid = b->cityId();
     const auto city = boardCityWithId(cid);
     if(!city) return false;
     city->unregisterBuilding(b);
-    eVectorHelpers::remove(mTimedBuildings, b);
     scheduleAppealMapUpdate(cid);
     return true;
 }
@@ -1986,6 +2042,7 @@ bool eGameBoard::unregisterCommonHouse(eSmallHouse* const ch) {
     if(!mRegisterBuildingsEnabled) return false;
     const auto cid = ch->cityId();
     const auto city = boardCityWithId(cid);
+    if(!city) return false;
     return city->unregisterCommonHouse(ch);
 }
 
@@ -1993,6 +2050,7 @@ void eGameBoard::registerEmplBuilding(eEmployingBuilding* const b) {
     if(!mRegisterBuildingsEnabled) return;
     const auto cid = b->cityId();
     const auto city = boardCityWithId(cid);
+    if(!city) return;
     city->registerEmplBuilding(b);
 }
 
@@ -2000,6 +2058,7 @@ bool eGameBoard::unregisterEmplBuilding(eEmployingBuilding* const b) {
     if(!mRegisterBuildingsEnabled) return false;
     const auto cid = b->cityId();
     const auto city = boardCityWithId(cid);
+    if(!city) return false;
     return city->unregisterEmplBuilding(b);
 }
 
@@ -2007,6 +2066,7 @@ void eGameBoard::registerTradePost(eTradePost* const b) {
     if(!mRegisterBuildingsEnabled) return;
     const auto cid = b->cityId();
     const auto city = boardCityWithId(cid);
+    if(!city) return;
     city->registerTradePost(b);
     if(mButtonVisUpdater) mButtonVisUpdater();
 }
@@ -2015,6 +2075,7 @@ bool eGameBoard::unregisterTradePost(eTradePost* const b) {
     if(!mRegisterBuildingsEnabled) return false;
     const auto cid = b->cityId();
     const auto city = boardCityWithId(cid);
+    if(!city) return false;
     const bool r = city->unregisterTradePost(b);
     if(r && mButtonVisUpdater) mButtonVisUpdater();
     return r;
@@ -2038,6 +2099,7 @@ void eGameBoard::registerStadium(eStadium* const s) {
     if(!mRegisterBuildingsEnabled) return;
     const auto cid = s->cityId();
     const auto city = boardCityWithId(cid);
+    if(!city) return;
     city->registerStadium(s);
     if(mButtonVisUpdater) mButtonVisUpdater();
 }
@@ -2045,6 +2107,7 @@ void eGameBoard::registerStadium(eStadium* const s) {
 void eGameBoard::unregisterStadium(const eCityId cid) {
     if(!mRegisterBuildingsEnabled) return;
     const auto city = boardCityWithId(cid);
+    if(!city) return;
     city->unregisterStadium();
     if(mButtonVisUpdater) mButtonVisUpdater();
 }
@@ -2053,6 +2116,7 @@ void eGameBoard::registerMuseum(eMuseum* const s) {
     if(!mRegisterBuildingsEnabled) return;
     const auto cid = s->cityId();
     const auto city = boardCityWithId(cid);
+    if(!city) return;
     city->registerMuseum(s);
     if(mButtonVisUpdater) mButtonVisUpdater();
 }
@@ -2060,6 +2124,7 @@ void eGameBoard::registerMuseum(eMuseum* const s) {
 void eGameBoard::unregisterMuseum(const eCityId cid) {
     if(!mRegisterBuildingsEnabled) return;
     const auto city = boardCityWithId(cid);
+    if(!city) return;
     city->unregisterMuseum();
     if(mButtonVisUpdater) mButtonVisUpdater();
 }
@@ -2068,6 +2133,7 @@ void eGameBoard::registerStorBuilding(eStorageBuilding* const b) {
     if(!mRegisterBuildingsEnabled) return;
     const auto cid = b->cityId();
     const auto city = boardCityWithId(cid);
+    if(!city) return;
     city->registerStorBuilding(b);
 }
 
@@ -2075,6 +2141,7 @@ bool eGameBoard::unregisterStorBuilding(eStorageBuilding* const b) {
     if(!mRegisterBuildingsEnabled) return false;
     const auto cid = b->cityId();
     const auto city = boardCityWithId(cid);
+    if(!city) return false;
     return city->unregisterStorBuilding(b);
 }
 
@@ -2082,6 +2149,7 @@ void eGameBoard::registerSanctuary(eSanctuary* const b) {
     if(!mRegisterBuildingsEnabled) return;
     const auto cid = b->cityId();
     const auto city = boardCityWithId(cid);
+    if(!city) return;
     city->registerSanctuary(b);
     if(mButtonVisUpdater) mButtonVisUpdater();
 }
@@ -2090,6 +2158,7 @@ bool eGameBoard::unregisterSanctuary(eSanctuary* const b) {
     if(!mRegisterBuildingsEnabled) return false;
     const auto cid = b->cityId();
     const auto city = boardCityWithId(cid);
+    if(!city) return false;
     const bool r = city->unregisterSanctuary(b);
     if(r && mButtonVisUpdater) mButtonVisUpdater();
     return r;
@@ -2099,6 +2168,7 @@ void eGameBoard::registerMonument(eMonument* const b) {
     if(!mRegisterBuildingsEnabled) return;
     const auto cid = b->cityId();
     const auto city = boardCityWithId(cid);
+    if(!city) return;
     city->registerMonument(b);
     if(mButtonVisUpdater) mButtonVisUpdater();
 }
@@ -2107,6 +2177,7 @@ bool eGameBoard::unregisterMonument(eMonument* const b) {
     if(!mRegisterBuildingsEnabled) return false;
     const auto cid = b->cityId();
     const auto city = boardCityWithId(cid);
+    if(!city) return false;
     const bool r = city->unregisterMonument(b);
     if(r && mButtonVisUpdater) mButtonVisUpdater();
     return r;
@@ -2116,6 +2187,7 @@ void eGameBoard::registerHeroHall(eHerosHall* const b) {
     if(!mRegisterBuildingsEnabled) return;
     const auto cid = b->cityId();
     const auto city = boardCityWithId(cid);
+    if(!city) return;
     city->registerHeroHall(b);
 }
 
@@ -2123,6 +2195,7 @@ bool eGameBoard::unregisterHeroHall(eHerosHall* const b) {
     if(!mRegisterBuildingsEnabled) return false;
     const auto cid = b->cityId();
     const auto city = boardCityWithId(cid);
+    if(!city) return false;
     const bool r = city->unregisterHeroHall(b);
     if(r && mButtonVisUpdater) mButtonVisUpdater();
     return r;
@@ -2186,7 +2259,7 @@ void eGameBoard::registerMonster(const eCityId cid, eMonster* const m) {
 void eGameBoard::unregisterMonster(const eCityId cid, eMonster* const m) {
     const auto c = boardCityWithId(cid);
     if(!c) return;
-    return c->unregisterMonster(m);
+    c->unregisterMonster(m);
     updateMusic();
 }
 
@@ -2199,7 +2272,9 @@ eBanner* eGameBoard::banner(const eCityId cid,
 }
 
 void eGameBoard::registerBanner(eBanner* const b) {
+    if(!b) return;
     const auto t = b->tile();
+    if(!t) return;
     const auto cid = t->cityId();
     const auto c = boardCityWithId(cid);
     if(!c) return;
@@ -2208,11 +2283,16 @@ void eGameBoard::registerBanner(eBanner* const b) {
 }
 
 void eGameBoard::unregisterBanner(eBanner* const b) {
+    if(!b) return;
     const auto t = b->tile();
+    if(!t) {
+        eVectorHelpers::remove(mBanners, b);
+        return;
+    }
     const auto cid = t->cityId();
     const auto c = boardCityWithId(cid);
-    if(!c) return;
     eVectorHelpers::remove(mBanners, b);
+    if(!c) return;
     return c->unregisterBanner(b);
 }
 
@@ -2247,14 +2327,20 @@ void eGameBoard::incTime(const int by) {
     if(mEpisodeLost) return;
     const int dayLen = eNumbers::sDayLength;
     { // autosave
+        const auto oldMonth = mDate.month();
         const int time = mTime + by;
         bool nextMonth = false;
         bool nextYear = false;
         const int nd = time/dayLen;
         auto date = mDate;
         date.nextDays(nd, nextMonth, nextYear);
-        if(nextYear && date.year() > mSavedYear) {
-            mSavedYear = date.year();
+        const auto newMonth = date.month();
+        const bool autosaveMonth =
+            nextMonth &&
+            newMonth != oldMonth &&
+            (newMonth == eMonth::january ||
+             newMonth == eMonth::july);
+        if(autosaveMonth) {
             if(mAutosaver) mAutosaver();
         }
     }
@@ -2679,6 +2765,7 @@ void eGameBoard::requestForces(const eEnlistAction& action,
         for(const auto cid : baseCids) {
             bool e = false;
             for(const auto& ee : exclude) {
+                if(!ee) continue;
                 const auto eCid = ee->cityId();
                 if(cid == eCid) {
                     e = true;
@@ -2702,8 +2789,10 @@ void eGameBoard::requestForces(const eEnlistAction& action,
 
         const auto ss = f.fSoldiers;
         for(const auto& c : exclude) {
+            if(!c) continue;
             const auto cid = c->cityId();
             for(const auto& s : ss) {
+                if(!s) continue;
                 const auto sCid = s->cityId();
                 if(cid != sCid) continue;
                 eVectorHelpers::remove(f.fSoldiers, s);
@@ -2716,6 +2805,7 @@ void eGameBoard::requestForces(const eEnlistAction& action,
             if(abroad) heroesAbroad.push_back(h.second);
         }
         for(const auto& e : exclude) {
+            if(!e) continue;
             eVectorHelpers::remove(f.fAllies, e);
         }
         mEnlistRequester(f, cids, cnames, heroesAbroad, action, plunderResources);

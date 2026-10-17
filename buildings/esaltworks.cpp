@@ -23,8 +23,14 @@ void eSaltWorks::timeChanged(const int by) {
     if(enabled()) {
         mProductionProgress += by*effectiveness();
         if(mProductionProgress > sProductionPeriod) {
-            mProductionProgress -= sProductionPeriod;
-            addProduced(eResourceType::salt, 4);
+            // Do not discard part of a completed batch when the yard is full.
+            if(spaceLeft(eResourceType::salt) >= 4 &&
+               addProduced(eResourceType::salt, 4) == 4) {
+                mProductionProgress -= sProductionPeriod;
+            } else {
+                // Keep exactly one completed batch pending until there is room.
+                mProductionProgress = sProductionPeriod;
+            }
         }
     }
     eResourceBuildingBase::timeChanged(by);

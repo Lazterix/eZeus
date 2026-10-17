@@ -17,6 +17,7 @@ void eTexture::reset() {
 
 bool eTexture::create(SDL_Renderer* const r,
                       const int width, const int height) {
+    if(!r || width <= 0 || height <= 0) return false;
     reset();
     mTex = SDL_CreateTexture(r, SDL_PIXELFORMAT_RGBA8888,
                              SDL_TEXTUREACCESS_TARGET, width, height);
@@ -28,6 +29,7 @@ bool eTexture::create(SDL_Renderer* const r,
 }
 
 void eTexture::setAsRenderTarget(SDL_Renderer* const r) {
+    if(!r || !mTex) return;
     SDL_SetRenderTarget(r, mTex);
 }
 
@@ -78,6 +80,11 @@ bool eTexture::loadScaled(SDL_Renderer* const r,
 
 bool eTexture::load(SDL_Renderer* const r,
                     SDL_Surface* const surf) {
+    if(!surf) return false;
+    if(!r) {
+        SDL_FreeSurface(surf);
+        return false;
+    }
     reset();
     mTex = SDL_CreateTextureFromSurface(r, surf);
     mWidth = surf->w;
@@ -115,6 +122,7 @@ SDL_Texture*  generateTextTexture(SDL_Renderer* const r,
     if(!tex) {
         printf("Unable to create texture from rendered text! "
                "SDL Error: %s\n", SDL_GetError());
+        SDL_FreeSurface(surf);
         return nullptr;
     }
     w = surf->w;
@@ -251,7 +259,10 @@ bool eTexture::loadText(SDL_Renderer* const r,
     if(!tex1) return false;
     const auto tex2 = generateTextTexture(r, text, col2,
                                           font, width, w, h);
-    if(!tex2) return false;
+    if(!tex2) {
+        SDL_DestroyTexture(tex1);
+        return false;
+    }
 
     const int dx = 1;
     const int dy = 1;
@@ -314,6 +325,7 @@ void eTexture::render(SDL_Renderer* const r,
                       const SDL_Rect& srcRect,
                       const SDL_Rect& dstRect,
                       const bool flipped) const {
+    if(!r) return;
     if(mFlipTex) {
         mFlipTex->render(r, srcRect, dstRect, true);
     } else if(mParentTex) {
@@ -392,14 +404,14 @@ void eTexture::setOffset(const int x, const int y) {
 
 bool eTexture::isNull() const {
     if(mFlipTex) return mFlipTex->isNull();
-    else if(mParentTex) mParentTex->isNull();
+    else if(mParentTex) return mParentTex->isNull();
     return mWidth <= 0 || mHeight <= 0;
 }
 
 void eTexture::setAlpha(const Uint8 alpha) {
     if(mFlipTex) mFlipTex->setAlpha(alpha);
     else if(mParentTex) mParentTex->setAlpha(alpha);
-    else SDL_SetTextureAlphaMod(mTex, alpha);
+    else if(mTex) SDL_SetTextureAlphaMod(mTex, alpha);
 }
 
 void eTexture::clearAlphaMod() {
@@ -409,7 +421,7 @@ void eTexture::clearAlphaMod() {
 void eTexture::setColorMod(const Uint8 r, const Uint8 g, const Uint8 b) {
     if(mFlipTex) mFlipTex->setColorMod(r, g, b);
     else if(mParentTex) mParentTex->setColorMod(r, g, b);
-    else SDL_SetTextureColorMod(mTex, r, g, b);
+    else if(mTex) SDL_SetTextureColorMod(mTex, r, g, b);
 }
 
 void eTexture::clearColorMod() {
@@ -417,6 +429,10 @@ void eTexture::clearColorMod() {
 }
 
 void eTexture::setFlipTex(const std::shared_ptr<eTexture>& tex) {
+    if(!tex) {
+        mFlipTex.reset();
+        return;
+    }
     mFlipTex = tex;
     mX = mFlipTex->x();
     mY = mFlipTex->y();

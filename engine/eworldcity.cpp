@@ -35,6 +35,8 @@ std::string eWorldCity::sTypeName(const eCityType type) {
     case eCityType::destroyedCity:
         string = 6;
         break;
+    default:
+        return "";
     }
     return eLanguage::zeusText(group, string);
 }
@@ -112,6 +114,8 @@ std::string eWorldCity::sRelationshipName(const eForeignCityRelationship r) {
     case eForeignCityRelationship::rival:
         string = 1;
         break;
+    default:
+        return "";
     }
     return eLanguage::zeusText(group, string);
 }
@@ -125,6 +129,8 @@ std::string eWorldCity::sStateName(const eCityState s) {
     case eCityState::inactive:
         string = 249;
         break;
+    default:
+        return "";
     }
     return eLanguage::zeusText(44, string);
 }
@@ -315,7 +321,7 @@ std::string eWorldCity::sNationalityName(const eNationality type) {
         string = 9;
         break;
     default:
-        break;
+        return "";
     }
     return eLanguage::zeusText(group, string);
 }
@@ -356,12 +362,14 @@ std::string eWorldCity::anArmy() const {
         string = 9;
         break;
     default:
-        break;
+        return "";
     }
     return eLanguage::zeusText(group, 22 + string);
 }
 
 void eWorldCity::nextMonth(eGameBoard* const board) {
+    if(!board) return;
+
     const auto diff = board->personPlayerDifficulty();
     double mult;
     switch(diff) {
@@ -403,60 +411,60 @@ void eWorldCity::troopsByType(const int troops,
                               int &infantry,
                               int &cavalry,
                               int &archers) const {
-    const auto n = nationality();
-    switch(n) {
-    case eNationality::greek: {
-        infantry = std::ceil(0.6*troops);
-        cavalry = std::ceil(0.2*troops);
-        archers = std::ceil(0.2*troops);
-    } break;
-    case eNationality::trojan: {
-        infantry = std::ceil(0.5*troops);
-        cavalry = std::ceil(0.3*troops);
-        archers = std::ceil(0.2*troops);
-    } break;
-    case eNationality::persian: {
-        infantry = std::ceil(0.3*troops);
-        cavalry = std::ceil(0.3*troops);
-        archers = std::ceil(0.4*troops);
-    } break;
-    case eNationality::centaur: {
-        infantry = 0;
-        cavalry = std::ceil(0.5*troops);
-        archers = std::ceil(0.5*troops);
-    } break;
-    case eNationality::amazon: {
-        infantry = std::ceil(0.75*troops);
-        cavalry = 0;
-        archers = std::ceil(0.25*troops);
-    } break;
+    infantry = 0;
+    cavalry = 0;
+    archers = 0;
 
-    case eNationality::egyptian: {
-        infantry = std::ceil(0.5*troops);
-        cavalry = std::ceil(0.2*troops);
-        archers = std::ceil(0.3*troops);
-    } break;
-    case eNationality::mayan: {
-        infantry = std::ceil(0.25*troops);
-        cavalry = 0;
-        archers = std::ceil(0.75*troops);
-    } break;
-    case eNationality::phoenician: {
-        infantry = 0;
-        cavalry = std::ceil(0.3*troops);
-        archers = std::ceil(0.7*troops);
-    } break;
-    case eNationality::oceanid: {
-        infantry = std::ceil(0.5*troops);
-        cavalry = 0;
-        archers = std::ceil(0.5*troops);
-    } break;
-    case eNationality::atlantean: {
-        infantry = std::ceil(0.4*troops);
-        cavalry = std::ceil(0.3*troops);
-        archers = std::ceil(0.3*troops);
-    } break;
+    int infantryPct = 0;
+    int cavalryPct = 0;
+    int archersPct = 0;
+    switch(nationality()) {
+    case eNationality::greek:
+        infantryPct = 60; cavalryPct = 20; archersPct = 20; break;
+    case eNationality::trojan:
+        infantryPct = 50; cavalryPct = 30; archersPct = 20; break;
+    case eNationality::persian:
+        infantryPct = 30; cavalryPct = 30; archersPct = 40; break;
+    case eNationality::centaur:
+        infantryPct = 0; cavalryPct = 50; archersPct = 50; break;
+    case eNationality::amazon:
+        infantryPct = 75; cavalryPct = 0; archersPct = 25; break;
+    case eNationality::egyptian:
+        infantryPct = 50; cavalryPct = 20; archersPct = 30; break;
+    case eNationality::mayan:
+        infantryPct = 25; cavalryPct = 0; archersPct = 75; break;
+    case eNationality::phoenician:
+        infantryPct = 0; cavalryPct = 30; archersPct = 70; break;
+    case eNationality::oceanid:
+        infantryPct = 50; cavalryPct = 0; archersPct = 50; break;
+    case eNationality::atlantean:
+        infantryPct = 40; cavalryPct = 30; archersPct = 30; break;
+    default:
+        return;
     }
+
+    const int total = std::max(0, troops);
+    const int percentages[]{infantryPct, cavalryPct, archersPct};
+    int counts[]{0, 0, 0};
+    int remainders[]{0, 0, 0};
+    int allocated = 0;
+    for(int i = 0; i < 3; ++i) {
+        const auto weighted = static_cast<long long>(total)*percentages[i];
+        counts[i] = static_cast<int>(weighted/100);
+        remainders[i] = static_cast<int>(weighted%100);
+        allocated += counts[i];
+    }
+    for(int remaining = total - allocated; remaining > 0; --remaining) {
+        int best = 0;
+        for(int i = 1; i < 3; ++i) {
+            if(remainders[i] > remainders[best]) best = i;
+        }
+        ++counts[best];
+        remainders[best] = -1;
+    }
+    infantry = counts[0];
+    cavalry = counts[1];
+    archers = counts[2];
 }
 
 void eWorldCity::troopsByType(int& infantry,
@@ -596,8 +604,11 @@ void eWorldCity::write(eWriteStream& dst) const {
 
 void sread(eReadStream& src,
            std::vector<eResourceTrade>& v) {
+    v.clear();
     int n;
     src >> n;
+    if(n <= 0) return;
+    v.reserve(n);
     for(int i = 0; i < n; i++) {
         auto& vv = v.emplace_back();
         vv.read(src);
@@ -605,6 +616,12 @@ void sread(eReadStream& src,
 }
 
 void eWorldCity::read(eReadStream& src, eWorldBoard* const board) {
+    mReceived.clear();
+    mAtt.clear();
+    mWaterTrade.clear();
+    mBuys.clear();
+    mSells.clear();
+
     src >> mIOID;
     src >> mCityId;
     src.readCity(board, [this](const stdsptr<eWorldCity>& c) {

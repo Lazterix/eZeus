@@ -842,7 +842,8 @@ private:
     struct eMarbleTiles {
         bool contains(eTile* const tile) const;
         void add(eTile* const tile);
-        void addWithNeighbours(eTile* const tile);
+        void addWithNeighbours(eTile* const tile,
+                               const eTerrain terrain);
         void restock() const;
 
         std::vector<eTile*> fTiles;

@@ -42,6 +42,7 @@ eCharacterActionState ePatrolMoveAction::nextTurn(eOrientation& t) {
         return eCharacterActionState::finished;
     }
     const auto c = character();
+    if(!c || !mWalkable || !mOs) return eCharacterActionState::failed;
     const auto tile = c->tile();
     if(!tile) return eCharacterActionState::failed;
 
