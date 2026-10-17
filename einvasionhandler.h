@@ -170,7 +170,7 @@ public:
 
     void call() {
         if(mCptr) mCptr->kill();
-        mInvasion->disembark();
+        if(mInvasion) mInvasion->disembark();
     }
 
     void read(eReadStream& src) {

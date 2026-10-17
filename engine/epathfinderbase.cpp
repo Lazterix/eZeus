@@ -51,9 +51,9 @@ bool ePathFinderBase::extractPath(
     const int finalX = mData.fFinalX;
     const int finalY = mData.fFinalY;
 
-    using eBFinder = std::function<bool(const eTilePair&)>;
-    eBFinder bestFinder;
-    bestFinder = [&](const eTilePair& from) {
+    // The route can span thousands of tiles: avoid one stack frame per tile.
+    const auto bestFinder = [&](eTilePair from) {
+        for(;;) {
         if(!from.first || !from.second) return false;
         const auto tile = from.first;
         const int dist = *from.second;
@@ -105,9 +105,11 @@ bool ePathFinderBase::extractPath(
         }
         if(best.second.first) {
             pathFunc(best);
-            return bestFinder(best.second);
+            from = best.second;
+            continue;
         }
         return false;
+        }
     };
 
     const auto t = tileGetter(brd, mData.fStart,

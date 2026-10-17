@@ -63,13 +63,14 @@ void eArmyReturnEvent::trigger() {
     }
 
     for(const auto& s : mForces.fSoldiers) {
+        if(!s) continue;
         s->killAll();
         s->setBothCityIds(cid);
         s->backFromAbroad(wait);
     }
 
     for(const auto& a : mForces.fAllies) {
-        a->setAbroad(false);
+        if(a) a->setAbroad(false);
     }
 
     eEventData ed(cityId());

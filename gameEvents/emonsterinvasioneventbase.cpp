@@ -1,5 +1,7 @@
 #include "emonsterinvasioneventbase.h"
 
+#include <algorithm>
+
 #include "engine/egameboard.h"
 #include "engine/eeventdata.h"
 #include "characters/actions/emonsteraction.h"
@@ -136,10 +138,14 @@ eMonster* eMonsterInvasionEventBase::triggerBase() {
             monster->changeTile(tile);
             return true;
         };
-        int k = 0;
-        while(!monster->tile()) {
-            eIterateSquare::iterateSquare(k++, placeMonster);
+        const int maxRadius = std::max(board->width(), board->height());
+        for(int k = 0; k <= maxRadius && !monster->tile(); k++) {
+            eIterateSquare::iterateSquare(k, placeMonster);
         }
+    }
+    if(!monster->tile()) {
+        monster->kill();
+        return nullptr;
     }
     a->increment(1);
 

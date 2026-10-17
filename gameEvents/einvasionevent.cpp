@@ -281,7 +281,7 @@ void eInvasionEvent::read(eReadStream& src) {
     src >> mSentByPlayer;
 
     src.readGameEvent(board, [this](eGameEvent* const e) {
-        mConquestEvent = static_cast<ePlayerConquestEvent*>(e);
+        mConquestEvent = dynamic_cast<ePlayerConquestEvent*>(e);
     });
     mForces.read(*board, src);
 

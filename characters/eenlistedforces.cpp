@@ -9,6 +9,7 @@ std::map<eCityId, eEnlistedForces>
 eEnlistedForces::splitIntoCities() const {
     std::map<eCityId, eEnlistedForces> forces;
     for(const auto& s : fSoldiers) {
+        if(!s) continue;
         const auto cid = s->cityId();
         forces[cid].fSoldiers.push_back(s);
     }
@@ -30,6 +31,7 @@ eEnlistedForces::splitIntoCities() const {
 
 void eEnlistedForces::read(eGameBoard& board,
                            eReadStream& src) {
+    clear();
     auto& wboard = board.world();
     {
         int ns;
@@ -57,7 +59,7 @@ void eEnlistedForces::read(eGameBoard& board,
         src >> nc;
         for(int i = 0; i < nc; i++) {
             const auto func = [this](const stdsptr<eWorldCity>& c) {
-                fAllies.push_back(c);
+                if(c) fAllies.push_back(c);
             };
             src.readCity(&wboard, func);
         }
@@ -97,13 +99,13 @@ void eEnlistedForces::clear() {
 
 void eEnlistedForces::add(const eEnlistedForces& o) {
     for(const auto& s : o.fSoldiers) {
-        fSoldiers.push_back(s);
+        if(s) fSoldiers.push_back(s);
     }
     for(const auto& h : o.fHeroes) {
         fHeroes.push_back(h);
     }
     for(const auto& a : o.fAllies) {
-        fAllies.push_back(a);
+        if(a) fAllies.push_back(a);
     }
     if(o.fAres && !fAres) fAresCity = o.fAresCity;
     fAres = fAres || o.fAres;
@@ -114,6 +116,7 @@ const double gHelpFrac = 0.33;
 int eEnlistedForces::strength() const {
     double str = 0;
     for(const auto& s : fSoldiers) {
+        if(!s) continue;
         double mult = 1.;
         switch(s->type()) {
         case eBannerType::horseman:
@@ -126,6 +129,7 @@ int eEnlistedForces::strength() const {
         str += mult*s->count();
     }
     for(const auto& c : fAllies) {
+        if(!c) continue;
         str += gHelpFrac*c->troops();
     }
     str += 8*fHeroes.size();
@@ -135,6 +139,7 @@ int eEnlistedForces::strength() const {
 
 void eEnlistedForces::kill(const double killFrac) const {
     for(const auto& s : fSoldiers) {
+        if(!s) continue;
         const auto cid = s->cityId();
         const int oC = s->count();
         int nC = std::round((1 - killFrac)*oC);
@@ -157,6 +162,7 @@ void eEnlistedForces::kill(const double killFrac) const {
     }
 
     for(const auto& c : fAllies) {
+        if(!c) continue;
         const int t = c->troops();
         c->setTroops((1 - gHelpFrac*killFrac)*t);
     }
@@ -165,9 +171,11 @@ void eEnlistedForces::kill(const double killFrac) const {
 int eEnlistedForces::count() const {
     int result = 0;
     for(const auto& b : fSoldiers) {
+        if(!b) continue;
         result += b->count();
     }
     for(const auto& f : fAllies) {
+        if(!f) continue;
         std::vector<eSoldierBanner*> solds;
         int infantry;
         int cavalry;

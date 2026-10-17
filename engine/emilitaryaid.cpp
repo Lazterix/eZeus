@@ -2,9 +2,10 @@
 
 #include "characters/esoldierbanner.h"
 
-bool eMilitaryAid::count() const {
+int eMilitaryAid::count() const {
     int c = 0;
     for(const auto& s : fSoldiers) {
+        if(!s) continue;
         c += s->count();
     }
     return c;
@@ -12,6 +13,7 @@ bool eMilitaryAid::count() const {
 
 void eMilitaryAid::goBack() {
     for(const auto& s : fSoldiers) {
+        if(!s) continue;
         s->goAbroad();
     }
     fSoldiers.clear();

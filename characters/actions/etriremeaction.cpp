@@ -26,7 +26,12 @@ void eTriremeAction::read(eReadStream& src) {
     eFightingAction::read(src);
     auto& board = eTriremeAction::board();
     src.readBuilding(&board, [this](eBuilding* const b) {
-        mHome = static_cast<eTriremeWharf*>(b);
+        mHome = dynamic_cast<eTriremeWharf*>(b);
+        // Away triremes are omitted from the wharf's saved ship reference.
+        // Recover that state from this action's persisted home reference.
+        if(mHome && !mHome->hasTrireme()) {
+            mHome->triremeLeaving();
+        }
     });
 }
 
@@ -36,9 +41,12 @@ void eTriremeAction::write(eWriteStream& dst) const {
 }
 
 void eTriremeAction::goHome() {
+    if(!mHome) return;
     const auto c = character();
+    if(!c) return;
 
     const auto tile = mHome->triremeTile();
+    if(!tile) return;
     const stdptr<eCharacter> cptr(c);
 
     const auto a = e::make_shared<eMoveToAction>(cptr.get());
@@ -58,7 +66,13 @@ eTile* eTriremeAction::exitPoint() const {
 }
 
 void eTriremeAction::goAbroad() {
+    if(!mHome) return;
     const auto c = character();
+    if(!c) return;
+
+    const auto exitPoint = eTriremeAction::exitPoint();
+    if(!exitPoint) return;
+
     auto& board = eFightingAction::board();
     const auto trireme = static_cast<eTrireme*>(c);
     board.deselectTrireme(trireme);
@@ -79,7 +93,6 @@ void eTriremeAction::goAbroad() {
     setCurrentAction(a);
     c->setActionType(eCharacterActionType::walk);
 
-    const auto exitPoint = eTriremeAction::exitPoint();
     a->start(exitPoint, eWalkableObject::sCreateDeepWater());
 }
 

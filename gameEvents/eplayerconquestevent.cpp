@@ -58,14 +58,16 @@ void ePlayerConquestEvent::trigger() {
         const int playerStr = mForces.strength();
         const bool unbeatable = mCity->militaryStrength() == 6;
 
-        {
+        if(playerStr > 0) {
             const double killFrac = std::clamp(0.5*enemyStr/playerStr, 0., 1.);
             mForces.kill(killFrac);
         }
 
-        {
+        if(enemyStr > 0) {
             const double killFrac = std::clamp(0.5*playerStr/enemyStr, 0., 1.);
             mCity->setTroops((1 - killFrac)*enemyStr);
+        } else {
+            mCity->setTroops(0);
         }
 
         const bool conquered = playerStr > enemyStr && !unbeatable;
@@ -126,7 +128,7 @@ void ePlayerConquestEvent::read(eReadStream& src) {
     ePlayerConquestEventBase::read(src);
 
     src.readGameEvent(gameBoard(), [this](eGameEvent* const e) {
-        mInvasionEvent = static_cast<eInvasionEvent*>(e);
+        mInvasionEvent = dynamic_cast<eInvasionEvent*>(e);
     });
 }
 

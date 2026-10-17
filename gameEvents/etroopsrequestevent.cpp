@@ -358,6 +358,7 @@ void eTroopsRequestEvent::lost() {
     ed.fType = eMessageEventType::common;
 
     auto& msgs = eMessages::instance;
+    const bool refused = mPostpone > 2;
     eEvent event;
     eTroopsRequestedMessages* rrmsgs = nullptr;
     switch(mType) {
@@ -396,6 +397,19 @@ void eTroopsRequestEvent::lost() {
         }
     } break;
     case eTroopsRequestEventType::cityAttacksRival: {
+        if(mCity->isVassal()) {
+            rrmsgs = &msgs.fVassalTroopsAttackRequest;
+        } else {
+            rrmsgs = &msgs.fAllyTroopsAttackRequest;
+        }
+        mCity->incAttitude(-25, pid);
+        const auto me = mainEvent<eTroopsRequestEvent>();
+        if(!me || !rrmsgs) return;
+        if(refused) {
+            me->finished(*me->mRefuseTrigger, rrmsgs->fRefuseReason);
+        } else {
+            me->finished(*me->mLostBattleTrigger, rrmsgs->fLostBattleReason);
+        }
         return;
     } break;
     case eTroopsRequestEventType::greekCityTerrorized: {
@@ -429,9 +443,13 @@ void eTroopsRequestEvent::lost() {
     board->event(event, ed);
     mCity->incAttitude(-25, pid);
 
-    const auto& reason = rrmsgs->fLostBattleReason;
     const auto me = mainEvent<eTroopsRequestEvent>();
-    me->finished(*me->mLostBattleTrigger, reason);
+    if(!me || !rrmsgs) return;
+    if(refused) {
+        me->finished(*me->mRefuseTrigger, rrmsgs->fRefuseReason);
+    } else {
+        me->finished(*me->mLostBattleTrigger, rrmsgs->fLostBattleReason);
+    }
 }
 
 void eTroopsRequestEvent::finished(eEventTrigger& t, const eReason& r) {

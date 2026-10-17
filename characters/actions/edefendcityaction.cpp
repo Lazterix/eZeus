@@ -70,7 +70,7 @@ void eDefendCityAction::read(eReadStream& src) {
     auto& board = eDefendCityAction::board();
     eDefendAttackCityAction::read(src);
     src.readGameEvent(&board, [this](eGameEvent* const e) {
-        mEvent = static_cast<eInvasionEvent*>(e);
+        mEvent = dynamic_cast<eInvasionEvent*>(e);
     });
 }
 

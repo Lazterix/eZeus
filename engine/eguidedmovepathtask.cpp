@@ -10,7 +10,7 @@
 eGuidedMovePathTask::eGuidedMovePathTask(ePatrolBuildingBase * const b,
                                          const eAction &finish) :
     eTask(b->cityId()),
-    mB(b), mFinish(finish) {
+    mB(b), mFinish(finish), mPathGeneration(b->mPathGeneration) {
     setRelevance(eStateRelevance::buildings);
     const auto walkable = eWalkableObject::sCreateRoadAvenue();
     mWalkable = eWalkableObject::sCreateRect(b, walkable);
@@ -56,6 +56,7 @@ void eGuidedMovePathTask::run(eThreadBoard &data) {
 
 void eGuidedMovePathTask::finish() {
     if(!mB) return;
+    if(mB->mPathGeneration != mPathGeneration) return;
     mB->setPath(mPath, mReversePath);
     if(mFinish) mFinish();
 }
@@ -69,6 +70,7 @@ bool eGuidedMovePathTask::runImpl(eThreadBoard& data,
                                   ePatrolGuide& last) {
     last = from;
     const auto startT = data.tile(from.fX, from.fY);
+    if(!startT || !data.tile(to.fX, to.fY)) return false;
 
     ePathFinder pf0([&](eTileBase* const t) {
         return mWalkable->walkable(t);
@@ -91,6 +93,7 @@ bool eGuidedMovePathTask::runImpl(eThreadBoard& data,
             const auto o = tpath[i];
             path.insert(path.begin(), o);
             const auto tile = data.tile(last.fX, last.fY);
+            if(!tile) return false;
             const bool road = tile->hasRoad();
             last.moveInDirection(o);
             if(road) distance++;

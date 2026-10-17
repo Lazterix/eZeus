@@ -31,7 +31,10 @@ void eReinforcementsEvent::trigger() {
         return;
     }
     const auto entryPoint = board->entryPoint(cid);
-    if(!entryPoint) return;
+    if(!entryPoint) {
+        planArmyReturn(eNumbers::sReinforcementsTravelTime);
+        return;
+    }
 
     eEventData ed(cid);
     ed.fCity = mCity;

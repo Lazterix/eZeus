@@ -12,7 +12,7 @@ class eWorldCity;
 class eSoldierBanner;
 
 struct eMilitaryAid {
-    bool count() const;
+    int count() const;
 
     bool allDead() const {
         return count() == 0;

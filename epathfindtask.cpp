@@ -41,8 +41,16 @@ ePathFindTask::ePathFindTask(const eCityId cid,
     mFindAll(findAll) {}
 
 void ePathFindTask::run(eThreadBoard& data) {
+    if(!mTileWalkable) {
+        mR = false;
+        return;
+    }
     if(mEndTile) {
         const auto endT = mEndTile(data);
+        if(!endT) {
+            mR = false;
+            return;
+        }
         eKnownEndPathFinder pf0(
         [&](eTileBase* const t) {
             return mTileWalkable->walkable(t);

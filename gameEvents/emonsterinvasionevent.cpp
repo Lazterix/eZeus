@@ -102,6 +102,7 @@ void eMonsterInvasionEvent::trigger() {
     if(!board) return;
 
     const auto monster = triggerBase();
+    if(!monster) return;
 
     const auto cid = cityId();
     eEventData ed(cid);

@@ -113,6 +113,7 @@ std::vector<eOverlay> eTriremeWharf::getOverlays(const eTileSize size) const {
     }
 
     if(!coll) return {};
+    if(coll->size() <= 0) return {};
 
     const int texId = textureTime() % coll->size();
     o.fTex = coll->getTexture(texId);
@@ -128,18 +129,27 @@ void eTriremeWharf::timeChanged(const int by) {
         const auto eff = effectiveness();
         if(!mTakeCart) {
             mTakeCart = spawnCart(eCartActionTypeSupport::take);
-            mTakeCart->setMaxDistance(eNumbers::sTriremeWharfMaxResourceTakeDistance);
+            if(mTakeCart) {
+                mTakeCart->setMaxDistance(
+                    eNumbers::sTriremeWharfMaxResourceTakeDistance);
+            }
         }
         if(!mTrireme && mWoodCount > 1 && mArmorCount > 0) {
             mTriremeBuildingTime += by*eff;
             if(mTriremeBuildingTime > eNumbers::sTriremeWharfBuildTime) {
                 mTriremeBuildingTime = 0;
-                mTriremeBuildingStage++;
-                mWoodCount -= 2;
-                mArmorCount--;
-                if(mTriremeBuildingStage >= eNumbers::sTriremeWharfBuildStages) {
-                    mTriremeBuildingStage = 0;
-                    spawnTrireme();
+                // A final-stage build without an accessible water tile
+                // must not consume the remaining supplies for no ship.
+                const bool finalStage =
+                    mTriremeBuildingStage + 1 >= eNumbers::sTriremeWharfBuildStages;
+                if(!finalStage || triremeTile()) {
+                    mTriremeBuildingStage++;
+                    mWoodCount -= 2;
+                    mArmorCount--;
+                    if(mTriremeBuildingStage >= eNumbers::sTriremeWharfBuildStages) {
+                        mTriremeBuildingStage = 0;
+                        spawnTrireme();
+                    }
                 }
             }
         }
@@ -207,10 +217,10 @@ void eTriremeWharf::read(eReadStream& src) {
     eEmployingBuilding::read(src);
 
     src.readCharacter(&getBoard(), [this](eCharacter* const c) {
-        mTakeCart = static_cast<eCartTransporter*>(c);
+        mTakeCart = dynamic_cast<eCartTransporter*>(c);
     });
     src.readCharacter(&getBoard(), [this](eCharacter* const c) {
-        mTrireme = static_cast<eTrireme*>(c);
+        mTrireme = dynamic_cast<eTrireme*>(c);
     });
     src >> mWoodCount;
     src >> mArmorCount;
@@ -283,11 +293,12 @@ eTile *eTriremeWharf::triremeTile() const {
 
 void eTriremeWharf::spawnTrireme() {
     if(mTrireme) return;
+    const auto t = triremeTile();
+    if(!t) return;
+
     const auto b = e::make_shared<eTrireme>(getBoard());
     b->setBothCityIds(cityId());
     mTrireme = b.get();
-    const auto t = triremeTile();
-    if(!t) return;
     b->changeTile(t);
 
     const auto a = e::make_shared<eTriremeAction>(this, b.get());

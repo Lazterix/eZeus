@@ -36,8 +36,10 @@ void ePlayerRaidEvent::trigger() {
     const int enemyStr = mCity->troops();
     const int str = mForces.strength();
 
-    const double killFrac = std::clamp(0.5*enemyStr/str, 0., 1.);
-    mForces.kill(killFrac);
+    if(str > 0) {
+        const double killFrac = std::clamp(0.5*enemyStr/str, 0., 1.);
+        mForces.kill(killFrac);
+    }
 
     const bool raided = str > 0.75*enemyStr;
     const auto pid = playerId();

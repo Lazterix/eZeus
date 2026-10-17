@@ -32,6 +32,7 @@ private:
 
     const stdptr<ePatrolBuildingBase> mB;
     const eAction mFinish;
+    const unsigned long long mPathGeneration;
 
     stdsptr<eWalkableObject> mWalkable;
     bool mBothDirections;

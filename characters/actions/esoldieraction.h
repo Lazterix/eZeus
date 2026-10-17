@@ -59,7 +59,7 @@ public:
 
     void read(eReadStream& src) override {
         src.readCharacterAction(&board(), [this](eCharacterAction* const ca) {
-            mTptr = static_cast<eSoldierAction*>(ca);
+            mTptr = dynamic_cast<eSoldierAction*>(ca);
         });
     }
 

@@ -42,6 +42,8 @@
 #include "characters/eareswarrior.h"
 
 #include "characters/eenemyboat.h"
+#include "characters/gods/egod.h"
+#include "characters/heroes/ehero.h"
 
 #include "characters/actions/eattackcityaction.h"
 #include "characters/actions/emovetoaction.h"
@@ -224,6 +226,7 @@ void eInvasionHandler::initializeSeaInvasion(
     }
 
     for(const auto& f : forces.fAllies) {
+        if(!f) continue;
         const auto cid = f->cityId();
         const auto nat = f->nationality();
         std::vector<eSoldierBanner*> solds;
@@ -231,7 +234,8 @@ void eInvasionHandler::initializeSeaInvasion(
         int cavalry;
         int archers;
         f->troopsByType(infantry, cavalry, archers);
-        mAllyForcesLeft.push_back(eAllyForces{cid, nat, infantry, cavalry});
+        mAllyForcesLeft.push_back(
+            eAllyForces{cid, nat, infantry, cavalry, archers});
         troops += infantry + cavalry + archers;
     }
 
@@ -461,6 +465,7 @@ void eInvasionHandler::initializeLandInvasion(
     }
 
     for(const auto& f : forces.fAllies) {
+        if(!f) continue;
         const auto cid = f->cityId();
         const auto nat = f->nationality();
         int infantry;
@@ -532,10 +537,10 @@ eInvasionHandler::generateSoldiersForCity(
                 s = spawnSoldier<eAtlanteanHoplite>(mBoard, ocid, cid, tile);
                 break;
             case ePlayerSoldierType::atlanteanArcher:
-                s = spawnSoldier<ePersianHoplite>(mBoard, ocid, cid, tile);
+                s = spawnSoldier<eAtlanteanArcher>(mBoard, ocid, cid, tile);
                 break;
             case ePlayerSoldierType::atlanteanChariot:
-                s = spawnSoldier<ePersianHoplite>(mBoard, ocid, cid, tile);
+                s = spawnSoldier<eAtlanteanChariot>(mBoard, ocid, cid, tile);
                 break;
 
             case ePlayerSoldierType::amazon: {
@@ -582,8 +587,11 @@ void eInvasionHandler::extractSSFromForces(
     int aresWarriors = 0;
     int amazons = 0;
     for(const auto& s : forces.fSoldiers) {
+        if(!s) continue;
         const auto cid = s->cityId();
         const auto c = world.cityWithId(cid);
+        if(!c) continue;
+
         const auto nat = c->nationality();
         const bool atlantean = nat == eNationality::atlantean;
         const auto type = s->type();
@@ -620,7 +628,7 @@ void eInvasionHandler::extractSSFromForces(
     }
     if(atlanteanInfantry > 0) {
         ss.push_back(std::pair<ePlayerSoldierType, int>(
-            ePlayerSoldierType::atlanteanHoplite, greekInfantry));
+            ePlayerSoldierType::atlanteanHoplite, atlanteanInfantry));
     }
     if(greekCavalry > 0) {
         ss.push_back(std::pair<ePlayerSoldierType, int>(
@@ -628,7 +636,7 @@ void eInvasionHandler::extractSSFromForces(
     }
     if(atlanteanCavalry > 0) {
         ss.push_back(std::pair<ePlayerSoldierType, int>(
-            ePlayerSoldierType::atlanteanChariot, greekCavalry));
+            ePlayerSoldierType::atlanteanChariot, atlanteanCavalry));
     }
     if(greekArchers > 0) {
         ss.push_back(std::pair<ePlayerSoldierType, int>(
@@ -636,7 +644,7 @@ void eInvasionHandler::extractSSFromForces(
     }
     if(atlanteanArchers > 0) {
         ss.push_back(std::pair<ePlayerSoldierType, int>(
-            ePlayerSoldierType::atlanteanArcher, greekArchers));
+            ePlayerSoldierType::atlanteanArcher, atlanteanArchers));
     }
     if(amazons > 0) {
         ss.push_back(std::pair<ePlayerSoldierType, int>(
@@ -848,7 +856,9 @@ void eInvasionHandler::incTime(const int by) {
                 for(const auto& b : mBanners) {
                     count += b->count();
                 }
-                forces.kill(1 - double(count)/iniCount);
+                if(iniCount > 0) {
+                    forces.kill(1 - double(count)/iniCount);
+                }
             }
             assert(mEvent);
             mEvent->invadersWon();
@@ -887,18 +897,20 @@ void eInvasionHandler::read(eReadStream& src) {
 
     src >> mWait;
     src.readGameEvent(&mBoard, [this](eGameEvent* const e) {
-        mEvent = static_cast<eInvasionEvent*>(e);
+        mEvent = dynamic_cast<eInvasionEvent*>(e);
         if(mEvent) mEvent->addInvasionHandler(this);
     });
     src.readGameEvent(&mBoard, [this](eGameEvent* const e) {
-        mConquestEvent = static_cast<ePlayerConquestEvent*>(e);
+        mConquestEvent = dynamic_cast<ePlayerConquestEvent*>(e);
     });
 
     int nhg;
     src >> nhg;
     for(int i = 0; i < nhg; i++) {
         src.readCharacter(&mBoard, [this](eCharacter* const c) {
-            mHeroesAndGods.push_back(c);
+            if(dynamic_cast<eGod*>(c) || dynamic_cast<eHero*>(c)) {
+                mHeroesAndGods.push_back(c);
+            }
         });
     }
 
@@ -934,7 +946,9 @@ void eInvasionHandler::read(eReadStream& src) {
     src >> nb;
     for(int i = 0; i < nb; i++) {
         src.readCharacter(&mBoard, [this](eCharacter* const b) {
-            mBoats.push_back(b);
+            if(dynamic_cast<eEnemyBoat*>(b)) {
+                mBoats.push_back(b);
+            }
         });
     }
 }
@@ -1075,6 +1089,7 @@ void eInvasionHandler::generateImmortals(
     const int ty = tile->y();
 
     const auto prcsAttack = [&](const stdsptr<eCharacter>& c) {
+        if(!c) return;
         c->setOnCityId(tileCid);
         c->setCityId(cid);
         bool found = false;

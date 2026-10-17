@@ -32,7 +32,7 @@ bool eKnownEndPathFinder::findPath(
         const eTileDistance& distance) {
     (void)srcW;
     (void)srcH;
-    if(!start) return false;
+    if(!start || !mEndTile) return false;
 
     const bool finishOnFound = mMode == ePathFinderMode::findSingle;
 

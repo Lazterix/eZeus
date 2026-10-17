@@ -339,8 +339,10 @@ void eSoldierBanner::read(eReadStream& src) {
     for(int i = 0; i < np; i++) {
         const auto t = src.readTile(mBoard);
         src.readCharacter(&mBoard, [this, t](eCharacter* const c) {
-            const auto s = static_cast<eSoldier*>(c);
-            mPlaces[s] = t;
+            const auto s = dynamic_cast<eSoldier*>(c);
+            if(s) {
+                mPlaces[s] = t;
+            }
         });
     }
 
@@ -348,8 +350,8 @@ void eSoldierBanner::read(eReadStream& src) {
     src >> ns;
     for(int i = 0; i < ns; i++) {
         src.readCharacter(&mBoard, [this](eCharacter* const c) {
-            const auto s = static_cast<eSoldier*>(c);
-            mSoldiers.push_back(s);
+            const auto s = dynamic_cast<eSoldier*>(c);
+            if(s) mSoldiers.push_back(s);
         });
     }
 }

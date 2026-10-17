@@ -29,21 +29,33 @@ void eTroopsRequestFulfilledEvent::trigger() {
     removeConquestEvent();
     if(!mCity) return;
 
-    const int enemyStr = mRivalCity->troops();
+    auto rivalCity = mRivalCity;
+    const auto me = mainEvent<eTroopsRequestEvent>();
+    if(!rivalCity && me) {
+        rivalCity = me->attackingCity();
+        mRivalCity = rivalCity;
+    }
+    if(!rivalCity) {
+        planArmyReturn();
+        return;
+    }
+
+    const int enemyStr = rivalCity->troops();
     const int str = mCity->troops() + mForces.strength();
 
-    const double killFrac = std::clamp(0.5*enemyStr/str, 0., 1.);
-    mForces.kill(killFrac);
-    const int t = mCity->troops();
-    mCity->setTroops((1 - 0.5*killFrac)*t);
+    if(str > 0) {
+        const double killFrac = std::clamp(0.5*enemyStr/str, 0., 1.);
+        mForces.kill(killFrac);
+        const int t = mCity->troops();
+        mCity->setTroops((1 - 0.5*killFrac)*t);
+    }
 
     const bool defended = str > enemyStr;
 
-    const auto me = mainEvent<eTroopsRequestEvent>();
     if(defended) {
-        me->won();
+        if(me) me->won();
     } else {
-        me->lost();
+        if(me) me->lost();
     }
 
     planArmyReturn();
