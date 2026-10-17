@@ -2752,6 +2752,7 @@ add_executable(eZeus
     widgets/eeventselectionwidget.h
     widgets/eeventwidget.cpp
     widgets/eeventwidget.h
+    widgets/esidebarnotificationstate.h
     widgets/eexclamationbutton.cpp
     widgets/eexclamationbutton.h
     widgets/efilewidget.cpp
@@ -2820,6 +2821,9 @@ add_executable(eZeus
     widgets/emenuloadingwidget.h
     widgets/emessagebox.cpp
     widgets/emessagebox.h
+    widgets/emessagehistory.h
+    widgets/emessagehistorywidget.cpp
+    widgets/emessagehistorywidget.h
     widgets/emessagewidget.cpp
     widgets/emessagewidget.h
     widgets/emicrobutton.cpp
@@ -2864,6 +2868,10 @@ add_executable(eZeus
     widgets/erequestdialog.h
     widgets/eresolution.cpp
     widgets/eresolution.h
+    widgets/esavepath.h
+    widgets/edisplaymode.h
+    widgets/edisplaytransition.cpp
+    widgets/edisplaytransition.h
     widgets/eresourcebutton.cpp
     widgets/eresourcebutton.h
     widgets/erightbutton.cpp
@@ -2884,6 +2892,8 @@ add_executable(eZeus
     widgets/eselectcolonywidget.h
     widgets/esettingsmenu.cpp
     widgets/esettingsmenu.h
+    widgets/esoundsettingswidget.cpp
+    widgets/esoundsettingswidget.h
     widgets/esmalldownbutton.cpp
     widgets/esmalldownbutton.h
     widgets/esmallupbutton.cpp
@@ -2904,6 +2914,7 @@ add_executable(eZeus
     widgets/etopbarwidget.h
     widgets/etopmenudropdown.cpp
     widgets/etopmenudropdown.h
+    widgets/etopmenumodel.h
     widgets/etradeeditwidget.cpp
     widgets/etradeeditwidget.h
     widgets/etriggerselectionwidget.cpp
@@ -3380,3 +3391,121 @@ target_link_libraries(eZeus PRIVATE SDL2::SDL2)
 target_link_libraries(eZeus PRIVATE SDL2_ttf::SDL2_ttf)
 target_link_libraries(eZeus PRIVATE SDL2_image::SDL2_image)
 target_link_libraries(eZeus PRIVATE SDL2_mixer::SDL2_mixer)
+
+include(CTest)
+enable_testing()
+add_executable(eReadSourceTests EXCLUDE_FROM_ALL
+    tests/ereadsource.tests.cpp
+)
+target_include_directories(eReadSourceTests PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}
+)
+target_link_libraries(eReadSourceTests PRIVATE SDL2::SDL2)
+add_test(NAME eReadSourceTests COMMAND eReadSourceTests)
+
+add_executable(eAvailableBuildingsTests EXCLUDE_FROM_ALL
+    tests/eavailablebuildings.tests.cpp
+)
+target_include_directories(eAvailableBuildingsTests PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}
+)
+target_link_libraries(eAvailableBuildingsTests PRIVATE
+    SDL2::SDL2
+    SDL2_image::SDL2_image
+    SDL2_ttf::SDL2_ttf
+)
+add_test(NAME eAvailableBuildingsTests COMMAND eAvailableBuildingsTests)
+
+add_executable(eEventStateHelpersTests EXCLUDE_FROM_ALL
+    tests/eeventstatehelpers.tests.cpp
+)
+target_include_directories(eEventStateHelpersTests PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}
+)
+add_test(NAME eEventStateHelpersTests COMMAND eEventStateHelpersTests)
+
+add_executable(eResourceTypeTests EXCLUDE_FROM_ALL
+    tests/eresourcetype.tests.cpp
+    engine/eresourcetype.cpp
+)
+target_include_directories(eResourceTypeTests PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}
+)
+target_link_libraries(eResourceTypeTests PRIVATE
+    SDL2::SDL2
+    SDL2_image::SDL2_image
+    SDL2_ttf::SDL2_ttf
+)
+add_test(NAME eResourceTypeTests COMMAND eResourceTypeTests)
+
+add_executable(eMessageHistoryTests EXCLUDE_FROM_ALL
+    tests/emessagehistory.tests.cpp
+)
+target_include_directories(eMessageHistoryTests PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}
+)
+target_link_libraries(eMessageHistoryTests PRIVATE
+    SDL2::SDL2
+    SDL2_image::SDL2_image
+    SDL2_ttf::SDL2_ttf
+)
+add_test(NAME eMessageHistoryTests COMMAND eMessageHistoryTests)
+
+add_executable(eSidebarNotificationTests EXCLUDE_FROM_ALL
+    tests/esidebarnotification.tests.cpp
+)
+target_include_directories(eSidebarNotificationTests PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}
+)
+target_link_libraries(eSidebarNotificationTests PRIVATE
+    SDL2::SDL2
+    SDL2_image::SDL2_image
+    SDL2_ttf::SDL2_ttf
+)
+add_test(NAME eSidebarNotificationTests COMMAND eSidebarNotificationTests)
+
+add_executable(eTopMenuModelTests EXCLUDE_FROM_ALL
+    tests/etopmenumodel.tests.cpp
+)
+target_include_directories(eTopMenuModelTests PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}
+)
+add_test(NAME eTopMenuModelTests COMMAND eTopMenuModelTests)
+
+add_executable(eDisplayModeTests EXCLUDE_FROM_ALL
+    tests/edisplaymode.tests.cpp
+    widgets/eresolution.cpp
+)
+target_include_directories(eDisplayModeTests PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}
+)
+add_test(NAME eDisplayModeTests COMMAND eDisplayModeTests)
+
+add_executable(eDisplayTransitionTests EXCLUDE_FROM_ALL
+    tests/edisplaytransition.tests.cpp
+    widgets/edisplaytransition.cpp
+    widgets/eresolution.cpp
+)
+target_include_directories(eDisplayTransitionTests PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}
+)
+target_link_libraries(eDisplayTransitionTests PRIVATE SDL2::SDL2)
+add_test(NAME eDisplayTransitionTests COMMAND eDisplayTransitionTests)
+
+# Exercise engine behavior through the same production translation units as eZeus.
+get_target_property(eCoreRegressionSources eZeus SOURCES)
+list(FILTER eCoreRegressionSources INCLUDE REGEX "\\.cpp$")
+list(REMOVE_ITEM eCoreRegressionSources main.cpp)
+list(REMOVE_ITEM eCoreRegressionSources engine/ecampaignreadpak.cpp)
+add_executable(eCoreRegressionTests EXCLUDE_FROM_ALL
+    tests/ecore.regression.tests.cpp
+    ${eCoreRegressionSources}
+)
+target_include_directories(eCoreRegressionTests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(eCoreRegressionTests PRIVATE
+    SDL2::SDL2 SDL2_ttf::SDL2_ttf SDL2_image::SDL2_image SDL2_mixer::SDL2_mixer)
+if(LINUX)
+    target_include_directories(eCoreRegressionTests PRIVATE ${NOISE_INCLUDE_DIR})
+    target_link_libraries(eCoreRegressionTests PRIVATE ${NOISE_LIBRARY})
+endif()
+add_test(NAME eCoreRegressionTests COMMAND eCoreRegressionTests)
