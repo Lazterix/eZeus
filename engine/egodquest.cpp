@@ -118,6 +118,7 @@ eHeroType eGodQuest::sDefaultHero(
         }
     } break;
     }
+    return eHeroType::achilles;
 }
 
 std::string eGodQuest::name() const {

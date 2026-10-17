@@ -101,7 +101,9 @@ void eBoardCity::read(eReadStream& src) {
         src >> ngs;
         for(int i = 0; i < ngs; i++) {
             src.readCharacter(&mBoard, [this](eCharacter* const c) {
-                mAttackingGods.push_back(c);
+                if(c) {
+                    mAttackingGods.push_back(c);
+                }
             });
         }
     }
@@ -111,7 +113,10 @@ void eBoardCity::read(eReadStream& src) {
         src >> nms;
         for(int i = 0; i < nms; i++) {
             src.readCharacter(&mBoard, [this](eCharacter* const c) {
-                mMonsters.push_back(static_cast<eMonster*>(c));
+                const auto m = dynamic_cast<eMonster*>(c);
+                if(m) {
+                    mMonsters.push_back(m);
+                }
             });
         }
     }
@@ -168,8 +173,11 @@ void eBoardCity::read(eReadStream& src) {
             eMonsterType type;
             src >> type;
             src.readGameEvent(&mBoard, [this, type](eGameEvent* const e) {
-                const auto me = static_cast<eMonsterInvasionEventBase*>(e);
-                mMonsterEvents[type] = me;
+                const auto me =
+                    dynamic_cast<eMonsterInvasionEventBase*>(e);
+                if(me) {
+                    mMonsterEvents[type] = me;
+                }
             });
         }
     }

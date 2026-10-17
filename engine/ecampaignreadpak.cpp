@@ -407,11 +407,16 @@ void readEpisodeEvents(eEpisode& ep, ZeusFile& file,
     std::map<int, uint16_t> triggerMap;
     for(int i = 0; i < nEvents; i++) {
         const uint8_t eventTypeId = file.readUByte();
-        if(eventTypeId == 0) continue;
+        if(eventTypeId == 0) {
+            file.skipBytes(123);
+            events.push_back(nullptr);
+            continue;
+        }
         bool valid = false;
         const auto type = pakIdToEventType(eventTypeId, valid);
         if(!valid) {
             file.skipBytes(123);
+            events.push_back(nullptr);
             continue;
         }
 
@@ -565,6 +570,7 @@ void readEpisodeEvents(eEpisode& ep, ZeusFile& file,
                     effect = eTroopsRequestEventEffect::conquered;
                 } else {
                     printf("Invalid effect on city id %i\n", effectOnCityId);
+                    events.push_back(nullptr);
                     continue;
                 }
                 ee->setEffect(effect);
@@ -653,7 +659,10 @@ void readEpisodeEvents(eEpisode& ep, ZeusFile& file,
         case ePakEventType::godQuest: {
             bool valid = false;
             const auto god = pakIdToGodType(subType, valid);
-            if(!valid) continue;
+            if(!valid) {
+                events.push_back(nullptr);
+                continue;
+            }
            eHeroType hero;
             if(godMonsterHeroId == 0) {
                 const auto& o = opponentGods[0];

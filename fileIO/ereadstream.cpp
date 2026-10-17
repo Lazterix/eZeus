@@ -139,7 +139,7 @@ stdsptr<eDirectionTimes> eReadStream::readDirectionTimes(
         const auto tile = readTile(board);
         eDirectionLastUseTime u;
         u.read(*this);
-        (*r)[tile] = u;
+        if(tile) (*r)[tile] = u;
     }
     return r;
 }

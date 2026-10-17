@@ -158,8 +158,9 @@ void eBoardPlayer::read(eReadStream& src) {
         src >> nq;
         for(int i = 0; i < nq; i++) {
             src.readGameEvent(&mBoard, [this](eGameEvent* const e) {
-                const auto ge = static_cast<eGodQuestEvent*>(e);
-                mGodQuests.push_back(ge);
+                if(const auto ge = dynamic_cast<eGodQuestEvent*>(e)) {
+                    mGodQuests.push_back(ge);
+                }
             });
         }
     }

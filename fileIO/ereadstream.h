@@ -10,6 +10,8 @@
 #include <cstdint>
 #include <cstring>
 #include <cassert>
+#include <algorithm>
+#include <vector>
 
 #include "pointers/estdpointer.h"
 #include "efileformat.h"
@@ -40,23 +42,48 @@ public:
         fFile(file) {}
     eReadSource(void* mem) :
         fMem(mem) {}
+    eReadSource(const std::vector<char>* const mem) :
+        fVector(mem) {}
 
     inline size_t read(void* const data, const size_t len) {
-        assert(fFile || fMem);
+        assert(fFile || fMem || fVector);
         if(fFile) {
             fFile->read(static_cast<char*>(data), len);
-            return len;
+            const auto got = static_cast<size_t>(fFile->gcount());
+            if(got < len) {
+                std::memset(data, 0, len);
+                fFailed = true;
+            }
+            return got;
         } else if(fMem) {
             std::memcpy(data, static_cast<char*>(fMem) + fMemPos, len);
             fMemPos += len;
             return len;
+        } else if(fVector) {
+            const size_t available =
+                fMemPos < fVector->size() ? fVector->size() - fMemPos : 0;
+            const size_t got = std::min(len, available);
+            if(got > 0) {
+                std::memcpy(data, fVector->data() + fMemPos, got);
+            }
+            if(got < len) {
+                std::memset(data, 0, len);
+                fFailed = true;
+            }
+            fMemPos += got;
+            return got;
         }
         return 0;
     }
+
+    void fail() { fFailed = true; }
+    bool failed() const { return fFailed; }
 private:
     std::ifstream* fFile = nullptr;
     void* fMem = nullptr;
+    const std::vector<char>* fVector = nullptr;
     size_t fMemPos = 0;
+    bool fFailed = false;
 };
 
 class eReadStream {
@@ -129,7 +156,7 @@ public:
     inline eReadStream& operator>>(std::string& val) {
         int32_t size;
         *this >> size;
-        if(size == 0) {
+        if(size <= 0) {
             val = "";
         } else {
             val.resize(size);
@@ -175,6 +202,8 @@ public:
 
     const std::string& format() const { return mFormat; }
     int formatVersion() const { return mFormatVersion; }
+    void fail() { mSrc.fail(); }
+    bool failed() const { return mSrc.failed(); }
 private:
     std::vector<eFunc> mPostFuncs;
 

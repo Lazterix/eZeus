@@ -34,6 +34,13 @@ void eEpisodeGoal::write(eWriteStream& dst) const {
 }
 
 bool eEpisodeGoal::met() const {
+    switch(fType) {
+    case eEpisodeGoalType::surviveUntil:
+    case eEpisodeGoalType::completeBefore:
+        return fStatusCount >= 1;
+    default:
+        break;
+    }
     return fStatusCount >= fRequiredCount;
 }
 
@@ -246,11 +253,12 @@ std::string eEpisodeGoal::statusText(const eGameBoard& b) const {
     } break;
     case eEpisodeGoalType::hippodrome: {
         if(fStatusCount == 0) {
-            eLanguage::zeusText(194, 69);
+            return eLanguage::zeusText(194, 69);
         } else {
             auto text = eLanguage::zeusText(194, 71);
             const auto countStr = std::to_string(fStatusCount);
             eStringHelpers::replace(text, "[amount]", countStr);
+            return text;
         }
     } break;
     case eEpisodeGoalType::support: {

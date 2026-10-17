@@ -3,6 +3,8 @@
 #include "elanguage.h"
 
 void eEpisode::read(eReadStream& src) {
+    clear();
+
     {
         int nc;
         src >> nc;
@@ -42,7 +44,12 @@ void eEpisode::read(eReadStream& src) {
                 src >> type;
                 const auto branch = eGameEventBranch::root;
                 const auto e = eGameEvent::sCreate(cid, type, branch, *fBoard);
+                if(!e) {
+                    src.fail();
+                    return;
+                }
                 e->read(src);
+                if(src.failed()) return;
                 fEvents[cid].push_back(e);
             }
         }
@@ -142,7 +149,20 @@ void eEpisode::write(eWriteStream& dst) const {
 }
 
 void eEpisode::clear() {
+    fDrachmas.clear();
     fFriendlyGods.clear();
     fEvents.clear();
     fGoals.clear();
+    fAvailableBuildings.clear();
+    fMaxSanctuaries.clear();
+
+    fIntroId = 0;
+    fCompleteId = 0;
+    fTitle.clear();
+    fIntroduction.clear();
+    fComplete.clear();
+
+    if(const auto colony = dynamic_cast<eColonyEpisode*>(this)) {
+        colony->fSelection.clear();
+    }
 }

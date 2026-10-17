@@ -35,9 +35,11 @@ public:
         fFile(file) {}
     eWriteTarget(void* mem) :
         fMem(mem) {}
+    eWriteTarget(std::vector<char>* const mem) :
+        fVector(mem) {}
 
     inline size_t write(const void* const data, const size_t len) {
-        assert(fFile || fMem);
+        assert(fFile || fMem || fVector);
         if(fFile) {
             fFile->write(static_cast<const char*>(data), len);
             return len;
@@ -45,12 +47,17 @@ public:
             std::memcpy(static_cast<char*>(fMem) + fMemPos, data, len);
             fMemPos += len;
             return len;
+        } else if(fVector) {
+            const auto begin = static_cast<const char*>(data);
+            fVector->insert(fVector->end(), begin, begin + len);
+            return len;
         }
         return 0;
     }
 private:
     std::ofstream* fFile = nullptr;
     void* fMem = nullptr;
+    std::vector<char>* fVector = nullptr;
     size_t fMemPos = 0;
 };
 
@@ -121,7 +128,9 @@ public:
     inline eWriteStream& operator<<(const std::string& val) {
         const int32_t size = val.size();
         *this << size;
-        write(&val[0], size);
+        if(size > 0) {
+            write(val.data(), size);
+        }
         return *this;
     }
 

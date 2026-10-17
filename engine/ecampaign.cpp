@@ -303,6 +303,7 @@ bool eCampaign::sReadGlossary(const std::string& name,
 }
 
 void eCampaign::read(eReadStream& src) {
+    constexpr int maxColonyBoards = 128;
     src >> mBitmap;
     src >> mIsPak;
     if(mIsPak) {
@@ -317,10 +318,18 @@ void eCampaign::read(eReadStream& src) {
     {
         int nc;
         src >> nc;
+        constexpr int maxCampaignPlayers = 128;
+        if(src.failed() || nc < 0 || nc > maxCampaignPlayers) {
+            src.fail();
+            return;
+        }
         for(int i = 0; i < nc; i++) {
             ePlayerId pid;
             src >> pid;
-            src >> mDrachmas[pid];
+            int drachmas;
+            src >> drachmas;
+            if(src.failed()) return;
+            mDrachmas[pid] = drachmas;
         }
     }
     mDate.read(src);
@@ -335,9 +344,14 @@ void eCampaign::read(eReadStream& src) {
     {
         int ne;
         src >> ne;
+        if(src.failed() || ne < 0 || ne > maxColonyBoards) {
+            src.fail();
+            return;
+        }
         for(int i = 0; i < ne; i++) {
             int e;
             src >> e;
+            if(src.failed()) return;
             mPlayedColonyEpisodes.push_back(e);
         }
     }
@@ -345,23 +359,36 @@ void eCampaign::read(eReadStream& src) {
     {
         int nc;
         src >> nc;
+        // A normal adventure has only a handful of colonies. Never let a
+        // damaged save allocate an unbounded number of game boards.
+        if(src.failed() || nc < 0 || nc > maxColonyBoards) {
+            src.fail();
+            return;
+        }
         for(int i = 0; i < nc; i++) {
             auto& b = mColonyBoards.emplace_back();
             const bool finished = colonyEpisodeFinished(i);
             b = e::make_shared<eGameBoard>(mWorldBoard);
             if(finished) continue;
             b->read(src);
+            if(src.failed()) return;
         }
     }
 
     {
         int ne;
         src >> ne;
+        constexpr int maxParentEpisodes = 128;
+        if(src.failed() || ne < 0 || ne > maxParentEpisodes) {
+            src.fail();
+            return;
+        }
         for(int i = 0; i < ne; i++) {
             const auto e = std::make_shared<eParentCityEpisode>();
             e->fBoard = mParentBoard.get();
             e->fWorldBoard = &mWorldBoard;
             e->read(src);
+            if(src.failed()) return;
             mParentCityEpisodes.push_back(e);
         }
     }
@@ -369,11 +396,19 @@ void eCampaign::read(eReadStream& src) {
     {
         int ne;
         src >> ne;
+        // Colony episode i refers to colony board i. The save must supply
+        // the board before the episode; otherwise indexing would be unsafe.
+        if(src.failed() || ne < 0 ||
+           static_cast<size_t>(ne) > mColonyBoards.size()) {
+            src.fail();
+            return;
+        }
         for(int i = 0; i < ne; i++) {
             const auto e = std::make_shared<eColonyEpisode>();
             e->fBoard = mColonyBoards[i].get();
             e->fWorldBoard = &mWorldBoard;
             e->read(src);
+            if(src.failed()) return;
             mColonyEpisodes.push_back(e);
         }
     }
@@ -381,18 +416,28 @@ void eCampaign::read(eReadStream& src) {
     {
         int ne;
         src >> ne;
+        if(src.failed() || ne < 0) {
+            src.fail();
+            return;
+        }
         for(int i = 0; i < ne; i++) {
             const auto set = std::make_shared<eSetAside>();
             set->read(src, &mWorldBoard);
+            if(src.failed()) return;
             mForColony.push_back(set);
         }
     }
     {
         int ne;
         src >> ne;
+        if(src.failed() || ne < 0) {
+            src.fail();
+            return;
+        }
         for(int i = 0; i < ne; i++) {
             const auto set = std::make_shared<eSetAside>();
             set->read(src, &mWorldBoard);
+            if(src.failed()) return;
             mForParent.push_back(set);
         }
     }
@@ -408,10 +453,12 @@ void eCampaign::read(eReadStream& src) {
         mComplete = complete.fContent;
     }
 
+    if(src.failed()) return;
     if(src.format() == "eZeus.ez") { // save file
         const auto e = currentEpisode();
-        const auto board = e->fBoard;
-        board->loadResources();
+        // A finished adventure may no longer have a current episode.
+        // Do not dereference a missing episode while restoring resources.
+        if(e && e->fBoard) e->fBoard->loadResources();
     }
 }
 
@@ -488,6 +535,7 @@ bool eCampaign::load(const std::string& name) {
     eReadSource source(&file);
     eReadStream src(source);
     src.readFormat();
+    if(src.failed()) return false;
     const auto& format = src.format();
     const int version = src.formatVersion();
     if(format != "eZeus.epak") {
@@ -496,11 +544,17 @@ bool eCampaign::load(const std::string& name) {
         return false;
     }
     if(version > eFileFormat::version) {
-        printf("Attempting to read '%s' format '%s' version '%i' newer than the executable.\n",
-               pakFile.c_str(), format.c_str(), version);
+        printf("Cannot read '%s' format '%s' version '%i': newer than executable version '%i'.\n",
+               pakFile.c_str(), format.c_str(), version,
+               eFileFormat::version);
+        return false;
     }
     read(src);
+    // A truncated or inconsistent adventure must not be accepted as loaded
+    // or run callbacks against an incompletely restored world.
+    if(src.failed()) return false;
     src.handlePostFuncs();
+    if(src.failed()) return false;
     file.close();
 
     loadStrings();
@@ -529,8 +583,16 @@ bool eCampaign::save() const {
 
 eEpisode* eCampaign::currentEpisode() const {
     if(mCurrentEpisodeType == eEpisodeType::colony) {
+        if(mCurrentColonyEpisode < 0 ||
+           mCurrentColonyEpisode >= static_cast<int>(mColonyEpisodes.size())) {
+            return nullptr;
+        }
         return mColonyEpisodes[mCurrentColonyEpisode].get();
     } else {
+        if(mCurrentParentEpisode < 0 ||
+           mCurrentParentEpisode >= static_cast<int>(mParentCityEpisodes.size())) {
+            return nullptr;
+        }
         return mParentCityEpisodes[mCurrentParentEpisode].get();
     }
 }
@@ -540,6 +602,9 @@ void eCampaign::setCurrentColonyEpisode(const int e) {
 }
 
 void eCampaign::startEpisode() {
+    const auto e = currentEpisode();
+    if(!e || !e->fBoard) return;
+
     if(mCurrentEpisodeType == eEpisodeType::colony) {
         mPlayedColonyEpisodes.push_back(mCurrentColonyEpisode);
         mWorldBoard.activateColony(mCurrentColonyEpisode);
@@ -547,7 +612,6 @@ void eCampaign::startEpisode() {
     } else { // parentCity
         mWorldBoard.setParentAsCurrentCity();
     }
-    const auto e = currentEpisode();
     e->fDrachmas = mDrachmas;
     e->fStartDate = mDate;
     e->fWageMultiplier = mWageMultiplier;
@@ -573,6 +637,8 @@ void eCampaign::startEpisode() {
 
 void eCampaign::episodeFinished() {
     const auto e = currentEpisode();
+    if(!e || !e->fBoard) return;
+
     const auto board = e->fBoard;
     for(auto& d : mDrachmas) {
         d.second = board->drachmas(d.first);
@@ -624,11 +690,13 @@ bool eCampaign::finished() const {
 
 std::vector<eColonyEpisode*> eCampaign::remainingColonies() const {
     std::vector<eColonyEpisode*> result;
-    for(int i = 0; i < 4; i++) {
+    const int count = std::min(
+        4, static_cast<int>(mColonyEpisodes.size()));
+    for(int i = 0; i < count; i++) {
         const bool p = eVectorHelpers::contains(mPlayedColonyEpisodes, i);
         if(p) continue;
         const auto& ep = mColonyEpisodes[i];
-        if(!ep->fCity) continue;
+        if(!ep || !ep->fCity) continue;
         result.push_back(ep.get());
     }
     return result;
@@ -654,63 +722,75 @@ stdsptr<eParentCityEpisode> eCampaign::addParentCityEpisode() {
 }
 
 stdsptr<eParentCityEpisode> eCampaign::insertParentCityEpisode(const int id) {
+    const int insertId = std::clamp(
+        id, 0, static_cast<int>(mParentCityEpisodes.size()));
     const auto e = std::make_shared<eParentCityEpisode>();
-    mParentCityEpisodes.insert(mParentCityEpisodes.begin() + id, e);
+    e->fBoard = mParentBoard.get();
+    e->fWorldBoard = &mWorldBoard;
+    mParentCityEpisodes.insert(mParentCityEpisodes.begin() + insertId, e);
     return e;
 }
 
 void eCampaign::deleteParentCityEpisode(const int id) {
+    if(mParentCityEpisodes.size() <= 1) return;
+    if(id < 0 ||
+       id >= static_cast<int>(mParentCityEpisodes.size())) return;
     mParentCityEpisodes.erase(mParentCityEpisodes.begin() + id);
 }
 
 void eCampaign::setVictoryParentCityEpisode(const int id) {
-    for(int i = mParentCityEpisodes.size() - 1; i > id; i--) {
-        deleteParentCityEpisode(id);
+    if(id < 0 ||
+       id >= static_cast<int>(mParentCityEpisodes.size())) return;
+    for(int i = static_cast<int>(mParentCityEpisodes.size()) - 1;
+        i > id; i--) {
+        deleteParentCityEpisode(i);
     }
 }
 
 void eCampaign::copyParentCityEpisodeSettings(const int from, const int to) {
+    if(from < 0 || to < 0) return;
+    if(from >= static_cast<int>(mParentCityEpisodes.size()) ||
+       to >= static_cast<int>(mParentCityEpisodes.size())) return;
     const auto f = mParentCityEpisodes[from];
     const auto t = mParentCityEpisodes[to];
+    if(!f || !t) return;
     copyEpisodeSettings(f.get(), t.get());
 }
 
 void eCampaign::copyEpisodeSettings(eEpisode* const from,
                                     eEpisode* const to) {
+    if(!from || !to || from == to) return;
     to->clear();
-    const size_t size = 1000000;
-    void* mem = malloc(size);
+    std::vector<char> mem;
     {
         mWorldBoard.setIOIDs();
-        eWriteTarget target(mem);
+        eWriteTarget target(&mem);
         eWriteStream dst(target);
         dst.writeFormat("eZeus");
         from->write(dst);
     }
     {
-        eReadSource source(mem);
+        eReadSource source(&mem);
         eReadStream src(source);
         src.readFormat();
         to->read(src);
         src.handlePostFuncs();
     }
-
-    free(mem);
 }
 
 void eCampaign::setDifficulty(const eDifficulty d) {
     mDifficulty = d;
-    mParentBoard->setDifficulty(d);
+    if(mParentBoard) mParentBoard->setDifficulty(d);
     for(const auto& b : mColonyBoards) {
-        b->setDifficulty(d);
+        if(b) b->setDifficulty(d);
     }
 }
 
 void eCampaign::setEditorMode(const bool e) {
     mWorldBoard.setEditorMode(e);
-    mParentBoard->setEditorMode(e);
+    if(mParentBoard) mParentBoard->setEditorMode(e);
     for(const auto& c : mColonyBoards) {
-        c->setEditorMode(e);
+        if(c) c->setEditorMode(e);
     }
 }
 
@@ -730,6 +810,9 @@ void eCampaign::setAside(const eResourceType res, const int count,
 stdsptr<eWorldCity> eCampaign::lastPlayedColony() const {
     if(mPlayedColonyEpisodes.empty()) return nullptr;
     const int i = mPlayedColonyEpisodes.back();
+    if(i < 0 ||
+       i >= static_cast<int>(mColonyEpisodes.size())) return nullptr;
+    if(!mColonyEpisodes[i]) return nullptr;
     return mColonyEpisodes[i]->fCity;
 }
 
@@ -743,7 +826,11 @@ bool eCampaign::colonyEpisodeFinished(const int id) const {
 }
 
 void eCampaign::copyColonyEpisodeSettings(const int from, const int to) {
+    if(from < 0 || to < 0) return;
+    if(from >= static_cast<int>(mColonyEpisodes.size()) ||
+       to >= static_cast<int>(mColonyEpisodes.size())) return;
     const auto f = mColonyEpisodes[from];
     const auto t = mColonyEpisodes[to];
+    if(!f || !t) return;
     copyEpisodeSettings(f.get(), t.get());
 }
