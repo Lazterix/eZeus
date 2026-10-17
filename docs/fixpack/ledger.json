@@ -1,0 +1,3504 @@
+[
+  {
+    "id": "base:fix-racing-horse-negative-index",
+    "stage": 0,
+    "tier": "tier_a",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-a-obvious/ezeus-fix-racing-horse-negative-index.patch",
+    "sha256": "1ffb9dce246b9efde8dd3bc4ab64303c3fd2818113ec8a19f744b0a90f9ea7ce",
+    "patch": "build/fixpack-audit/00/ezeus-fix-racing-horse-negative-index.patch",
+    "files": [
+      "characters/eracinghorse.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Reviewed localized defect; exact context applied after recounting malformed hunk metadata where necessary"
+  },
+  {
+    "id": "base:fix-parent-texture-isnull",
+    "stage": 0,
+    "tier": "tier_a",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-a-obvious/ezeus-fix-parent-texture-isnull.patch",
+    "sha256": "29df7d83f467bfd862b7b0062400b8414e54f6f48e3e70267035ef3d89bcca9e",
+    "patch": "build/fixpack-audit/00/ezeus-fix-parent-texture-isnull.patch",
+    "files": [
+      "etexture.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Reviewed localized defect; exact context applied after recounting malformed hunk metadata where necessary"
+  },
+  {
+    "id": "base:fix-display-mode-enumeration",
+    "stage": 0,
+    "tier": "tier_a",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-a-obvious/ezeus-fix-display-mode-enumeration.patch",
+    "sha256": "0595d573b1ef981c18a20c299321abca2e892c1d5921f8f55d17736368ecb544",
+    "patch": "build/fixpack-audit/00/ezeus-fix-display-mode-enumeration.patch",
+    "files": [
+      "main.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Reviewed localized defect; exact context applied after recounting malformed hunk metadata where necessary"
+  },
+  {
+    "id": "base:fix-missing-return-fallbacks",
+    "stage": 0,
+    "tier": "tier_a",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-a-obvious/ezeus-fix-missing-return-fallbacks.patch",
+    "sha256": "9ee04056ed1e01d54b72d232e28f53d1e3205d24dbb3bac1461ad826c493fb20",
+    "patch": "build/fixpack-audit/00/ezeus-fix-missing-return-fallbacks.patch",
+    "files": [
+      "engine/edifficulty.cpp",
+      "widgets/ebuildingmode.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Reviewed localized defect; exact context applied after recounting malformed hunk metadata where necessary"
+  },
+  {
+    "id": "base:fix-small-house-water-and-culture-timers",
+    "stage": 0,
+    "tier": "tier_a",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-a-obvious/ezeus-fix-small-house-water-and-culture-timers.patch",
+    "sha256": "893dc681138ade207a8d8950da4c2bc1843dac46bbd1b2ce00ff70e861017587",
+    "patch": "build/fixpack-audit/00/ezeus-fix-small-house-water-and-culture-timers.patch",
+    "files": [
+      "buildings/esmallhouse.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Reviewed localized defect; exact context applied after recounting malformed hunk metadata where necessary"
+  },
+  {
+    "id": "base:fix-elite-housing-level-timer",
+    "stage": 0,
+    "tier": "tier_a",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-a-obvious/ezeus-fix-elite-housing-level-timer.patch",
+    "sha256": "960cc481ca48c4a7e589e3bb8711ade55bea616aaff424b8cba433fe96d2a82a",
+    "patch": "build/fixpack-audit/00/ezeus-fix-elite-housing-level-timer.patch",
+    "files": [
+      "buildings/eelitehousing.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Reviewed localized defect; exact context applied after recounting malformed hunk metadata where necessary"
+  },
+  {
+    "id": "base:fix-house-level-clamp",
+    "stage": 0,
+    "tier": "tier_a",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-a-obvious/ezeus-fix-house-level-clamp.patch",
+    "sha256": "a354cb525c291d134852381fb9cefac10c84187887f4634512d7dc5d38b37823",
+    "patch": "build/fixpack-audit/00/ezeus-fix-house-level-clamp.patch",
+    "files": [
+      "buildings/ehousebase.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Reviewed localized defect; exact context applied after recounting malformed hunk metadata where necessary"
+  },
+  {
+    "id": "base:fix-marble-tile-groups",
+    "stage": 0,
+    "tier": "tier_a",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-a-obvious/ezeus-fix-marble-tile-groups.patch",
+    "sha256": "fcdf1f33bb0d53b2fd08ac56fa3b47a52c70056b443744381e91ea96bcf31b34",
+    "patch": "build/fixpack-audit/00/ezeus-fix-marble-tile-groups.patch",
+    "files": [
+      "engine/egameboard.h",
+      "engine/egameboard.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Reviewed localized defect; exact context applied after recounting malformed hunk metadata where necessary"
+  },
+  {
+    "id": "base:rebuild-black-marble-groups-after-load",
+    "stage": 0,
+    "tier": "tier_a",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-a-obvious/ezeus-rebuild-black-marble-groups-after-load.patch",
+    "sha256": "ec767c52be0639d309e0bccc53aa9937632aa5526f9685ab78aba1f3d63f2112",
+    "patch": "build/fixpack-audit/00/ezeus-rebuild-black-marble-groups-after-load.patch",
+    "files": [
+      "engine/egameboardread.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Reviewed localized defect; exact context applied after recounting malformed hunk metadata where necessary"
+  },
+  {
+    "id": "base:fix-fourth-god-voice-path",
+    "stage": 0,
+    "tier": "tier_a",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-a-obvious/ezeus-fix-fourth-god-voice-path.patch",
+    "sha256": "bfe0712b7f3fb8768ebab6631c5cfe410a4aab971d120c106c60b27e6bd69119",
+    "patch": "build/fixpack-audit/00/ezeus-fix-fourth-god-voice-path.patch",
+    "files": [
+      "audio/esounds.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Reviewed localized defect; exact context applied after recounting malformed hunk metadata where necessary"
+  },
+  {
+    "id": "base:remove-duplicate-fleece-audio-registration",
+    "stage": 0,
+    "tier": "tier_a",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-a-obvious/ezeus-remove-duplicate-fleece-audio-registration.patch",
+    "sha256": "669ac221bbfbaf249711f5a3aad88d0ae0c9cdd79618c4861e285a7f88ea3122",
+    "patch": "build/fixpack-audit/00/ezeus-remove-duplicate-fleece-audio-registration.patch",
+    "files": [
+      "audio/esounds.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Reviewed localized defect; exact context applied after recounting malformed hunk metadata where necessary"
+  },
+  {
+    "id": "base:fix-message-second-action-visibility",
+    "stage": 0,
+    "tier": "tier_a",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-a-obvious/ezeus-fix-message-second-action-visibility.patch",
+    "sha256": "4b85daa14c69424ccbcbd16d3ae0e09769416aff2b35bfbe3176c7a4b5d49048",
+    "patch": "build/fixpack-audit/00/ezeus-fix-message-second-action-visibility.patch",
+    "files": [
+      "widgets/emessagebox.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Reviewed localized defect; exact context applied after recounting malformed hunk metadata where necessary"
+  },
+  {
+    "id": "base:fix-message-key-and-placeholder-bugs",
+    "stage": 0,
+    "tier": "tier_a",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-a-obvious/ezeus-fix-message-key-and-placeholder-bugs.patch",
+    "sha256": "2c049c482751d469f0223953d3f58451034f4ef1be75c3f6345f5335f1ab853b",
+    "patch": "build/fixpack-audit/00/ezeus-fix-message-key-and-placeholder-bugs.patch",
+    "files": [
+      "emessages.cpp"
+    ],
+    "outcome": "corrected-validated-release",
+    "reason": "Applied intended literal corrections against actual source; original surrounding context did not match"
+  },
+  {
+    "id": "base:fix-condensed-message-substitutions",
+    "stage": 0,
+    "tier": "tier_a",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-a-obvious/ezeus-fix-condensed-message-substitutions.patch",
+    "sha256": "e4755524abb3b0edb8471b468f23ad6bc1cc59bf593fed9d85677af102c093cd",
+    "patch": "build/fixpack-audit/00/ezeus-fix-condensed-message-substitutions.patch",
+    "files": [
+      "emessages.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Reviewed localized defect; exact context applied after recounting malformed hunk metadata where necessary"
+  },
+  {
+    "id": "base:fix-unemployment-message-keys",
+    "stage": 0,
+    "tier": "tier_a",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-a-obvious/ezeus-fix-unemployment-message-keys.patch",
+    "sha256": "d5e90e6609d7cb0f2302adfb074b158b6e39cc31b21fc1e0026de89f7efe846c",
+    "patch": "build/fixpack-audit/00/ezeus-fix-unemployment-message-keys.patch",
+    "files": [
+      "emessages.cpp"
+    ],
+    "outcome": "corrected-validated-release",
+    "reason": "Applied intended literal corrections against actual source; original surrounding context did not match"
+  },
+  {
+    "id": "base:fix-message-loader-state",
+    "stage": 0,
+    "tier": "tier_a",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-a-obvious/ezeus-fix-message-loader-state.patch",
+    "sha256": "cc5d92f9b3eaa3628a036833d9767d059160dc6f856c0d95e27520bedb11ec75",
+    "patch": "build/fixpack-audit/00/ezeus-fix-message-loader-state.patch",
+    "files": [
+      "emessages.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Reviewed localized defect; exact context applied after recounting malformed hunk metadata where necessary"
+  },
+  {
+    "id": "base:fix-tax-stat-getters",
+    "stage": 0,
+    "tier": "tier_a",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-a-obvious/ezeus-fix-tax-stat-getters.patch",
+    "sha256": "27e2eb9f739a0d2946db8c92031a94dc2adb7d72961372dd5b0ba116eff60518",
+    "patch": "build/fixpack-audit/00/ezeus-fix-tax-stat-getters.patch",
+    "files": [
+      "engine/egameboard.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Reviewed localized defect; exact context applied after recounting malformed hunk metadata where necessary"
+  },
+  {
+    "id": "base:fix-world-city-id-lookup",
+    "stage": 0,
+    "tier": "tier_a",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-a-obvious/ezeus-fix-world-city-id-lookup.patch",
+    "sha256": "2f7b24dfd655590500674679050d68cc32b3e6ffd82dd87eaae78a073c233f5a",
+    "patch": "build/fixpack-audit/00/ezeus-fix-world-city-id-lookup.patch",
+    "files": [
+      "engine/eworldboard.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Reviewed localized defect; exact context applied after recounting malformed hunk metadata where necessary"
+  },
+  {
+    "id": "base:fix-editor-city-plan-invalid-district",
+    "stage": 0,
+    "tier": "tier_a",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-a-obvious/ezeus-fix-editor-city-plan-invalid-district.patch",
+    "sha256": "45875fdb2ced0db16d55eb4bfbbc62ab092c55bea00dd50150fdc8eafe555b55",
+    "patch": "build/fixpack-audit/00/ezeus-fix-editor-city-plan-invalid-district.patch",
+    "files": [
+      "engine/eboardcity.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Reviewed localized defect; exact context applied after recounting malformed hunk metadata where necessary"
+  },
+  {
+    "id": "base:fix-editor-district-condition-handling",
+    "stage": 0,
+    "tier": "tier_a",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-a-obvious/ezeus-fix-editor-district-condition-handling.patch",
+    "sha256": "eeb02144a693e9ad23bed31ea3d25cfaf2f238461a14b15660fa3f4b6a079db6",
+    "patch": "build/fixpack-audit/00/ezeus-fix-editor-district-condition-handling.patch",
+    "files": [
+      "engine/eboardcity.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Reviewed localized defect; exact context applied after recounting malformed hunk metadata where necessary"
+  },
+  {
+    "id": "base:harden-district-readiness-checks",
+    "stage": 0,
+    "tier": "tier_a",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-a-obvious/ezeus-harden-district-readiness-checks.patch",
+    "sha256": "ccb008584cf40dc950e42b2a232f29522d52675a37bbac6eb8da4a2521e6f55c",
+    "patch": "build/fixpack-audit/00/ezeus-harden-district-readiness-checks.patch",
+    "files": [
+      "engine/eboardcity.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Reviewed localized defect; exact context applied after recounting malformed hunk metadata where necessary"
+  },
+  {
+    "id": "base:fix-employment-distribution-zero-divisions",
+    "stage": 0,
+    "tier": "tier_a",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-a-obvious/ezeus-fix-employment-distribution-zero-divisions.patch",
+    "sha256": "bef8fef33051943cfdb59135505466fc41ee2eb21cb64de73200ff3bda137e0b",
+    "patch": "build/fixpack-audit/00/ezeus-fix-employment-distribution-zero-divisions.patch",
+    "files": [
+      "engine/eboardcity.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Reviewed localized defect; exact context applied after recounting malformed hunk metadata where necessary"
+  },
+  {
+    "id": "base:fix-employment-distributor-zero-capacity",
+    "stage": 0,
+    "tier": "tier_a",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-a-obvious/ezeus-fix-employment-distributor-zero-capacity.patch",
+    "sha256": "31e495fdf1b6f76b4c13b0858986659aa765f5972d785a56129b32f8dd17cc15",
+    "patch": "build/fixpack-audit/00/ezeus-fix-employment-distributor-zero-capacity.patch",
+    "files": [
+      "engine/eemploymentdistributor.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Reviewed localized defect; exact context applied after recounting malformed hunk metadata where necessary"
+  },
+  {
+    "id": "base:harden-employment-data-counters",
+    "stage": 0,
+    "tier": "tier_a",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-a-obvious/ezeus-harden-employment-data-counters.patch",
+    "sha256": "1c2e1a27d8774e99bafeddced8fa5394c12676b997edee0ee6cf9fd73262fbd8",
+    "patch": "build/fixpack-audit/00/ezeus-harden-employment-data-counters.patch",
+    "files": [
+      "engine/boardData/eemploymentdata.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Reviewed localized defect; exact context applied after recounting malformed hunk metadata where necessary"
+  },
+  {
+    "id": "base:harden-population-counters",
+    "stage": 0,
+    "tier": "tier_a",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-a-obvious/ezeus-harden-population-counters.patch",
+    "sha256": "b64275f2c53cb9c6fc383e344c6305b955fd808366481ae16194364dd02037b6",
+    "patch": "build/fixpack-audit/00/ezeus-harden-population-counters.patch",
+    "files": [
+      "engine/boardData/epopulationdata.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Reviewed localized defect; exact context applied after recounting malformed hunk metadata where necessary"
+  },
+  {
+    "id": "base:guard-monument-availability-ids",
+    "stage": 0,
+    "tier": "tier_a",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-a-obvious/ezeus-guard-monument-availability-ids.patch",
+    "sha256": "40bc8cb7bb4ee9f4705e242a1a292d08226e3e3467ae66be8e891aa1350ce6e1",
+    "patch": "build/fixpack-audit/00/ezeus-guard-monument-availability-ids.patch",
+    "files": [
+      "buildings/eavailablebuildings.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Reviewed localized defect; exact context applied after recounting malformed hunk metadata where necessary"
+  },
+  {
+    "id": "base:fix-character-unregister-downcast",
+    "stage": 0,
+    "tier": "tier_a",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-a-obvious/ezeus-fix-character-unregister-downcast.patch",
+    "sha256": "9532d4016adc6779f5916140aa4544b71ddb472550ff7f0f7baa385d39f7cc24",
+    "patch": "build/fixpack-audit/00/ezeus-fix-character-unregister-downcast.patch",
+    "files": [
+      "engine/egameboard.cpp"
+    ],
+    "outcome": "corrected-validated-release",
+    "reason": "Compare selected trireme base-pointer identity during eCharacter destruction; dynamic_cast in original patch fails after derived destructor"
+  },
+  {
+    "id": "base:fix-attacking-god-and-monster-city-guards",
+    "stage": 0,
+    "tier": "tier_a",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-a-obvious/ezeus-fix-attacking-god-and-monster-city-guards.patch",
+    "sha256": "8fa1e87f1d924d79d835e077e15e15c5e02c1218b39355ad1ddccc5ac4637a40",
+    "patch": "build/fixpack-audit/00/ezeus-fix-attacking-god-and-monster-city-guards.patch",
+    "files": [
+      "engine/egameboard.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Reviewed localized defect; exact context applied after recounting malformed hunk metadata where necessary"
+  },
+  {
+    "id": "base:fix-small-sdl-resource-leaks",
+    "stage": 0,
+    "tier": "tier_a",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-a-obvious/ezeus-fix-small-sdl-resource-leaks.patch",
+    "sha256": "5836c3fddd4ef181da5884632ec5ac9034779267cfa4ae7f4bdebcb58ad81b12",
+    "patch": "build/fixpack-audit/00/ezeus-fix-small-sdl-resource-leaks.patch",
+    "files": [
+      "etexture.cpp",
+      "emainwindow.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Reviewed localized defect; exact context applied after recounting malformed hunk metadata where necessary"
+  },
+  {
+    "id": "base:fix-texture-and-audio-cleanup",
+    "stage": 0,
+    "tier": "tier_a",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-a-obvious/ezeus-fix-texture-and-audio-cleanup.patch",
+    "sha256": "cd3908a9c74086c138101b72306d105026935adf6db396b117aa656c5110467a",
+    "patch": "build/fixpack-audit/00/ezeus-fix-texture-and-audio-cleanup.patch",
+    "files": [
+      "etexture.cpp",
+      "main.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Reviewed localized defect; exact context applied after recounting malformed hunk metadata where necessary"
+  },
+  {
+    "id": "base:fix-startup-error-cleanup-and-exit-code",
+    "stage": 0,
+    "tier": "tier_a",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-a-obvious/ezeus-fix-startup-error-cleanup-and-exit-code.patch",
+    "sha256": "b5ab7f127d37b981e8e4ef65191a48567c575bb1dae1d3943e352c28a574ff67",
+    "patch": "build/fixpack-audit/00/ezeus-fix-startup-error-cleanup-and-exit-code.patch",
+    "files": [
+      "main.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Reviewed localized defect; exact context applied after recounting malformed hunk metadata where necessary"
+  },
+  {
+    "id": "base:guard-music-index",
+    "stage": 0,
+    "tier": "tier_a",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-a-obvious/ezeus-guard-music-index.patch",
+    "sha256": "34bec63d5ed3da53a355f528fd462e253652ddf49fe1fcd6ace3c67905a6f9ec",
+    "patch": "build/fixpack-audit/00/ezeus-guard-music-index.patch",
+    "files": [
+      "audio/emusicvector.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Reviewed localized defect; exact context applied after recounting malformed hunk metadata where necessary"
+  },
+  {
+    "id": "base:guard-invalid-audio-enums",
+    "stage": 0,
+    "tier": "tier_a",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-a-obvious/ezeus-guard-invalid-audio-enums.patch",
+    "sha256": "70063c4ccafaae437a0218ff0c594bd40916d16d1fa3ecae8a68be1009585ae8",
+    "patch": "build/fixpack-audit/00/ezeus-guard-invalid-audio-enums.patch",
+    "files": [
+      "audio/esounds.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Reviewed localized defect; exact context applied after recounting malformed hunk metadata where necessary"
+  },
+  {
+    "id": "base:harden-string-serialization",
+    "stage": 0,
+    "tier": "tier_a",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-a-obvious/ezeus-harden-string-serialization.patch",
+    "sha256": "f4304406c4d639a38db1693f8a7eca7acc7a63cbedc44dc5e1511412d39628dc",
+    "patch": "build/fixpack-audit/00/ezeus-harden-string-serialization.patch",
+    "files": [
+      "fileIO/ewritestream.h",
+      "fileIO/ereadstream.h"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Reviewed localized defect; exact context applied after recounting malformed hunk metadata where necessary"
+  },
+  {
+    "id": "base:guard-tax-sentiment-index",
+    "stage": 0,
+    "tier": "tier_a",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-a-obvious/ezeus-guard-tax-sentiment-index.patch",
+    "sha256": "0e2b45596154d68dd1c9573728084acd0fd566e5ed83d70ccf46d767bf67f051",
+    "patch": "build/fixpack-audit/00/ezeus-guard-tax-sentiment-index.patch",
+    "files": [
+      "engine/edifficulty.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Reviewed localized defect; exact context applied after recounting malformed hunk metadata where necessary"
+  },
+  {
+    "id": "base:fix-rotated-orientation-fallback",
+    "stage": 0,
+    "tier": "tier_a",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-a-obvious/ezeus-fix-rotated-orientation-fallback.patch",
+    "sha256": "9dc031eb49fe31833614b884ced4f8fd67c5097c16d5536f00feaa122425e556",
+    "patch": "build/fixpack-audit/00/ezeus-fix-rotated-orientation-fallback.patch",
+    "files": [
+      "characters/echaracter.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Reviewed localized defect; exact context applied after recounting malformed hunk metadata where necessary"
+  },
+  {
+    "id": "base:campaign-safety-pack",
+    "stage": 0,
+    "tier": "tier_b",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-b-hardening/ezeus-campaign-safety-pack.patch",
+    "sha256": "19606c57e387b7a1671543763b9e56a473c72719b154879d275e7a8ea455016b",
+    "patch": "build/fixpack-audit/00/ezeus-campaign-safety-pack.patch",
+    "files": [
+      "fileIO/ereadstream.h",
+      "fileIO/ewritestream.h",
+      "engine/ecampaign.cpp"
+    ],
+    "outcome": "corrected-validated-release",
+    "reason": "Applied overlay bounds and repaired duplicate local declarations in the two-spectator branches"
+  },
+  {
+    "id": "base:harden-world-board-city-access",
+    "stage": 0,
+    "tier": "tier_b",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-b-hardening/ezeus-harden-world-board-city-access.patch",
+    "sha256": "aa797c862a49a683f169e4db8f49c47d9af9354aa54ff431ba92cb8e1cc39b21",
+    "patch": "build/fixpack-audit/00/ezeus-harden-world-board-city-access.patch",
+    "files": [
+      "engine/eworldboard.cpp"
+    ],
+    "outcome": "corrected-validated-release",
+    "reason": "Retained tier-A city-ID lookup (supersedes index lookup hunk); integrated null guards against actual functions"
+  },
+  {
+    "id": "base:reset-world-board-before-load",
+    "stage": 0,
+    "tier": "tier_b",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-b-hardening/ezeus-reset-world-board-before-load.patch",
+    "sha256": "721e439cea658c9ce625b6fac8ce7810b49d7394958a22a5e88bd251599e5dba",
+    "patch": "build/fixpack-audit/00/ezeus-reset-world-board-before-load.patch",
+    "files": [
+      "engine/eworldboard.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Intent reviewed; exact source context applied (hunk counts recalculated)"
+  },
+  {
+    "id": "base:reset-world-city-before-load",
+    "stage": 0,
+    "tier": "tier_b",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-b-hardening/ezeus-reset-world-city-before-load.patch",
+    "sha256": "f886e63fc243ff1043bda1544872ee3d69d2d9b4f73ba491d9d42f0b441f6913",
+    "patch": "build/fixpack-audit/00/ezeus-reset-world-city-before-load.patch",
+    "files": [
+      "engine/eworldcity.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Intent reviewed; exact source context applied (hunk counts recalculated)"
+  },
+  {
+    "id": "base:harden-board-city-defense-and-military-service",
+    "stage": 0,
+    "tier": "tier_b",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-b-hardening/ezeus-harden-board-city-defense-and-military-service.patch",
+    "sha256": "8e00c07646f2211d6bff40877477ed7914b4c96d00449646178c4caf406d4b9c",
+    "patch": "build/fixpack-audit/00/ezeus-harden-board-city-defense-and-military-service.patch",
+    "files": [
+      "engine/eboardcity.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Intent reviewed; exact source context applied (hunk counts recalculated)"
+  },
+  {
+    "id": "base:harden-board-city-coverage-and-cutoff",
+    "stage": 0,
+    "tier": "tier_b",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-b-hardening/ezeus-harden-board-city-coverage-and-cutoff.patch",
+    "sha256": "70cb2212f4bb91f4f2593527a078e8ff13fdcc0c3b2bff91fb1a1b1d94bb9620",
+    "patch": "build/fixpack-audit/00/ezeus-harden-board-city-coverage-and-cutoff.patch",
+    "files": [
+      "engine/eboardcity.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Intent reviewed; exact source context applied (hunk counts recalculated)"
+  },
+  {
+    "id": "base:harden-board-city-counts-and-random-building",
+    "stage": 0,
+    "tier": "tier_b",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-b-hardening/ezeus-harden-board-city-counts-and-random-building.patch",
+    "sha256": "584f7d9af2185bc5b88aa34948a4a7aed42b4cb52622cf7bf00247a1a1b77056",
+    "patch": "build/fixpack-audit/00/ezeus-harden-board-city-counts-and-random-building.patch",
+    "files": [
+      "engine/eboardcity.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Intent reviewed; exact source context applied (hunk counts recalculated)"
+  },
+  {
+    "id": "base:harden-board-city-resource-transfers",
+    "stage": 0,
+    "tier": "tier_b",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-b-hardening/ezeus-harden-board-city-resource-transfers.patch",
+    "sha256": "f4fcf40e2481a3944fd4984eda40291b6d767dc91c32dc03787a1d5155a3d996",
+    "patch": "build/fixpack-audit/00/ezeus-harden-board-city-resource-transfers.patch",
+    "files": [
+      "engine/eboardcity.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Intent reviewed; exact source context applied (hunk counts recalculated)"
+  },
+  {
+    "id": "base:harden-board-city-banner-pointers",
+    "stage": 0,
+    "tier": "tier_b",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-b-hardening/ezeus-harden-board-city-banner-pointers.patch",
+    "sha256": "07199d4c682cda6fb3c434194b22942825092b196ab56296cca94fec8411d7a4",
+    "patch": "build/fixpack-audit/00/ezeus-harden-board-city-banner-pointers.patch",
+    "files": [
+      "engine/eboardcity.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Intent reviewed; exact source context applied (hunk counts recalculated)"
+  },
+  {
+    "id": "base:harden-board-city-output-pointers",
+    "stage": 0,
+    "tier": "tier_b",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-b-hardening/ezeus-harden-board-city-output-pointers.patch",
+    "sha256": "102ff85f7a19aa53a9d012513b87bcddb612240e2021ee5e33266ab9c1e48706",
+    "patch": "build/fixpack-audit/00/ezeus-harden-board-city-output-pointers.patch",
+    "files": [
+      "engine/eboardcity.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Intent reviewed; exact source context applied (hunk counts recalculated)"
+  },
+  {
+    "id": "base:harden-board-city-load-callbacks",
+    "stage": 0,
+    "tier": "tier_b",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-b-hardening/ezeus-harden-board-city-load-callbacks.patch",
+    "sha256": "16ded0c374f44b9ec1c5cff9c46ac4c263c6981ce43c6410e824094bd8d42246",
+    "patch": "build/fixpack-audit/00/ezeus-harden-board-city-load-callbacks.patch",
+    "files": [
+      "engine/eboardcityread.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Intent reviewed; exact source context applied (hunk counts recalculated)"
+  },
+  {
+    "id": "base:harden-building-and-banner-unregistration",
+    "stage": 0,
+    "tier": "tier_b",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-b-hardening/ezeus-harden-building-and-banner-unregistration.patch",
+    "sha256": "36382bae8a3932d789a6b8d4beca6fe8f6696afbe5201ac47caa0f78426e0712",
+    "patch": "build/fixpack-audit/00/ezeus-harden-building-and-banner-unregistration.patch",
+    "files": [
+      "engine/egameboard.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Intent reviewed; exact source context applied (hunk counts recalculated)"
+  },
+  {
+    "id": "base:guard-building-registry-city-lookups",
+    "stage": 0,
+    "tier": "tier_b",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-b-hardening/ezeus-guard-building-registry-city-lookups.patch",
+    "sha256": "525520b724edd28eabd4738da76c043071f061165b11434f97884b56eca168e8",
+    "patch": "build/fixpack-audit/00/ezeus-guard-building-registry-city-lookups.patch",
+    "files": [
+      "engine/egameboard.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Intent reviewed; exact source context applied (hunk counts recalculated)"
+  },
+  {
+    "id": "base:harden-army-selection-pointers",
+    "stage": 0,
+    "tier": "tier_b",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-b-hardening/ezeus-harden-army-selection-pointers.patch",
+    "sha256": "5be2841fa6cb361e43ac07180334cf579c3b8cc5a1c1d9a0769becf37559da70",
+    "patch": "build/fixpack-audit/00/ezeus-harden-army-selection-pointers.patch",
+    "files": [
+      "engine/egameboard.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Intent reviewed; exact source context applied (hunk counts recalculated)"
+  },
+  {
+    "id": "base:guard-appeal-map-city-lifetime",
+    "stage": 0,
+    "tier": "tier_b",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-b-hardening/ezeus-guard-appeal-map-city-lifetime.patch",
+    "sha256": "2264cb220f4315cef73c6282294243d9210b012818789effc1aead6359c768c9",
+    "patch": "build/fixpack-audit/00/ezeus-guard-appeal-map-city-lifetime.patch",
+    "files": [
+      "engine/egameboard.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Intent reviewed; exact source context applied (hunk counts recalculated)"
+  },
+  {
+    "id": "base:harden-request-forces-exclusions",
+    "stage": 0,
+    "tier": "tier_b",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-b-hardening/ezeus-harden-request-forces-exclusions.patch",
+    "sha256": "8b64374818f227a62346fc9aa650594aa54e2689591536de775df7f0eac3181c",
+    "patch": "build/fixpack-audit/00/ezeus-harden-request-forces-exclusions.patch",
+    "files": [
+      "engine/egameboard.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Intent reviewed; exact source context applied (hunk counts recalculated)"
+  },
+  {
+    "id": "base:guard-soldier-banner-and-root-events",
+    "stage": 0,
+    "tier": "tier_b",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-b-hardening/ezeus-guard-soldier-banner-and-root-events.patch",
+    "sha256": "b99aed2f777d996c215f1902560b9e460cba4eca0d1794e9af6626b5636becae",
+    "patch": "build/fixpack-audit/00/ezeus-guard-soldier-banner-and-root-events.patch",
+    "files": [
+      "engine/egameboard.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Intent reviewed; exact source context applied (hunk counts recalculated)"
+  },
+  {
+    "id": "base:harden-games-event-city-handling",
+    "stage": 0,
+    "tier": "tier_b",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-b-hardening/ezeus-harden-games-event-city-handling.patch",
+    "sha256": "0646179aab5597a528d3b92418633b863c22fb5017ec383cb2fcf9dd1397c3d4",
+    "patch": "build/fixpack-audit/00/ezeus-harden-games-event-city-handling.patch",
+    "files": [
+      "engine/egameboard.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Intent reviewed; exact source context applied (hunk counts recalculated)"
+  },
+  {
+    "id": "base:harden-patrol-path-rebuild",
+    "stage": 0,
+    "tier": "tier_b",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-b-hardening/ezeus-harden-patrol-path-rebuild.patch",
+    "sha256": "d2d52a03b0d47483ac322830ca6adfe33e314a3cb7fea4a11129fbe4060eb2ca",
+    "patch": "build/fixpack-audit/00/ezeus-harden-patrol-path-rebuild.patch",
+    "files": [
+      "widgets/egamewidget.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Intent reviewed; exact source context applied (hunk counts recalculated)"
+  },
+  {
+    "id": "base:harden-soldier-consolidation",
+    "stage": 0,
+    "tier": "tier_b",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-b-hardening/ezeus-harden-soldier-consolidation.patch",
+    "sha256": "9fe6e84cc65f784ba86c4e3ada1666294ccc5d388f415a274ce462cc84644d42",
+    "patch": "build/fixpack-audit/00/ezeus-harden-soldier-consolidation.patch",
+    "files": [
+      "engine/eboardcity.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Intent reviewed; exact source context applied (hunk counts recalculated)"
+  },
+  {
+    "id": "base:harden-trireme-wharf-runtime",
+    "stage": 0,
+    "tier": "tier_b",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-b-hardening/ezeus-harden-trireme-wharf-runtime.patch",
+    "sha256": "0adec0c3bc0851b12f36eb0bdd55a551af7b591991836f2d7de2ac1f7f064257",
+    "patch": "build/fixpack-audit/00/ezeus-harden-trireme-wharf-runtime.patch",
+    "files": [
+      "buildings/etriremewharf.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Intent reviewed; exact source context applied (hunk counts recalculated)"
+  },
+  {
+    "id": "base:harden-trireme-action",
+    "stage": 0,
+    "tier": "tier_b",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-b-hardening/ezeus-harden-trireme-action.patch",
+    "sha256": "fa559c689d527eded59bb5ffca48d2d64ad603408af454d811e0f25728dcb812",
+    "patch": "build/fixpack-audit/00/ezeus-harden-trireme-action.patch",
+    "files": [
+      "characters/actions/etriremeaction.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Intent reviewed; exact source context applied (hunk counts recalculated)"
+  },
+  {
+    "id": "base:harden-chariot-factory-runtime",
+    "stage": 0,
+    "tier": "tier_b",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-b-hardening/ezeus-harden-chariot-factory-runtime.patch",
+    "sha256": "26f9cfd0537baa53b0e3385f5e44d8415090209a964b379f51dc97e5f1cc05bb",
+    "patch": "build/fixpack-audit/00/ezeus-harden-chariot-factory-runtime.patch",
+    "files": [
+      "buildings/echariotfactory.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Intent reviewed; exact source context applied (hunk counts recalculated)"
+  },
+  {
+    "id": "base:harden-black-marble-workshop-overlays",
+    "stage": 0,
+    "tier": "tier_b",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-b-hardening/ezeus-harden-black-marble-workshop-overlays.patch",
+    "sha256": "de4c6c40e7e313c1b9ecc3945d2d6224f460ee4ea5bd32a0a477f3da97879d1a",
+    "patch": "build/fixpack-audit/00/ezeus-harden-black-marble-workshop-overlays.patch",
+    "files": [
+      "buildings/eblackmarbleworkshop.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Intent reviewed; exact source context applied (hunk counts recalculated)"
+  },
+  {
+    "id": "base:harden-corral-overlays",
+    "stage": 0,
+    "tier": "tier_b",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-b-hardening/ezeus-harden-corral-overlays.patch",
+    "sha256": "24e798365ac78f5cd972afe329822f6db72347dd9a4a1aa466d5b11196bc79e5",
+    "patch": "build/fixpack-audit/00/ezeus-harden-corral-overlays.patch",
+    "files": [
+      "buildings/ecorral.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Intent reviewed; exact source context applied (hunk counts recalculated)"
+  },
+  {
+    "id": "base:harden-granary-growers-hippodrome",
+    "stage": 0,
+    "tier": "tier_b",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-b-hardening/ezeus-harden-granary-growers-hippodrome.patch",
+    "sha256": "7134d61814179ecdd488a9e4f7ffa406069e841d8a2c825fde3eb278357bc346",
+    "patch": "build/fixpack-audit/00/ezeus-harden-granary-growers-hippodrome.patch",
+    "files": [
+      "buildings/egranary.cpp",
+      "buildings/egrowerslodge.cpp",
+      "buildings/ehippodrome.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Intent reviewed; exact source context applied (hunk counts recalculated)"
+  },
+  {
+    "id": "base:harden-hippodrome-overlays",
+    "stage": 0,
+    "tier": "tier_b",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-b-hardening/ezeus-harden-hippodrome-overlays.patch",
+    "sha256": "03463794768949fd7ad2ebbd44fb7da5578e456843d3b10700bf978cfa03275c",
+    "patch": "build/fixpack-audit/00/ezeus-harden-hippodrome-overlays.patch",
+    "files": [
+      "buildings/ehippodromepiece.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Intent reviewed; exact source context applied (hunk counts recalculated)"
+  },
+  {
+    "id": "base:guard-building-overlay-collections",
+    "stage": 0,
+    "tier": "tier_b",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-b-hardening/ezeus-guard-building-overlay-collections.patch",
+    "sha256": "3bf5a53867f09519eb36b34b037b13af2999e9dab09735fe28e1b3c82a637252",
+    "patch": "build/fixpack-audit/00/ezeus-guard-building-overlay-collections.patch",
+    "files": [
+      "buildings/eaestheticsbuilding.cpp",
+      "buildings/eagoraspace.cpp",
+      "buildings/eartisansguild.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Intent reviewed; exact source context applied (hunk counts recalculated)"
+  },
+  {
+    "id": "base:guard-horse-ranch-hunting-overlays",
+    "stage": 0,
+    "tier": "tier_b",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-b-hardening/ezeus-guard-horse-ranch-hunting-overlays.patch",
+    "sha256": "b939015ca5809c5eca65a8cb18bf092626f3ac93a464f42cc80596273232a3d9",
+    "patch": "build/fixpack-audit/00/ezeus-guard-horse-ranch-hunting-overlays.patch",
+    "files": [
+      "buildings/ehorseranch.cpp",
+      "buildings/ehuntinglodge.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Intent reviewed; exact source context applied (hunk counts recalculated)"
+  },
+  {
+    "id": "base:guard-null-texture-draws",
+    "stage": 0,
+    "tier": "tier_b",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-b-hardening/ezeus-guard-null-texture-draws.patch",
+    "sha256": "3207b918cafb3d7b89bdd5964868e466e49b7d6ed21eeec0ed50ea4ee874d046",
+    "patch": "build/fixpack-audit/00/ezeus-guard-null-texture-draws.patch",
+    "files": [
+      "widgets/epainter.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Intent reviewed; exact source context applied (hunk counts recalculated)"
+  },
+  {
+    "id": "base:guard-null-texture-modulation-and-flip",
+    "stage": 0,
+    "tier": "tier_b",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-b-hardening/ezeus-guard-null-texture-modulation-and-flip.patch",
+    "sha256": "6f5b45204bea516ccbb8d0090036fabad0844c96e669934e01027fb9537b73c8",
+    "patch": "build/fixpack-audit/00/ezeus-guard-null-texture-modulation-and-flip.patch",
+    "files": [
+      "etexture.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Intent reviewed; exact source context applied (hunk counts recalculated)"
+  },
+  {
+    "id": "base:guard-null-texture-surface",
+    "stage": 0,
+    "tier": "tier_b",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-b-hardening/ezeus-guard-null-texture-surface.patch",
+    "sha256": "719c66c426ab638c0c00fc07bc1f4a277fd01db3d29a24e6061e7c19402fc303",
+    "patch": "build/fixpack-audit/00/ezeus-guard-null-texture-surface.patch",
+    "files": [
+      "etexture.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Intent reviewed; exact source context applied (hunk counts recalculated)"
+  },
+  {
+    "id": "base:guard-invalid-renderer-texture-ops",
+    "stage": 0,
+    "tier": "tier_b",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-b-hardening/ezeus-guard-invalid-renderer-texture-ops.patch",
+    "sha256": "e55b9d47f693bf6e935fbdbb465b1ba6a06db83ccd6a95434ecbb1af2f616db7",
+    "patch": "build/fixpack-audit/00/ezeus-guard-invalid-renderer-texture-ops.patch",
+    "files": [
+      "etexture.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Intent reviewed; exact source context applied (hunk counts recalculated)"
+  },
+  {
+    "id": "base:guard-texture-collection-indices",
+    "stage": 0,
+    "tier": "tier_b",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-b-hardening/ezeus-guard-texture-collection-indices.patch",
+    "sha256": "faaa8b7b6ad1bc52abc5f067d5e53460f0bd7aae9654fc3a0da4a62da932ac32",
+    "patch": "build/fixpack-audit/00/ezeus-guard-texture-collection-indices.patch",
+    "files": [
+      "etexturecollection.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Intent reviewed; exact source context applied (hunk counts recalculated)"
+  },
+  {
+    "id": "base:guard-topbar-texture-loop",
+    "stage": 0,
+    "tier": "tier_b",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-b-hardening/ezeus-guard-topbar-texture-loop.patch",
+    "sha256": "f5c84ff12f469ec84fb3154edddef7092ef58d05cf6c8ccbca9f4aedd805d4e0",
+    "patch": "build/fixpack-audit/00/ezeus-guard-topbar-texture-loop.patch",
+    "files": [
+      "widgets/etopbarwidget.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Intent reviewed; exact source context applied (hunk counts recalculated)"
+  },
+  {
+    "id": "base:guard-invalid-save-factory-types",
+    "stage": 0,
+    "tier": "tier_b",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-b-hardening/ezeus-guard-invalid-save-factory-types.patch",
+    "sha256": "e3c91e2b77325c586c03852646dd33131e4cf6d664474ab1851e544ba4c2b4fa",
+    "patch": "build/fixpack-audit/00/ezeus-guard-invalid-save-factory-types.patch",
+    "files": [
+      "fileIO/ereadstream.cpp"
+    ],
+    "outcome": "rejected",
+    "reason": "Unknown unframed factory payloads cannot be skipped safely; only the independent null-tile filtering is retained for a later focused patch"
+  },
+  {
+    "id": "base:guard-invalid-world-city-enums",
+    "stage": 0,
+    "tier": "tier_b",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-b-hardening/ezeus-guard-invalid-world-city-enums.patch",
+    "sha256": "79df8dd0c6a605929b8bebd178b998109baa72ffe24109dba52581451a8103d7",
+    "patch": "build/fixpack-audit/00/ezeus-guard-invalid-world-city-enums.patch",
+    "files": [
+      "engine/eworldcity.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Intent reviewed; exact source context applied (hunk counts recalculated)"
+  },
+  {
+    "id": "base:guard-character-interaction-pointers",
+    "stage": 0,
+    "tier": "tier_b",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-b-hardening/ezeus-guard-character-interaction-pointers.patch",
+    "sha256": "afcc40d3866d3a986b530c416a30b6714684e0e698e59c3715d1bd56969d80e0",
+    "patch": "build/fixpack-audit/00/ezeus-guard-character-interaction-pointers.patch",
+    "files": [
+      "characters/echaracter.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Intent reviewed; exact source context applied (hunk counts recalculated)"
+  },
+  {
+    "id": "base:guard-empty-texture-size-list",
+    "stage": 0,
+    "tier": "tier_b",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-b-hardening/ezeus-guard-empty-texture-size-list.patch",
+    "sha256": "7ca9a2d9d5a0a2f3b7f227991ec5126da973dab8c46fe99044971a1313420814",
+    "patch": "build/fixpack-audit/00/ezeus-guard-empty-texture-size-list.patch",
+    "files": [
+      "widgets/egamewidget.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Intent reviewed; exact source context applied (hunk counts recalculated)"
+  },
+  {
+    "id": "base:harden-settings-read",
+    "stage": 0,
+    "tier": "tier_b",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-b-hardening/ezeus-harden-settings-read.patch",
+    "sha256": "16b1142cf0891cafc4e8fb8d3eb0462f39fb4f76d2ef16e545f4cf1d3a1a41fc",
+    "patch": "build/fixpack-audit/00/ezeus-harden-settings-read.patch",
+    "files": [
+      "esettings.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Intent reviewed; exact source context applied (hunk counts recalculated)"
+  },
+  {
+    "id": "base:harden-resolution-defaults",
+    "stage": 0,
+    "tier": "tier_b",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-b-hardening/ezeus-harden-resolution-defaults.patch",
+    "sha256": "af74d7406f2823dc510d427950ce7c296cbcfbcf8a41c9400a6a8504b80a9eed",
+    "patch": "build/fixpack-audit/00/ezeus-harden-resolution-defaults.patch",
+    "files": [
+      "widgets/eresolution.h",
+      "widgets/eresolution.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Intent reviewed; exact source context applied (hunk counts recalculated)"
+  },
+  {
+    "id": "base:guard-save-without-campaign",
+    "stage": 0,
+    "tier": "tier_b",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-b-hardening/ezeus-guard-save-without-campaign.patch",
+    "sha256": "7e35bc89246c89565e21b422c6b86bc4dfc13adc9f1b5e96943c8cc719d845db",
+    "patch": "build/fixpack-audit/00/ezeus-guard-save-without-campaign.patch",
+    "files": [
+      "emainwindow.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Intent reviewed; exact source context applied (hunk counts recalculated)"
+  },
+  {
+    "id": "base:guard-null-campaign-episode-ui",
+    "stage": 0,
+    "tier": "tier_b",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-b-hardening/ezeus-guard-null-campaign-episode-ui.patch",
+    "sha256": "bddf8a4fc19313a52ab441f7b9496cbf5635f33b370d22f8d99e0fd3b4a9f093",
+    "patch": "build/fixpack-audit/00/ezeus-guard-null-campaign-episode-ui.patch",
+    "files": [
+      "emainwindow.cpp",
+      "widgets/egamewidget.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Intent reviewed; exact source context applied (hunk counts recalculated)"
+  },
+  {
+    "id": "base:runtime-state-persistence-pack",
+    "stage": 0,
+    "tier": "tier_c",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-c-behavior-persistence/ezeus-runtime-state-persistence-pack.patch",
+    "sha256": "e08e72f90f6eed9b07347b5da86374e5457ecba177d78557c80ae90943df3d2b",
+    "patch": "build/fixpack-audit/00/ezeus-runtime-state-persistence-pack.patch",
+    "files": [
+      "fileIO/efileformat.h",
+      "characters/eresourcecollectorbase.h",
+      "characters/eresourcecollectorbase.cpp",
+      "characters/egrower.h",
+      "characters/egrower.cpp",
+      "buildings/etriremewharf.cpp",
+      "buildings/echariotfactory.cpp",
+      "characters/etrader.h",
+      "characters/etrader.cpp",
+      "engine/egameboardread.cpp",
+      "engine/egameboardwrite.cpp",
+      "buildings/eavailablebuildings.cpp"
+    ],
+    "outcome": "rejected",
+    "reason": "Adds positional serialized fields and a new format version; excluded under the unchanged-save-format constraint"
+  },
+  {
+    "id": "base:add-autosave-setting-backend",
+    "stage": 0,
+    "tier": "tier_c",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-c-behavior-persistence/ezeus-add-autosave-setting-backend.patch",
+    "sha256": "840ae7a381181028d39ff72895636606f8d903ec3c4007c333f2bee217fc4768",
+    "patch": "build/fixpack-audit/00/ezeus-add-autosave-setting-backend.patch",
+    "files": [
+      "esettings.h",
+      "esettings.cpp",
+      "emainwindow.h",
+      "emainwindow.cpp",
+      "widgets/egamewidget.cpp"
+    ],
+    "outcome": "corrected-validated-release",
+    "reason": "Settings read/write, autosave API, and autosaver gating integrated against the hardened settings parser"
+  },
+  {
+    "id": "base:restore-january-july-autosave-cadence",
+    "stage": 0,
+    "tier": "tier_c",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-c-behavior-persistence/ezeus-restore-january-july-autosave-cadence.patch",
+    "sha256": "753fbb6c6335ad461b76d5a926b517baec140eca18714e6681770c3347d1cf4b",
+    "patch": "build/fixpack-audit/00/ezeus-restore-january-july-autosave-cadence.patch",
+    "files": [
+      "engine/egameboard.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Intent reviewed; exact source context applied (hunk counts recalculated)"
+  },
+  {
+    "id": "base:preserve-campaign-difficulty-on-intro",
+    "stage": 0,
+    "tier": "tier_c",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-c-behavior-persistence/ezeus-preserve-campaign-difficulty-on-intro.patch",
+    "sha256": "d5c8f78b6fd849f1d67c15de35260b5b142e321c19bf1765591b30b7169c8cdd",
+    "patch": "build/fixpack-audit/00/ezeus-preserve-campaign-difficulty-on-intro.patch",
+    "files": [
+      "widgets/eepisodeintroductionwidget.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Intent reviewed; exact source context applied (hunk counts recalculated)"
+  },
+  {
+    "id": "base:unify-game-speed-state",
+    "stage": 0,
+    "tier": "tier_c",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-c-behavior-persistence/ezeus-unify-game-speed-state.patch",
+    "sha256": "aed2c0cfa5c4777074fab254a08e256c97a252a104c63df28343f5f711edc804",
+    "patch": "build/fixpack-audit/00/ezeus-unify-game-speed-state.patch",
+    "files": [
+      "widgets/egamewidget.h",
+      "widgets/egamewidget.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Intent reviewed; exact source context applied (hunk counts recalculated)"
+  },
+  {
+    "id": "base:allow-start-without-audio",
+    "stage": 0,
+    "tier": "tier_c",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-c-behavior-persistence/ezeus-allow-start-without-audio.patch",
+    "sha256": "92f8473e48f96a7481e0e1a25c1318be13270ada5ea8d09d03942facd160d503",
+    "patch": "build/fixpack-audit/00/ezeus-allow-start-without-audio.patch",
+    "files": [
+      "main.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Intent reviewed; exact source context applied (hunk counts recalculated)"
+  },
+  {
+    "id": "base:fix-renderer-texture-shutdown-order",
+    "stage": 0,
+    "tier": "tier_c",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-c-behavior-persistence/ezeus-fix-renderer-texture-shutdown-order.patch",
+    "sha256": "012967a7a70adbb52b5a2076ca132df5b7abb7901c10ef88d88910e52d859d7a",
+    "patch": "build/fixpack-audit/00/ezeus-fix-renderer-texture-shutdown-order.patch",
+    "files": [
+      "emainwindow.cpp",
+      "textures/egametextures.h",
+      "textures/egametextures.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Intent reviewed; exact source context applied (hunk counts recalculated)"
+  },
+  {
+    "id": "base:fix-texture-settings-reload-and-persist",
+    "stage": 0,
+    "tier": "tier_c",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-c-behavior-persistence/ezeus-fix-texture-settings-reload-and-persist.patch",
+    "sha256": "787a219b290e4eb03de62414960c115fb0e0ea381d46ea50e0d2ecac6b5aeeec",
+    "patch": "build/fixpack-audit/00/ezeus-fix-texture-settings-reload-and-persist.patch",
+    "files": [
+      "emainwindow.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Intent reviewed; exact source context applied (hunk counts recalculated)"
+  },
+  {
+    "id": "base:recover-from-invalid-texture-settings",
+    "stage": 0,
+    "tier": "tier_c",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-c-behavior-persistence/ezeus-recover-from-invalid-texture-settings.patch",
+    "sha256": "743f52c8bb2b743c9eeabd632c26332fcb92cd1b62409a05d799b772ce8d914d",
+    "patch": "build/fixpack-audit/00/ezeus-recover-from-invalid-texture-settings.patch",
+    "files": [
+      "main.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Intent reviewed; exact source context applied (hunk counts recalculated)"
+  },
+  {
+    "id": "base:restore-peddler-agora-after-load",
+    "stage": 0,
+    "tier": "tier_c",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/tier-c-behavior-persistence/ezeus-restore-peddler-agora-after-load.patch",
+    "sha256": "63e360f5b8c7ae670034bfd6e256b26b11567e5b13daf87bcc99159a1ce9e91d",
+    "patch": "build/fixpack-audit/00/ezeus-restore-peddler-agora-after-load.patch",
+    "files": [
+      "characters/actions/epatrolaction.h",
+      "characters/epeddler.h",
+      "characters/epeddler.cpp"
+    ],
+    "outcome": "corrected-validated-release",
+    "reason": "Restores peddler agora from patrol building post-fixup, including paused patrol action state, without save bytes"
+  },
+  {
+    "id": "base:custom-monument-registry-v2",
+    "stage": 0,
+    "tier": "extras",
+    "archive": "ezeus-fixpack-2026-10-07.zip",
+    "entry": "ezeus-fixpack-2026-10-07/extras/ezeus-custom-monument-registry-v2.patch",
+    "sha256": "9fa653887d35f1061fd023c23616910ed47fd4d261ad60821a98a0d02f14e916",
+    "patch": "build/fixpack-audit/00/ezeus-custom-monument-registry-v2.patch",
+    "files": [
+      "CMakeLists.txt",
+      "buildings/ecustommonumentregistry.h",
+      "buildings/ecustommonumentregistry.cpp",
+      "buildings/eaestheticsbuilding.cpp",
+      "buildings/ebuilding.cpp",
+      "textures/ebuildingtextures.h",
+      "textures/ebuildingtextures.cpp",
+      "textures/egametextures.h",
+      "textures/egametextures.cpp",
+      "widgets/ebuildingmode.h",
+      "widgets/egamemenu.h",
+      "widgets/egamemenu.cpp",
+      "widgets/egamewidgetbuild.cpp",
+      "widgets/egamewidgetpaint.cpp"
+    ],
+    "outcome": "excluded",
+    "reason": "Separate feature; preserve existing custom monuments"
+  },
+  {
+    "id": "001",
+    "stage": 1,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-07-continuation.zip",
+    "entry": "ezeus-fixpack-2026-10-07-continuation/patches/01-ezeus-fix-removechildren-iterator-invalidation.patch",
+    "sha256": "ef26b6ae4353f21281756c0a0a8a9d28899ee146dca26a1030204b6154085dae",
+    "patch": "build/fixpack-audit/01/01-ezeus-fix-removechildren-iterator-invalidation.patch",
+    "files": [
+      "widgets/ewidget.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Intent reviewed; exact source context applied (hunk counts recalculated)"
+  },
+  {
+    "id": "002",
+    "stage": 1,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-07-continuation.zip",
+    "entry": "ezeus-fixpack-2026-10-07-continuation/patches/02-ezeus-fix-event-widget-lifecycle.patch",
+    "sha256": "f6f4c6a5e526ea5e7bacffa3d45b17b03a326ecbdb9df8aa0ee7054470fbdcb3",
+    "patch": "build/fixpack-audit/01/02-ezeus-fix-event-widget-lifecycle.patch",
+    "files": [
+      "widgets/eeventwidget.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Intent reviewed; exact source context applied (hunk counts recalculated)"
+  },
+  {
+    "id": "003",
+    "stage": 1,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-07-continuation.zip",
+    "entry": "ezeus-fixpack-2026-10-07-continuation/patches/03-ezeus-fix-message-queue-event-time.patch",
+    "sha256": "5eea7657c01fb308742693672c881b99643c06c5d93962583f49faa15bbe07e5",
+    "patch": "build/fixpack-audit/01/03-ezeus-fix-message-queue-event-time.patch",
+    "files": [
+      "widgets/egamewidget.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Intent reviewed; exact source context applied (hunk counts recalculated)"
+  },
+  {
+    "id": "004",
+    "stage": 1,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-07-continuation.zip",
+    "entry": "ezeus-fixpack-2026-10-07-continuation/patches/04-ezeus-fix-invasion-force-composition.patch",
+    "sha256": "69f20d4d20108384f29faf5b54b41287270f4a8cd5ec2916d7dd5ced633380be",
+    "patch": "build/fixpack-audit/01/04-ezeus-fix-invasion-force-composition.patch",
+    "files": [
+      "einvasionhandler.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Intent reviewed; exact source context applied (hunk counts recalculated)"
+  },
+  {
+    "id": "005",
+    "stage": 1,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-07-continuation.zip",
+    "entry": "ezeus-fixpack-2026-10-07-continuation/patches/05-ezeus-harden-enlisted-forces-null-entries.patch",
+    "sha256": "b9eef3619c54c05bf8ee3255b1cc044af89b8826048302aa2840e9e4145737a3",
+    "patch": "build/fixpack-audit/01/05-ezeus-harden-enlisted-forces-null-entries.patch",
+    "files": [
+      "characters/eenlistedforces.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Intent reviewed; exact source context applied (hunk counts recalculated)"
+  },
+  {
+    "id": "006",
+    "stage": 1,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-07-continuation.zip",
+    "entry": "ezeus-fixpack-2026-10-07-continuation/patches/06-ezeus-harden-army-return-null-forces.patch",
+    "sha256": "3f048dbc6b139a4739cf8d39c97208fceed9a0daff6b2ed7284422e42c5f0d0f",
+    "patch": "build/fixpack-audit/01/06-ezeus-harden-army-return-null-forces.patch",
+    "files": [
+      "gameEvents/earmyreturnevent.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Intent reviewed; exact source context applied (hunk counts recalculated)"
+  },
+  {
+    "id": "007",
+    "stage": 1,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-07-continuation.zip",
+    "entry": "ezeus-fixpack-2026-10-07-continuation/patches/07-ezeus-harden-military-naval-deserialization-types.patch",
+    "sha256": "530d4b9366d1123f419a7bbd04f5ecbe92edd71b57dfab70ebab7a481ab5bfd3",
+    "patch": "build/fixpack-audit/01/07-ezeus-harden-military-naval-deserialization-types.patch",
+    "files": [
+      "characters/esoldierbanner.cpp",
+      "buildings/etriremewharf.cpp",
+      "characters/actions/etriremeaction.cpp",
+      "einvasionhandler.cpp",
+      "gameEvents/einvasionevent.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Intent reviewed; exact source context applied (hunk counts recalculated)"
+  },
+  {
+    "id": "008",
+    "stage": 1,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-07-continuation.zip",
+    "entry": "ezeus-fixpack-2026-10-07-continuation/patches/08-ezeus-fix-episode-read-reset-and-copy.patch",
+    "sha256": "7c2b8a50beba30d546154960c31f5fd4df9e9dfab7f1408f116adf792e75f029",
+    "patch": "build/fixpack-audit/01/08-ezeus-fix-episode-read-reset-and-copy.patch",
+    "files": [
+      "engine/eepisode.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Intent reviewed; exact source context applied (hunk counts recalculated)"
+  },
+  {
+    "id": "009",
+    "stage": 1,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-07-continuation.zip",
+    "entry": "ezeus-fixpack-2026-10-07-continuation/patches/09-ezeus-reset-available-buildings-before-read.patch",
+    "sha256": "9ba7758886bd0b7fe277bdd089a1be899a4640cbca6ad07dc2f765c6efde89f6",
+    "patch": "build/fixpack-audit/01/09-ezeus-reset-available-buildings-before-read.patch",
+    "files": [
+      "buildings/eavailablebuildings.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Intent reviewed; exact source context applied (hunk counts recalculated)"
+  },
+  {
+    "id": "010",
+    "stage": 1,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-07-continuation.zip",
+    "entry": "ezeus-fixpack-2026-10-07-continuation/patches/10-ezeus-fix-episode-hero-hall-availability.patch",
+    "sha256": "5b823e330876fac07f83b0272fb84a27f2289b324f26814c374690b4a8f85800",
+    "patch": "build/fixpack-audit/01/10-ezeus-fix-episode-hero-hall-availability.patch",
+    "files": [
+      "buildings/eavailablebuildings.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Intent reviewed; exact source context applied (hunk counts recalculated)"
+  },
+  {
+    "id": "011",
+    "stage": 1,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-07-continuation.zip",
+    "entry": "ezeus-fixpack-2026-10-07-continuation/patches/11-ezeus-editor-expose-sanctuary-hero-availability.patch",
+    "sha256": "2c58469301f699f61cf115fe3a71d55e0eef10a4f0dbfd4c14cb4d5672ee705a",
+    "patch": "build/fixpack-audit/01/11-ezeus-editor-expose-sanctuary-hero-availability.patch",
+    "files": [
+      "widgets/eeditorsettingsmenu.cpp"
+    ],
+    "outcome": "corrected-validated-release",
+    "reason": "Reconciled incorrect archive context against actual function; preserved intended fix"
+  },
+  {
+    "id": "012",
+    "stage": 1,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-07-continuation.zip",
+    "entry": "ezeus-fixpack-2026-10-07-continuation/patches/12-ezeus-editor-preserve-parent-episode.patch",
+    "sha256": "54393b36b1f61c9432fcdffcfeb504dad32c886de7657b1b7fe05ff8a6b9f794",
+    "patch": "build/fixpack-audit/01/12-ezeus-editor-preserve-parent-episode.patch",
+    "files": [
+      "engine/ecampaign.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Intent reviewed; exact source context applied (hunk counts recalculated)"
+  },
+  {
+    "id": "013",
+    "stage": 1,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-07-continuation.zip",
+    "entry": "ezeus-fixpack-2026-10-07-continuation/patches/13-ezeus-reject-newer-save-format.patch",
+    "sha256": "7c5c9067add1097327d57f7031c544dc8be30bbda584c8b88dfd5adc9a610386",
+    "patch": "build/fixpack-audit/01/13-ezeus-reject-newer-save-format.patch",
+    "files": [
+      "emainwindow.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Intent reviewed; exact source context applied (hunk counts recalculated)"
+  },
+  {
+    "id": "014",
+    "stage": 1,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-07-continuation.zip",
+    "entry": "ezeus-fixpack-2026-10-07-continuation/patches/14-ezeus-military-save-state-persistence.patch",
+    "sha256": "9da9c9f6eac2e09f6704886fccd0740f10d9a6d367c661e35adeb2c2d7f0c090",
+    "patch": "build/fixpack-audit/01/14-ezeus-military-save-state-persistence.patch",
+    "files": [
+      "fileIO/efileformat.h",
+      "characters/esoldierbanner.cpp",
+      "characters/actions/esoldieraction.cpp",
+      "einvasionhandler.cpp"
+    ],
+    "outcome": "rejected",
+    "reason": "Adds player runtime fields and serialized request registries; excluded under the unchanged-save-format constraint"
+  },
+  {
+    "id": "015",
+    "stage": 2,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-2.zip",
+    "entry": "ezeus-fixpack-2026-10-08-continuation-2/patches/15-ezeus-fix-reinforcements-missing-entry-return.patch",
+    "sha256": "1451d38fed7680e926a2e386303fed3d40f37f5afd6df04fe53db87a8b36faa0",
+    "patch": "build/fixpack-audit/02/15-ezeus-fix-reinforcements-missing-entry-return.patch",
+    "files": [
+      "gameEvents/ereinforcementsevent.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Intent reviewed; exact source context applied (hunk counts recalculated)"
+  },
+  {
+    "id": "016",
+    "stage": 2,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-2.zip",
+    "entry": "ezeus-fixpack-2026-10-08-continuation-2/patches/16-ezeus-fix-project-request-message-branch.patch",
+    "sha256": "3aef1a5fa9400d693d314021aa0b80db4dea94d54ca12cc48ce45e1aa4d2073a",
+    "patch": "build/fixpack-audit/02/16-ezeus-fix-project-request-message-branch.patch",
+    "files": [
+      "gameEvents/ereceiverequestevent.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Intent reviewed; exact source context applied (hunk counts recalculated)"
+  },
+  {
+    "id": "017",
+    "stage": 2,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-2.zip",
+    "entry": "ezeus-fixpack-2026-10-08-continuation-2/patches/17-ezeus-fix-game-event-copy-buffer.patch",
+    "sha256": "0c4b9df9dea69bbca51228689936c1dbe39ef5baf8898cb6942cbe5cc54f89d8",
+    "patch": "build/fixpack-audit/02/17-ezeus-fix-game-event-copy-buffer.patch",
+    "files": [
+      "gameEvents/egameevent.cpp",
+      "gameEvents/egameevent.cpp"
+    ],
+    "outcome": "corrected-validated-release",
+    "reason": "Reconciled incorrect archive context against actual function; preserved intended fix"
+  },
+  {
+    "id": "018",
+    "stage": 2,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-2.zip",
+    "entry": "ezeus-fixpack-2026-10-08-continuation-2/patches/18-ezeus-recover-troops-request-rival-after-load.patch",
+    "sha256": "d5f5bfc7ce8e491ee5f1586776b0ba1c7ef372b998d495fe5bcaf4965c357d4c",
+    "patch": "build/fixpack-audit/02/18-ezeus-recover-troops-request-rival-after-load.patch",
+    "files": [
+      "gameEvents/etroopsrequestfulfilledevent.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Intent reviewed; exact source context applied (hunk counts recalculated)"
+  },
+  {
+    "id": "019",
+    "stage": 2,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-2.zip",
+    "entry": "ezeus-fixpack-2026-10-08-continuation-2/patches/19-ezeus-fix-military-aid-return-count-and-lifecycle.patch",
+    "sha256": "56d78cc96721dd0e42b3ba52abed2179c6ef523fbe0105271369ed3d634f4d75",
+    "patch": "build/fixpack-audit/02/19-ezeus-fix-military-aid-return-count-and-lifecycle.patch",
+    "files": [
+      "engine/emilitaryaid.h",
+      "engine/emilitaryaid.cpp",
+      "gameEvents/erequestaidevent.cpp"
+    ],
+    "outcome": "corrected-validated-release",
+    "reason": "Reconciled incorrect archive context against actual function; preserved intended fix"
+  },
+  {
+    "id": "020",
+    "stage": 2,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-2.zip",
+    "entry": "ezeus-fixpack-2026-10-08-continuation-2/patches/20-ezeus-bound-monster-placement-search.patch",
+    "sha256": "0ae5069a478d914a57ca6b58baa6bdfb8c30017fb7b0ee4120ac2858fb6b30c8",
+    "patch": "build/fixpack-audit/02/20-ezeus-bound-monster-placement-search.patch",
+    "files": [
+      "gameEvents/emonsterinvasioneventbase.cpp",
+      "gameEvents/emonsterinvasioneventbase.cpp"
+    ],
+    "outcome": "corrected-validated-release",
+    "reason": "Reconciled incorrect archive context against actual function; preserved intended fix"
+  },
+  {
+    "id": "021",
+    "stage": 3,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-3.zip",
+    "entry": "ezeus-fixpack-2026-10-08-continuation-3/patches/21-ezeus-guard-zero-strength-combat-math.patch",
+    "sha256": "7fb9189beb85dd53c065888365706e9cb6e1d25b0f108cded2e9ef9994bff217",
+    "patch": "build/fixpack-audit/03/21-ezeus-guard-zero-strength-combat-math.patch",
+    "files": [
+      "gameEvents/eplayerconquestevent.cpp",
+      "gameEvents/eplayerraidevent.cpp",
+      "gameEvents/erequeststrikeevent.cpp",
+      "gameEvents/etroopsrequestfulfilledevent.cpp",
+      "einvasionhandler.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Intent reviewed; exact source context applied (hunk counts recalculated)"
+  },
+  {
+    "id": "022",
+    "stage": 3,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-3.zip",
+    "entry": "ezeus-fixpack-2026-10-08-continuation-3/patches/22-ezeus-clear-episode-text-state.patch",
+    "sha256": "9c028257d06cc6b51ef5ce8a5de832b1f208fd2e7e6068ada1da6cdd790b3a79",
+    "patch": "build/fixpack-audit/03/22-ezeus-clear-episode-text-state.patch",
+    "files": [
+      "engine/eepisode.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Intent reviewed; exact source context applied (hunk counts recalculated)"
+  },
+  {
+    "id": "023",
+    "stage": 3,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-3.zip",
+    "entry": "ezeus-fixpack-2026-10-08-continuation-3/patches/23-ezeus-guard-null-monster-event-spawns.patch",
+    "sha256": "9c7639f379e2bec80599711bd6d17b076075a7fc41d516ef3cbe5c00a743e9bb",
+    "patch": "build/fixpack-audit/03/23-ezeus-guard-null-monster-event-spawns.patch",
+    "files": [
+      "gameEvents/emonsterinvasionevent.cpp",
+      "gameEvents/emonsterincityevent.cpp",
+      "gameEvents/emonsterunleashedevent.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Intent reviewed; exact source context applied (hunk counts recalculated)"
+  },
+  {
+    "id": "024",
+    "stage": 3,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-3.zip",
+    "entry": "ezeus-fixpack-2026-10-08-continuation-3/patches/24-ezeus-fix-troops-request-outcome-triggers.patch",
+    "sha256": "0f83cbea56d58cc458cbb619799ea9d00af4560615d23479e190a3fa69c95508",
+    "patch": "build/fixpack-audit/03/24-ezeus-fix-troops-request-outcome-triggers.patch",
+    "files": [
+      "gameEvents/etroopsrequestevent.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Intent reviewed; exact source context applied (hunk counts recalculated)"
+  },
+  {
+    "id": "025",
+    "stage": 3,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-3.zip",
+    "entry": "ezeus-fixpack-2026-10-08-continuation-3/patches/25-ezeus-fix-episode-goal-date-status-and-editor.patch",
+    "sha256": "1c8e94b5e22184e728ed3e95969ab5fc5eaf54f2752c83387fe637b2adc3f4c0",
+    "patch": "build/fixpack-audit/03/25-ezeus-fix-episode-goal-date-status-and-editor.patch",
+    "files": [
+      "engine/eepisodegoal.cpp",
+      "widgets/eepisodegoalselectionwidget.cpp",
+      "widgets/eepisodegoalwidget.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Intent reviewed; exact source context applied (hunk counts recalculated)"
+  },
+  {
+    "id": "026",
+    "stage": 4,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-4.zip",
+    "entry": "ezeus-fixpack-2026-10-08-continuation-4/patches/26-ezeus-persist-board-player-runtime-state.patch",
+    "sha256": "155e0c6d69c9502c52e55c7c4f41d5b48625db36a2cb0960a4d702baec05dcd1",
+    "patch": "build/fixpack-audit/04/26-ezeus-persist-board-player-runtime-state.patch",
+    "files": [
+      "fileIO/efileformat.h",
+      "engine/eboardplayer.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Uses onboard cities for gift/request AI targets; null city checks preserved"
+  },
+  {
+    "id": "027",
+    "stage": 4,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-4.zip",
+    "entry": "ezeus-fixpack-2026-10-08-continuation-4/patches/27-ezeus-editor-expose-landslide-event.patch",
+    "sha256": "d77619c0fd51d12c0d72710046f12d6c921f35cbfebb6277dc77082d2d0ddb0f",
+    "patch": "build/fixpack-audit/04/27-ezeus-editor-expose-landslide-event.patch",
+    "files": [
+      "widgets/eeventselectionwidget.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Intent reviewed; exact source context applied (hunk counts recalculated)"
+  },
+  {
+    "id": "028",
+    "stage": 4,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-4.zip",
+    "entry": "ezeus-fixpack-2026-10-08-continuation-4/patches/28-ezeus-clamp-supply-demand-change-events.patch",
+    "sha256": "ab465426fefbed3ba43a493864c07d8b8a0c6331f22583da4d097d4b0088a45c",
+    "patch": "build/fixpack-audit/04/28-ezeus-clamp-supply-demand-change-events.patch",
+    "files": [
+      "gameEvents/esupplychangeevent.cpp",
+      "gameEvents/edemandchangeevent.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Intent reviewed; exact source context applied (hunk counts recalculated)"
+  },
+  {
+    "id": "029",
+    "stage": 4,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-4.zip",
+    "entry": "ezeus-fixpack-2026-10-08-continuation-4/patches/29-ezeus-guard-planned-action-null-targets.patch",
+    "sha256": "70457aa3bce2efd3b716258afb2c6fdfdb0665c2b2791568085c36c9bc27868a",
+    "patch": "build/fixpack-audit/04/29-ezeus-guard-planned-action-null-targets.patch",
+    "files": [
+      "engine/ecolonymonumentaction.cpp",
+      "engine/eregrowforestaction.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Intent reviewed; exact source context applied (hunk counts recalculated)"
+  },
+  {
+    "id": "030",
+    "stage": 4,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-4.zip",
+    "entry": "ezeus-fixpack-2026-10-08-continuation-4/patches/30-ezeus-guard-null-gift-target-city.patch",
+    "sha256": "c392b7d655964af7c70585a1ac3bc9afbac1859e0b08b9eb34f64cf42d8ace06",
+    "patch": "build/fixpack-audit/04/30-ezeus-guard-null-gift-target-city.patch",
+    "files": [
+      "engine/egameboard.cpp"
+    ],
+    "outcome": "corrected-validated-release",
+    "reason": "Reconciled incorrect archive context against actual function; preserved intended fix"
+  },
+  {
+    "id": "031",
+    "stage": 5,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-5.zip",
+    "entry": "ezeus-fixpack-2026-10-08-continuation-5/patches/31-ezeus-ai-use-onboard-city-for-gifts-and-requests.patch",
+    "sha256": "986e9eca62a1475b4043c0961e60d262f66e82b3e1ba71b85326226262122bf2",
+    "patch": "build/fixpack-audit/05/31-ezeus-ai-use-onboard-city-for-gifts-and-requests.patch",
+    "files": [
+      "engine/eboardplayer.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Makes active board-player event registration idempotent and null-safe"
+  },
+  {
+    "id": "032",
+    "stage": 5,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-5.zip",
+    "entry": "ezeus-fixpack-2026-10-08-continuation-5/patches/32-ezeus-idempotent-active-boardplayer-event-registries.patch",
+    "sha256": "a9bc95bb7238128563e0748adbabd4202100b3093678cdc8e5276222191ebc99",
+    "patch": "build/fixpack-audit/05/32-ezeus-idempotent-active-boardplayer-event-registries.patch",
+    "files": [
+      "engine/eboardplayer.cpp"
+    ],
+    "outcome": "corrected-validated-release",
+    "reason": "Replaced independent ceil rounding with largest-remainder allocation so troop subtype counts sum exactly to total"
+  },
+  {
+    "id": "033",
+    "stage": 5,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-5.zip",
+    "entry": "ezeus-fixpack-2026-10-08-continuation-5/patches/33-ezeus-preserve-troop-count-in-nationality-composition.patch",
+    "sha256": "ccc04377d4f0301fa7928f1bee7e355951c6b424def19b2111e26cbe978a1e15",
+    "patch": "build/fixpack-audit/05/33-ezeus-preserve-troop-count-in-nationality-composition.patch",
+    "files": [
+      "engine/eworldcity.cpp"
+    ],
+    "outcome": "corrected-validated-release",
+    "reason": "Replaced independent ceil rounding with largest-remainder allocation so troop subtype counts sum exactly to total"
+  },
+  {
+    "id": "034",
+    "stage": 6,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-6.zip",
+    "entry": "ezeus-fixpack-2026-10-08-continuation-6/patches/34-ezeus-fix-movearound-small-distance-modulo.patch",
+    "sha256": "4906b3997c91046ae1452975cf70ab902f42d528f788d0ea51c9f6e35adf2410",
+    "patch": "build/fixpack-audit/06/34-ezeus-fix-movearound-small-distance-modulo.patch",
+    "files": [
+      "characters/actions/emovearoundaction.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Guarded the small-distance divisor while preserving normal orientation bias"
+  },
+  {
+    "id": "035",
+    "stage": 6,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-6.zip",
+    "entry": "ezeus-fixpack-2026-10-08-continuation-6/patches/35-ezeus-reject-missing-async-pathfinding-target.patch",
+    "sha256": "eafdda6e81c71dac6c01aad5e5e841b8a563e7fdf0272f53f52f788f3ba167a7",
+    "patch": "build/fixpack-audit/06/35-ezeus-reject-missing-async-pathfinding-target.patch",
+    "files": [
+      "epathfindtask.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Rejects an asynchronously missing destination before constructing the known-end pathfinder"
+  },
+  {
+    "id": "036",
+    "stage": 6,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-6.zip",
+    "entry": "ezeus-fixpack-2026-10-08-continuation-6/patches/36-ezeus-guard-null-move-to-targets.patch",
+    "sha256": "19a7a48a5573de5c5f0d37b71ac22f4b6d0ec071c35da4266150bb424aaacfaa",
+    "patch": "build/fixpack-audit/06/36-ezeus-guard-null-move-to-targets.patch",
+    "files": [
+      "characters/actions/emovetoaction.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Fails movement actions safely when the character, walkability object, tile, or target is unavailable"
+  },
+  {
+    "id": "037",
+    "stage": 6,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-6.zip",
+    "entry": "ezeus-fixpack-2026-10-08-continuation-6/patches/37-ezeus-guard-trireme-missing-destinations.patch",
+    "sha256": "d8fba6ee1f9b7c68dcfd945bf93cdb790bb93a1da9a2cb34c26fe2836fab5ec9",
+    "patch": "build/fixpack-audit/06/37-ezeus-guard-trireme-missing-destinations.patch",
+    "files": [
+      "characters/actions/etriremeaction.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Guards missing wharf, character, dock tile, and river exit while retaining the dynamic type check"
+  },
+  {
+    "id": "038",
+    "stage": 6,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-6.zip",
+    "entry": "ezeus-fixpack-2026-10-08-continuation-6/patches/38-ezeus-protect-null-known-path-destination.patch",
+    "sha256": "630d76959ef21d81012dc0f420e836dba12a3b4c93124612144d7946423fbf2f",
+    "patch": "build/fixpack-audit/06/38-ezeus-protect-null-known-path-destination.patch",
+    "files": [
+      "engine/eknownendpathfinder.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Rejects path searches without a valid start or known destination"
+  },
+  {
+    "id": "039",
+    "stage": 6,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-6.zip",
+    "entry": "ezeus-fixpack-2026-10-08-continuation-6/patches/39-ezeus-guard-transport-target-tile.patch",
+    "sha256": "76afce930324fadd9de44a9e196444cc772c24da7d0d1e8f8c03018ba5c76751",
+    "patch": "build/fixpack-audit/06/39-ezeus-guard-transport-target-tile.patch",
+    "files": [
+      "characters/actions/ecarttransporteraction.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Skips stale asynchronous cart targets whose board tile has disappeared"
+  },
+  {
+    "id": "040",
+    "stage": 6,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-6.zip",
+    "entry": "ezeus-fixpack-2026-10-08-continuation-6/patches/40-ezeus-make-path-backtrace-iterative.patch",
+    "sha256": "572442b0dc93b29acf6d2f7da6c63646a3e74c6d6edb036f9519a1cdcf9c9d53",
+    "patch": "build/fixpack-audit/06/40-ezeus-make-path-backtrace-iterative.patch",
+    "files": [
+      "engine/epathfinderbase.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Uses an iterative path backtrace to avoid recursion depth failures on long routes"
+  },
+  {
+    "id": "041",
+    "stage": 7,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-7.zip",
+    "entry": "ezeus-fixpack-2026-10-08-continuation-7/patches/41-trade-budget-and-visitor-preconditions.patch",
+    "sha256": "a6d84d299e1f14311652886d132b9f96796e651e224039070d6182769a5acff3",
+    "patch": "build/fixpack-audit/07/41-trade-budget-and-visitor-preconditions.patch",
+    "files": [
+      "buildings/etradepost.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Validates trade-post entry, unpack, walkability, and trader creation prerequisites"
+  },
+  {
+    "id": "042",
+    "stage": 7,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-7.zip",
+    "entry": "ezeus-fixpack-2026-10-08-continuation-7/patches/42-charge-only-for-goods-actually-exchanged.patch",
+    "sha256": "a3507bdefbf8c6dda7eb702c3fde1567008541877d63a0d988a4f1f67be042a4",
+    "patch": "build/fixpack-audit/07/42-charge-only-for-goods-actually-exchanged.patch",
+    "files": [
+      "buildings/etradepost.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Charges and credits only after successful resource mutations and respects remaining budgets"
+  },
+  {
+    "id": "043",
+    "stage": 7,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-7.zip",
+    "entry": "ezeus-fixpack-2026-10-08-continuation-7/patches/43-protect-background-route-requests.patch",
+    "sha256": "128ba369a249e3e29a0179ab3dc54873ec06ed2b22c530e976c51db2d728b3ca",
+    "patch": "build/fixpack-audit/07/43-protect-background-route-requests.patch",
+    "files": [
+      "epathfindtask.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Rejects path tasks without a walkability object before asynchronous execution"
+  },
+  {
+    "id": "044",
+    "stage": 7,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-7.zip",
+    "entry": "ezeus-fixpack-2026-10-08-continuation-7/patches/44-complete-background-jobs-before-replacing-map.patch",
+    "sha256": "40b9cf68a5615512d9b272a1301cbe35b96f380a42f0e7e96adfd93eb61d9329",
+    "patch": "build/fixpack-audit/07/44-complete-background-jobs-before-replacing-map.patch",
+    "files": [
+      "engine/ethreadpool.h",
+      "engine/ethreadpool.cpp"
+    ],
+    "outcome": "corrected-validated-release",
+    "reason": "Uses atomic shutdown, joins safely, frees queued tasks, and checks worker plus completion queues under synchronization"
+  },
+  {
+    "id": "045",
+    "stage": 7,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-7.zip",
+    "entry": "ezeus-fixpack-2026-10-08-continuation-7/patches/45-keep-shipbuilding-supplies-when-sea-inaccessible.patch",
+    "sha256": "d57379921f14241c40e6b36924483c6b8eda1fc39e10731eb32846dc027e2f3f",
+    "patch": "build/fixpack-audit/07/45-keep-shipbuilding-supplies-when-sea-inaccessible.patch",
+    "files": [
+      "buildings/etriremewharf.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Preserves final-stage shipbuilding supplies when no valid water tile exists"
+  },
+  {
+    "id": "046",
+    "stage": 8,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-8-reviewed.zip",
+    "entry": "ezeus-fixpack-2026-10-08-continuation-8-reviewed/patches/46-correct-multi-resource-stock-count-and-withdrawal.patch",
+    "sha256": "9aeffc1b89ba0fec577754ef40d00008ecf0eecc78e46cf5a30bc7cc649b4328",
+    "patch": "build/fixpack-audit/08/46-correct-multi-resource-stock-count-and-withdrawal.patch",
+    "files": [
+      "buildings/ebuildingwithresource.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Aggregates matching stash entries and withdraws across them without over-taking"
+  },
+  {
+    "id": "047",
+    "stage": 8,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-8-reviewed.zip",
+    "entry": "ezeus-fixpack-2026-10-08-continuation-8-reviewed/patches/47-guard-unconfigured-warehouse-capacity.patch",
+    "sha256": "41d0f43cc6c54007437012e1b94663c1a68a9ac956f6e0cb4f54de4a4cd804cc",
+    "patch": "build/fixpack-audit/08/47-guard-unconfigured-warehouse-capacity.patch",
+    "files": [
+      "buildings/estoragebuilding.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Handles absent storage capacities and clamps remaining space safely"
+  },
+  {
+    "id": "048",
+    "stage": 8,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-8-reviewed.zip",
+    "entry": "ezeus-fixpack-2026-10-08-continuation-8-reviewed/patches/48-do-not-send-carts-to-empty-destinations.patch",
+    "sha256": "b15484f0f492a821527b1b99daac8aa1dab24e14fb806bb52391787aac0093e0",
+    "patch": "build/fixpack-audit/08/48-do-not-send-carts-to-empty-destinations.patch",
+    "files": [
+      "characters/actions/ecarttransporteraction.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Stops cart target selection when the target tile or task destination is stale"
+  },
+  {
+    "id": "049",
+    "stage": 8,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-8-reviewed.zip",
+    "entry": "ezeus-fixpack-2026-10-08-continuation-8-reviewed/patches/49-use-the-correct-market-stall-and-erase-safely.patch",
+    "sha256": "391dbb1ebb6c0862390df409ea99a66d4b96d2e000feaaeb8f85cddb0a69dd01",
+    "patch": "build/fixpack-audit/08/49-use-the-correct-market-stall-and-erase-safely.patch",
+    "files": [
+      "buildings/eagorabase.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Bounds agora stall access and keeps stalls alive during demolition iteration"
+  },
+  {
+    "id": "050",
+    "stage": 8,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-8-reviewed.zip",
+    "entry": "ezeus-fixpack-2026-10-08-continuation-8-reviewed/patches/50-stop-collectors-with-missing-workplaces.patch",
+    "sha256": "c6ba9501a730068c790e9f468f5d3e08467cee6f596650161739e794dd9de27e",
+    "patch": "build/fixpack-audit/08/50-stop-collectors-with-missing-workplaces.patch",
+    "files": [
+      "characters/actions/ecollectresourceaction.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Fails collector actions safely when character, tile, workplace, or resource state is missing"
+  },
+  {
+    "id": "051",
+    "stage": 8,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-8-reviewed.zip",
+    "entry": "ezeus-fixpack-2026-10-08-continuation-8-reviewed/patches/51-return-home-safely-if-origin-was-removed.patch",
+    "sha256": "df128d72c70eaabd497740e4601095aa4c41e15ca20fc07df0f7f11a39a497ff",
+    "patch": "build/fixpack-audit/08/51-return-home-safely-if-origin-was-removed.patch",
+    "files": [
+      "characters/actions/eactionwithcomeback.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Guards comeback actions against removed buildings, origins, and character tiles"
+  },
+  {
+    "id": "052",
+    "stage": 8,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-8-reviewed.zip",
+    "entry": "ezeus-fixpack-2026-10-08-continuation-8-reviewed/patches/52-remove-vendors-safely-after-market-demolition.patch",
+    "sha256": "1db200b03c2d30dae7b40f6b9581037270b11ee8c33cec4d01cd3a58bca05787",
+    "patch": "build/fixpack-audit/08/52-remove-vendors-safely-after-market-demolition.patch",
+    "files": [
+      "buildings/evendor.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Removes vendors safely when their agora link is already gone"
+  },
+  {
+    "id": "053",
+    "stage": 8,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-8-reviewed.zip",
+    "entry": "ezeus-fixpack-2026-10-08-continuation-8-reviewed/patches/53-only-create-collectors-with-valid-workplace.patch",
+    "sha256": "577c9a272a30f4ffd0af65099c4ac11c42c2592560d4b7d8e772e37b443cd6c4",
+    "patch": "build/fixpack-audit/08/53-only-create-collectors-with-valid-workplace.patch",
+    "files": [
+      "buildings/eresourcecollectbuilding.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Requires valid generators, resource state, and center tile before collector creation"
+  },
+  {
+    "id": "054",
+    "stage": 8,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-8-reviewed.zip",
+    "entry": "ezeus-fixpack-2026-10-08-continuation-8-reviewed/patches/54-keep-collector-callbacks-safe-after-demolition.patch",
+    "sha256": "7283d976472de21719432f2fa81304f268fbf6af352e65c1319aaa11d7962f47",
+    "patch": "build/fixpack-audit/08/54-keep-collector-callbacks-safe-after-demolition.patch",
+    "files": [
+      "characters/actions/ecollectresourceaction.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Captures weak collector and workplace references in callbacks after demolition"
+  },
+  {
+    "id": "055",
+    "stage": 8,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-8-reviewed.zip",
+    "entry": "ezeus-fixpack-2026-10-08-continuation-8-reviewed/patches/55-stop-unresolved-cart-actions-after-loading.patch",
+    "sha256": "a83e7ac09b7525ac836d79a11e58b608b9115ab12062854c01463f1b0cffa627",
+    "patch": "build/fixpack-audit/08/55-stop-unresolved-cart-actions-after-loading.patch",
+    "files": [
+      "characters/actions/ecarttransporteraction.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Fails unresolved cart actions after load instead of dereferencing missing targets"
+  },
+  {
+    "id": "056",
+    "stage": 8,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-8-reviewed.zip",
+    "entry": "ezeus-fixpack-2026-10-08-continuation-8-reviewed/patches/56-do-not-replay-or-invert-hidden-stock.patch",
+    "sha256": "50fbb03aac35afba3d13f9baa3733940bff9f554a8a2d18dade7ece108e16fef",
+    "patch": "build/fixpack-audit/08/56-do-not-replay-or-invert-hidden-stock.patch",
+    "files": [
+      "buildings/ebuildingwithresource.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Clears stale stash state before loading and rejects nonpositive hidden stock operations"
+  },
+  {
+    "id": "057",
+    "stage": 8,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-8-reviewed.zip",
+    "entry": "ezeus-fixpack-2026-10-08-continuation-8-reviewed/patches/57-prevent-negative-production-deliveries.patch",
+    "sha256": "915b8df9f564a5a512f319fe94bcb4994e2c9d60acbb4f67cd940d43e9558f81",
+    "patch": "build/fixpack-audit/08/57-prevent-negative-production-deliveries.patch",
+    "files": [
+      "buildings/eresourcebuildingbase.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Rejects nonpositive resource additions and preserves bounded production accounting"
+  },
+  {
+    "id": "058",
+    "stage": 9,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-9.zip",
+    "entry": "ezeus-fixpack-2026-10-08-continuation-9/patches/58-reject-negative-processing-input.patch",
+    "sha256": "33b217b7614ca6b8074ef391fbe24a3c8f9afa7e7d324456c49607c0d32a0b80",
+    "patch": "build/fixpack-audit/09/58-reject-negative-processing-input.patch",
+    "files": [
+      "buildings/eprocessingbuilding.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Rejects nonpositive raw-material input while preserving bounded processing storage"
+  },
+  {
+    "id": "059",
+    "stage": 9,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-9.zip",
+    "entry": "ezeus-fixpack-2026-10-08-continuation-9/patches/59-only-process-when-resources-available.patch",
+    "sha256": "91f98d8c0c94597a3a23bb13159d2c8b131c1d8a4e7bc42ce21f79ff1052ef85",
+    "patch": "build/fixpack-audit/09/59-only-process-when-resources-available.patch",
+    "files": [
+      "buildings/eprocessingbuilding.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Processes only when raw input and finished-goods capacity are both available"
+  },
+  {
+    "id": "060",
+    "stage": 9,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-9.zip",
+    "entry": "ezeus-fixpack-2026-10-08-continuation-9/patches/60-preserve-full-harvest-when-barn-near-capacity.patch",
+    "sha256": "3f582bf4af3e1e25f256d96a2b23ea7cbc52f292a53b38772a95ecc93ba3f5b4",
+    "patch": "build/fixpack-audit/09/60-preserve-full-harvest-when-barn-near-capacity.patch",
+    "files": [
+      "buildings/efarmbase.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Retains ripe harvest until the complete four-unit yield fits"
+  },
+  {
+    "id": "061",
+    "stage": 9,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-9.zip",
+    "entry": "ezeus-fixpack-2026-10-08-continuation-9/patches/61-respect-shutdown-and-valid-employee-counts.patch",
+    "sha256": "e0e6dd1a6ca8591227df14c82c0024ba161a6443812df93215721a86910fb639",
+    "patch": "build/fixpack-audit/09/61-respect-shutdown-and-valid-employee-counts.patch",
+    "files": [
+      "buildings/eemployingbuilding.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Clamps employee counts and keeps shutdown buildings disabled after load"
+  },
+  {
+    "id": "062",
+    "stage": 9,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-9.zip",
+    "entry": "ezeus-fixpack-2026-10-08-continuation-9/patches/62-enforce-growers-lodge-storage-limits.patch",
+    "sha256": "22ac7e796c4cacec70e2be60e955ff8a0f3da9c8cd982ea96ce08bd49feee18a",
+    "patch": "build/fixpack-audit/09/62-enforce-growers-lodge-storage-limits.patch",
+    "files": [
+      "buildings/egrowerslodge.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Enforces grower type-specific resource acceptance and nonnegative capacity"
+  },
+  {
+    "id": "063",
+    "stage": 9,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-9.zip",
+    "entry": "ezeus-fixpack-2026-10-08-continuation-9/patches/63-do-not-spawn-traders-without-workers.patch",
+    "sha256": "dafd21c1886a3c1b85d41c4c4e2be8fbd0f3c8087100be59833fd581e17c9de3",
+    "patch": "build/fixpack-audit/09/63-do-not-spawn-traders-without-workers.patch",
+    "files": [
+      "buildings/etradepost.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Requires an enabled trade post before spawning traders"
+  },
+  {
+    "id": "064",
+    "stage": 9,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-9.zip",
+    "entry": "ezeus-fixpack-2026-10-08-continuation-9/patches/64-validate-fishery-launch-point-before-spawn.patch",
+    "sha256": "6d3acc4a04cbc6a2c6a038fde33c62a0a81c79307f542ba44c2cf79dde80ecb6",
+    "patch": "build/fixpack-audit/09/64-validate-fishery-launch-point-before-spawn.patch",
+    "files": [
+      "buildings/efishery.cpp"
+    ],
+    "outcome": "corrected-validated-release",
+    "reason": "Validates the fishery center/launch tile before creating and registering a boat"
+  },
+  {
+    "id": "065",
+    "stage": 9,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-9.zip",
+    "entry": "ezeus-fixpack-2026-10-08-continuation-9/patches/65-refresh-resource-tree-after-withering.patch",
+    "sha256": "e61601732b675ca70f7ba18c07eb981c41a8e29a70841768c2d7463c318edd96",
+    "patch": "build/fixpack-audit/09/65-refresh-resource-tree-after-withering.patch",
+    "files": [
+      "buildings/eresourcebuilding.cpp"
+    ],
+    "outcome": "corrected-validated-release",
+    "reason": "Schedules terrain refresh after withering and guards missing center tiles"
+  },
+  {
+    "id": "066",
+    "stage": 9,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-9.zip",
+    "entry": "ezeus-fixpack-2026-10-08-continuation-9/patches/66-do-not-spawn-growers-without-a-tile.patch",
+    "sha256": "9d1a7641d2898534006da5675f30c9c1fab1fd4807bf3ffb531150a437b70489",
+    "patch": "build/fixpack-audit/09/66-do-not-spawn-growers-without-a-tile.patch",
+    "files": [
+      "buildings/egrowerslodge.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Requires a valid grower center tile before spawning"
+  },
+  {
+    "id": "067",
+    "stage": 10,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-10.zip",
+    "entry": "ezeus-fixpack-2026-10-08-continuation-10/patches/67-avoid-double-erase-of-trade-post.patch",
+    "sha256": "cc7766d733019b11639906f6fe50710c1717f23f307395aa038ba92bf2696d4e",
+    "patch": "build/fixpack-audit/10/67-avoid-double-erase-of-trade-post.patch",
+    "files": [
+      "buildings/etradepost.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Avoids recursively erasing an unpack building when it aliases the trade post"
+  },
+  {
+    "id": "068",
+    "stage": 10,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-10.zip",
+    "entry": "ezeus-fixpack-2026-10-08-continuation-10/patches/68-preserve-fish-catch-when-storage-is-full.patch",
+    "sha256": "6e40aa9837be4da8faf9788086dce4b994f8ad1af4fc80bcb333d172e06190f6",
+    "patch": "build/fixpack-audit/10/68-preserve-fish-catch-when-storage-is-full.patch",
+    "files": [
+      "buildings/efishery.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Retains fish catch when storage is full and retries without losing the in-progress state"
+  },
+  {
+    "id": "069",
+    "stage": 10,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-10.zip",
+    "entry": "ezeus-fixpack-2026-10-08-continuation-10/patches/69-keep-processed-meat-until-capacity-is-free.patch",
+    "sha256": "33e379510c104149d438a9a05c28bfefe457a9b01ef2170e3a1f86618eed0b57",
+    "patch": "build/fixpack-audit/10/69-keep-processed-meat-until-capacity-is-free.patch",
+    "files": [
+      "buildings/ecorral.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Retains processed meat until all output units can be stored"
+  },
+  {
+    "id": "070",
+    "stage": 10,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-10.zip",
+    "entry": "ezeus-fixpack-2026-10-08-continuation-10/patches/70-return-trader-when-unloading-building-disappears.patch",
+    "sha256": "280d6c2aa51f945fb998b16a03d8d04b34e48218f1e304fab2f4eee35bfc6295",
+    "patch": "build/fixpack-audit/10/70-return-trader-when-unloading-building-disappears.patch",
+    "files": [
+      "characters/actions/etraderaction.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Returns traders safely when their unloading building disappears"
+  },
+  {
+    "id": "071",
+    "stage": 10,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-10.zip",
+    "entry": "ezeus-fixpack-2026-10-08-continuation-10/patches/71-guard-cattle-fetch-after-corral-demolition.patch",
+    "sha256": "a56d747780ed26327208c828b657b49e8ee3ce25d5a9d980b13e53a04ec98307",
+    "patch": "build/fixpack-audit/10/71-guard-cattle-fetch-after-corral-demolition.patch",
+    "files": [
+      "characters/actions/etakecattleaction.cpp"
+    ],
+    "outcome": "corrected-validated-release",
+    "reason": "Guards cattle callbacks and corral links after demolition"
+  },
+  {
+    "id": "072",
+    "stage": 10,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-10.zip",
+    "entry": "ezeus-fixpack-2026-10-08-continuation-10/patches/72-ignore-completed-cattle-route-if-animal-is-gone.patch",
+    "sha256": "acda2bdc470bcb3e03cbbc2e71f72eca10beb59728c0032760e9c5ff531bb791",
+    "patch": "build/fixpack-audit/10/72-ignore-completed-cattle-route-if-animal-is-gone.patch",
+    "files": [
+      "characters/actions/ereplacecattleaction.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Skips completed cattle routes when the animal has already gone"
+  },
+  {
+    "id": "073",
+    "stage": 11,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-11.zip",
+    "entry": "ezeus-fixpack-2026-10-08-continuation-11/patches/73-one-cattle-per-courier-and-finish-on-no-target.patch",
+    "sha256": "032291373852f27f72b22994758af17d63d1df1a26be3cdbb6c95e35619d7364",
+    "patch": "build/fixpack-audit/11/73-one-cattle-per-courier-and-finish-on-no-target.patch",
+    "files": [
+      "characters/actions/etakecattleaction.cpp"
+    ],
+    "outcome": "corrected-validated-release",
+    "reason": "Limits each courier trip to one animal and transitions no-target failure to comeback"
+  },
+  {
+    "id": "074",
+    "stage": 11,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-11.zip",
+    "entry": "ezeus-fixpack-2026-10-08-continuation-11/patches/74-load-grower-cart-with-compatible-produce.patch",
+    "sha256": "9ff8e4792ee8becc9c2fe7647ad3607bd740ecaa44188354e33d9e1d4d81c684",
+    "patch": "build/fixpack-audit/11/74-load-grower-cart-with-compatible-produce.patch",
+    "files": [
+      "buildings/egrowerslodge.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Loads grower carts only with compatible existing cargo"
+  },
+  {
+    "id": "075",
+    "stage": 11,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-11.zip",
+    "entry": "ezeus-fixpack-2026-10-08-continuation-11/patches/75-pause-and-resume-fishing-when-landing-space-changes.patch",
+    "sha256": "b7221ef8a5ece50945f61cbd581134c0bca0cd8516c4cd55152e5c694b6cec60",
+    "patch": "build/fixpack-audit/11/75-pause-and-resume-fishing-when-landing-space-changes.patch",
+    "files": [
+      "buildings/efishery.cpp"
+    ],
+    "outcome": "corrected-validated-release",
+    "reason": "Pauses fishing during unpacking/full storage and propagates disabled state to the boat action"
+  },
+  {
+    "id": "076",
+    "stage": 11,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-11.zip",
+    "entry": "ezeus-fixpack-2026-10-08-continuation-11/patches/76-do-not-replace-occupied-cattle-pen.patch",
+    "sha256": "67520e09f9b97c17d70e402d5cf388313df01db8c0be7b32c8a00e31c6508d13",
+    "patch": "build/fixpack-audit/11/76-do-not-replace-occupied-cattle-pen.patch",
+    "files": [
+      "characters/actions/ereplacecattleaction.cpp"
+    ],
+    "outcome": "corrected-validated-release",
+    "reason": "Avoids replacing an occupied cattle pen after asynchronous travel"
+  },
+  {
+    "id": "077",
+    "stage": 12,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-12.zip",
+    "entry": "ezeus-fixpack-2026-10-08-continuation-12/patches/77-verify-tree-before-harvesting.patch",
+    "sha256": "45fb0912f070bc02c9c2180b4fd856b0ae8c2d180a5eeadacc659454eda5ad5c",
+    "patch": "build/fixpack-audit/12/77-verify-tree-before-harvesting.patch",
+    "files": [
+      "characters/actions/egroweraction.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Validates harvest tiles, busy state, building type, and resource-building lifetime"
+  },
+  {
+    "id": "078",
+    "stage": 12,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-12.zip",
+    "entry": "ezeus-fixpack-2026-10-08-continuation-12/patches/78-retain-grower-cargo-when-store-is-full.patch",
+    "sha256": "df880e6818d1857aa665901915d1f192a134df8a2fe45a420aa0db51411cb43f",
+    "patch": "build/fixpack-audit/12/78-retain-grower-cargo-when-store-is-full.patch",
+    "files": [
+      "characters/actions/egroweraction.cpp"
+    ],
+    "outcome": "corrected-validated-release",
+    "reason": "Subtracts only cargo successfully stored and keeps unfinished grower cargo for another trip"
+  },
+  {
+    "id": "079",
+    "stage": 12,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-12.zip",
+    "entry": "ezeus-fixpack-2026-10-08-continuation-12/patches/79-retain-hunter-cargo-when-lodge-is-full.patch",
+    "sha256": "1b498bd676a0d43967900079d67fa868a3a192c85bcf4b31417caabea2376df0",
+    "patch": "build/fixpack-audit/12/79-retain-hunter-cargo-when-lodge-is-full.patch",
+    "files": [
+      "characters/actions/ehuntaction.cpp"
+    ],
+    "outcome": "corrected-validated-release",
+    "reason": "Subtracts only meat successfully stored and waits with remaining hunter cargo"
+  },
+  {
+    "id": "080",
+    "stage": 12,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-12.zip",
+    "entry": "ezeus-fixpack-2026-10-08-continuation-12/patches/80-validate-grower-finish-callback.patch",
+    "sha256": "76207c151b714a193903783d4ed9cab5faed72cb4c9e4be184a26ef9bbf5a50c",
+    "patch": "build/fixpack-audit/12/80-validate-grower-finish-callback.patch",
+    "files": [
+      "characters/actions/egroweraction.h"
+    ],
+    "outcome": "corrected-validated-release",
+    "reason": "Guards grower finish callbacks against removed tiles, actions, and growers"
+  },
+  {
+    "id": "081",
+    "stage": 12,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-12.zip",
+    "entry": "ezeus-fixpack-2026-10-08-continuation-12/patches/81-validate-hunting-lodge-spawn.patch",
+    "sha256": "2faf12305a5adffb02485d0d86cda01be3287849fa2f77928f32ce9ca9e928b2",
+    "patch": "build/fixpack-audit/12/81-validate-hunting-lodge-spawn.patch",
+    "files": [
+      "buildings/ehuntinglodge.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Validates enabled hunting-lodge state, capacity, and center tile before spawning"
+  },
+  {
+    "id": "082",
+    "stage": 13,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-13.zip",
+    "entry": "ezeus-fixpack-2026-10-08-continuation-13/patches/82-avoid-zero-capacity-employment-divisions.patch",
+    "sha256": "95954fce847f4f39b0f60599eee7065cea38414255c788614996af0b92b8b4ab",
+    "patch": "build/fixpack-audit/13/82-avoid-zero-capacity-employment-divisions.patch",
+    "files": [
+      "engine/eemploymentdistributor.cpp"
+    ],
+    "outcome": "corrected-validated-release",
+    "reason": "Uses nonnegative 64-bit employment totals and avoids zero-capacity division"
+  },
+  {
+    "id": "083",
+    "stage": 13,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-13.zip",
+    "entry": "ezeus-fixpack-2026-10-08-continuation-13/patches/83-preserve-shepherd-deliveries-at-full-storage.patch",
+    "sha256": "fbec57934dc2fd6ac9d25da576be87192f77fcdc5d6d357d405aa5ef5895015a",
+    "patch": "build/fixpack-audit/13/83-preserve-shepherd-deliveries-at-full-storage.patch",
+    "files": [
+      "characters/actions/eshepherdaction.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Preserves shepherd cargo when storage accepts only part of a delivery"
+  },
+  {
+    "id": "084",
+    "stage": 13,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-13.zip",
+    "entry": "ezeus-fixpack-2026-10-08-continuation-13/patches/84-invalidate-shepherd-workplace-after-demolition.patch",
+    "sha256": "827f2833a779447b884cc43da229fd935bc4749c5610c73f647ccccb27657d27",
+    "patch": "build/fixpack-audit/13/84-invalidate-shepherd-workplace-after-demolition.patch",
+    "files": [
+      "characters/actions/eshepherdaction.h",
+      "characters/actions/eshepherdaction.cpp"
+    ],
+    "outcome": "corrected-validated-release",
+    "reason": "Uses a weak shepherd-building reference and fails safely after workplace demolition"
+  },
+  {
+    "id": "085",
+    "stage": 13,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-13.zip",
+    "entry": "ezeus-fixpack-2026-10-08-continuation-13/patches/85-protect-hunter-action-if-lodge-is-removed.patch",
+    "sha256": "b6a35642bf3e627853d3dd15495eb2aa6d6063aca421ab7efb23953dc8e88267",
+    "patch": "build/fixpack-audit/13/85-protect-hunter-action-if-lodge-is-removed.patch",
+    "files": [
+      "characters/actions/ehuntaction.h",
+      "characters/actions/ehuntaction.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Uses a weak hunting-lodge reference and guards hunter callbacks and comeback"
+  },
+  {
+    "id": "086",
+    "stage": 13,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-13.zip",
+    "entry": "ezeus-fixpack-2026-10-08-continuation-13/patches/86-protect-grower-action-if-lodge-is-removed.patch",
+    "sha256": "f71f1f8207550c5b5652e63b533a9e97b5d6693bddfbca514fc5db4bf55df187",
+    "patch": "build/fixpack-audit/13/86-protect-grower-action-if-lodge-is-removed.patch",
+    "files": [
+      "characters/actions/egroweraction.h",
+      "characters/actions/egroweraction.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Uses a weak growers-lodge reference and guards delivery/comeback callbacks"
+  },
+  {
+    "id": "087",
+    "stage": 13,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-13.zip",
+    "entry": "ezeus-fixpack-2026-10-08-continuation-13/patches/87-check-shepherd-spawn-before-creating-worker.patch",
+    "sha256": "fb2132eb18bec3f69b21c039b2f53bc546f6818f252f8e783610866f3931abda",
+    "patch": "build/fixpack-audit/13/87-check-shepherd-spawn-before-creating-worker.patch",
+    "files": [
+      "buildings/eshepherbuildingbase.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Requires an enabled, unoccupied shepherd building with a valid center tile"
+  },
+  {
+    "id": "088",
+    "stage": 14,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-14.zip",
+    "entry": "ezeus-fixpack-2026-10-08-continuation-14/patches/88-protect-cart-target-callback.patch",
+    "sha256": "e7306edbe71e8d6ce04ccfb99ced5a11da525daace8f06fc729548af63e01281",
+    "patch": "build/fixpack-audit/14/88-protect-cart-target-callback.patch",
+    "files": [
+      "characters/actions/ecarttransporteraction.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Validates cart target and character lifetime before starting a resource action"
+  },
+  {
+    "id": "089",
+    "stage": 14,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-14.zip",
+    "entry": "ezeus-fixpack-2026-10-08-continuation-14/patches/89-invalidate-cart-source-after-demolition.patch",
+    "sha256": "ce357728ca16b280da6ba2d3165768890acf41dffd550ea99338e4f3caa54b04",
+    "patch": "build/fixpack-audit/14/89-invalidate-cart-source-after-demolition.patch",
+    "files": [
+      "characters/actions/ecarttransporteraction.h",
+      "characters/actions/ecarttransporteraction.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Uses a weak cart source reference and invalidates it safely after demolition"
+  },
+  {
+    "id": "090",
+    "stage": 14,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-14.zip",
+    "entry": "ezeus-fixpack-2026-10-08-continuation-14/patches/90-reset-cart-followers-before-load.patch",
+    "sha256": "b2fce40da8862d8274749eb75be74fd0f3c584981a79f99ad9d315be1d88b867",
+    "patch": "build/fixpack-audit/14/90-reset-cart-followers-before-load.patch",
+    "files": [
+      "characters/ecarttransporter.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Clears stale trailer followers before loading serialized cart state"
+  },
+  {
+    "id": "091",
+    "stage": 14,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-14.zip",
+    "entry": "ezeus-fixpack-2026-10-08-continuation-14/patches/91-avoid-duplicate-collector-idle-overlay.patch",
+    "sha256": "59d4d39da2364c087714162999b832768dd1ecda536c6031da96d7141efc650d",
+    "patch": "build/fixpack-audit/14/91-avoid-duplicate-collector-idle-overlay.patch",
+    "files": [
+      "buildings/eresourcecollectbuilding.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Avoids duplicate idle overlays when a collector building has no active collector"
+  },
+  {
+    "id": "092",
+    "stage": 15,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-15.zip",
+    "entry": "patches/92-validate-urchin-launch-before-spawn.patch",
+    "sha256": "764896a0a7a663d731473a9e1954681bad789c61285b34ab38d19c5f0cf08b1c",
+    "patch": "build/fixpack-audit/15/92-validate-urchin-launch-before-spawn.patch",
+    "files": [
+      "buildings/eurchinquay.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Validates the urchin quay center and launch tile before gatherer creation"
+  },
+  {
+    "id": "093",
+    "stage": 15,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-15.zip",
+    "entry": "patches/93-preserve-urchin-catch-until-storage-has-room.patch",
+    "sha256": "f1d7221987e4312cf97943e265731b08c0dead997b843a372c075d66bb6a1050",
+    "patch": "build/fixpack-audit/15/93-preserve-urchin-catch-until-storage-has-room.patch",
+    "files": [
+      "buildings/eurchinquay.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Retains urchin catch until the full delivery fits in storage"
+  },
+  {
+    "id": "094",
+    "stage": 15,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-15.zip",
+    "entry": "patches/94-pause-urchin-gathering-when-dock-is-unavailable.patch",
+    "sha256": "fa0ff3ec4ade150abc4762d8a8da46348a69c14e222a1ae95e8fbe26e08d8dbf",
+    "patch": "build/fixpack-audit/15/94-pause-urchin-gathering-when-dock-is-unavailable.patch",
+    "files": [
+      "buildings/eurchinquay.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Pauses urchin gathering while unloading or when the dock cannot accept catch"
+  },
+  {
+    "id": "095",
+    "stage": 15,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-15.zip",
+    "entry": "patches/95-keep-urchin-unloading-after-gatherer-disappears.patch",
+    "sha256": "afce873c23b6a4fbef53c36d72e136377bdc097d75ad6eba58f38070fcda126d",
+    "patch": "build/fixpack-audit/15/95-keep-urchin-unloading-after-gatherer-disappears.patch",
+    "files": [
+      "buildings/eurchinquay.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Keeps unloading state when a gatherer disappears and propagates disabled state"
+  },
+  {
+    "id": "096",
+    "stage": 15,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-15.zip",
+    "entry": "patches/96-protect-market-vendor-from-invalid-multiplier.patch",
+    "sha256": "e5b90a3aaa26bc5ec77ec436b6d658886ce8cf1a82b374709b02a3d24e363dad",
+    "patch": "build/fixpack-audit/15/96-protect-market-vendor-from-invalid-multiplier.patch",
+    "files": [
+      "buildings/evendor.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Rejects nonpositive vendor multipliers and clamps available space"
+  },
+  {
+    "id": "097",
+    "stage": 16,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-16.zip",
+    "entry": "patches/97-pause-corral-when-workers-are-unavailable.patch",
+    "sha256": "aa4c56dfd2862c2c03ba435d8eff2b684cfd67fcbc43728f0c07e9f7ae5dd346",
+    "patch": "build/fixpack-audit/16/97-pause-corral-when-workers-are-unavailable.patch",
+    "files": [
+      "buildings/ecorral.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Stops corral processing and cattle timers when staffing disables the building"
+  },
+  {
+    "id": "098",
+    "stage": 16,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-16.zip",
+    "entry": "patches/98-retain-salt-production-until-four-units-fit.patch",
+    "sha256": "cbaeccdc84f341032178529d46a22df3dd7ae8f2a290dace48df433d09f74d87",
+    "patch": "build/fixpack-audit/16/98-retain-salt-production-until-four-units-fit.patch",
+    "files": [
+      "buildings/esaltworks.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Retains completed salt batches until four units fit in storage"
+  },
+  {
+    "id": "099",
+    "stage": 16,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-16.zip",
+    "entry": "patches/99-validate-agora-stall-tiles-before-placing.patch",
+    "sha256": "62748aab6a2ddb058b80c38bf6801780fdb548607369fc597e6deb5470e0809a",
+    "patch": "build/fixpack-audit/16/99-validate-agora-stall-tiles-before-placing.patch",
+    "files": [
+      "buildings/eagorabase.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Rejects agora stall placements with incomplete tile footprints before changing slots"
+  },
+  {
+    "id": "100",
+    "stage": 16,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-16.zip",
+    "entry": "patches/100-normalize-invalid-warehouse-slots-on-load.patch",
+    "sha256": "36ab6d93303da1500b474b063062f10fcb65efff9a4ce83cd28822370b3d8e45",
+    "patch": "build/fixpack-audit/16/100-normalize-invalid-warehouse-slots-on-load.patch",
+    "files": [
+      "buildings/estoragebuilding.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Normalizes warehouse slot counts and resource identifiers during load"
+  },
+  {
+    "id": "101",
+    "stage": 16,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-16.zip",
+    "entry": "patches/101-reject-invalid-warehouse-deposits.patch",
+    "sha256": "f9717d754fa23762ccedf39c2fee0b97a36ce6164cd246e4c63a71cdac6eade3",
+    "patch": "build/fixpack-audit/16/101-reject-invalid-warehouse-deposits.patch",
+    "files": [
+      "buildings/estoragebuilding.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Rejects nonpositive or unsupported warehouse deposits and clamps slot counts"
+  },
+  {
+    "id": "102",
+    "stage": 16,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-16.zip",
+    "entry": "patches/102-clamp-house-population-to-valid-capacity.patch",
+    "sha256": "1918fc3f8590234ffb0fb0200a0bb55d3398b47f965d5f0a80f9681fd66c1901",
+    "patch": "build/fixpack-audit/16/102-clamp-house-population-to-valid-capacity.patch",
+    "files": [
+      "buildings/ehousebase.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Clamps loaded house population to the level capacity while updating board totals"
+  },
+  {
+    "id": "103",
+    "stage": 17,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-17.zip",
+    "entry": "patches/103-normalize-resource-stock-when-loading.patch",
+    "sha256": "195fec98f05ce18043df96c7665f2b91f931e094c72bbd4c9b179c7619e379a1",
+    "patch": "build/fixpack-audit/17/103-normalize-resource-stock-when-loading.patch",
+    "files": [
+      "buildings/eresourcebuildingbase.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Clamps loaded resource-building stock to its configured capacity"
+  },
+  {
+    "id": "104",
+    "stage": 17,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-17.zip",
+    "entry": "patches/104-normalize-workshop-input-and-progress-on-load.patch",
+    "sha256": "02527bbdf644e21d91c3e40af29e4beb15cdd42a2812fd613b771faf5e5b4087",
+    "patch": "build/fixpack-audit/17/104-normalize-workshop-input-and-progress-on-load.patch",
+    "files": [
+      "buildings/eprocessingbuilding.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Normalizes processing input and progress counters without changing serialized layout"
+  },
+  {
+    "id": "105",
+    "stage": 17,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-17.zip",
+    "entry": "patches/105-normalize-collector-processing-state-on-load.patch",
+    "sha256": "cc6954fabf24c228966d8e408ee8d9b477600474ce930d2463ba88e07147c493",
+    "patch": "build/fixpack-audit/17/105-normalize-collector-processing-state-on-load.patch",
+    "files": [
+      "buildings/eresourcecollectbuilding.cpp"
+    ],
+    "outcome": "corrected-validated-release",
+    "reason": "Normalizes collector counters and timers while preserving positive legacy stock"
+  },
+  {
+    "id": "106",
+    "stage": 17,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-17.zip",
+    "entry": "patches/106-normalize-vendor-stock-on-load.patch",
+    "sha256": "488f3f9ed613886c2b3779d159b1cfdea88882edbcb81238cc074c10bc241232",
+    "patch": "build/fixpack-audit/17/106-normalize-vendor-stock-on-load.patch",
+    "files": [
+      "buildings/evendor.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Clamps loaded vendor stock to valid capacity"
+  },
+  {
+    "id": "107",
+    "stage": 17,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-17.zip",
+    "entry": "patches/107-normalize-corral-state-on-load.patch",
+    "sha256": "b919c691bb4f42a3f23bbbc4be3c12883289fb9422ba4b715f46585f7b838f19",
+    "patch": "build/fixpack-audit/17/107-normalize-corral-state-on-load.patch",
+    "files": [
+      "buildings/ecorral.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Clamps corral counts and rejects invalid floating-point processing timers"
+  },
+  {
+    "id": "108",
+    "stage": 17,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-17.zip",
+    "entry": "patches/108-limit-loaded-warehouse-quotas-to-physical-capacity.patch",
+    "sha256": "3e21702f1fa631169839ee426fae0afc2f4be8fc66bd11c7009e52d810648431",
+    "patch": "build/fixpack-audit/17/108-limit-loaded-warehouse-quotas-to-physical-capacity.patch",
+    "files": [
+      "buildings/estoragebuilding.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Limits loaded warehouse quotas to physical capacity and accepted resource types"
+  },
+  {
+    "id": "109",
+    "stage": 17,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-17.zip",
+    "entry": "patches/109-reject-negative-or-empty-stash-withdrawals.patch",
+    "sha256": "26070172bf059c7d9a0efa26527c7d8cc7af85a9cff1b5a38fd91911f4cc043d",
+    "patch": "build/fixpack-audit/17/109-reject-negative-or-empty-stash-withdrawals.patch",
+    "files": [
+      "buildings/ebuildingwithresource.cpp"
+    ],
+    "outcome": "corrected-validated-release",
+    "reason": "Rejects nonpositive stash withdrawals and ignores nonpositive stash entries across aggregate matching"
+  },
+  {
+    "id": "110",
+    "stage": 18,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-18-reviewed.zip",
+    "entry": "patches/110-make-chariot-with-exactly-two-wood.patch",
+    "sha256": "08c02e3a47e4ab672b520f873892e2d5876e6f8c41d1ab3565e81df27e3702e9",
+    "patch": "build/fixpack-audit/18/110-make-chariot-with-exactly-two-wood.patch",
+    "files": [
+      "buildings/echariotfactory.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Produces chariots only when exactly two wood are consumed"
+  },
+  {
+    "id": "111",
+    "stage": 18,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-18-reviewed.zip",
+    "entry": "patches/111-respect-chariot-factory-stock-and-withdrawal-limits.patch",
+    "sha256": "16763b23bb8621fa85e733dcb97438e41d56c53edc315d9a64ad663b3369ae28",
+    "patch": "build/fixpack-audit/18/111-respect-chariot-factory-stock-and-withdrawal-limits.patch",
+    "files": [
+      "buildings/echariotfactory.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Caps reported factory stock and withdrawals at the current chariot inventory"
+  },
+  {
+    "id": "112",
+    "stage": 18,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-18-reviewed.zip",
+    "entry": "patches/112-normalize-chariot-factory-stock-after-load.patch",
+    "sha256": "509f4de5ca4257e54360e2129dfc2e5ec3e8b2d9d194fda09b51c9262f5da032",
+    "patch": "build/fixpack-audit/18/112-normalize-chariot-factory-stock-after-load.patch",
+    "files": [
+      "buildings/echariotfactory.cpp"
+    ],
+    "outcome": "corrected-validated-release",
+    "reason": "Clamps only negative persisted chariot counts; retains positive legacy stock without adding fields or version changes"
+  },
+  {
+    "id": "113",
+    "stage": 18,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-18-reviewed.zip",
+    "entry": "patches/113-enforce-ranch-wheat-storage-capacity.patch",
+    "sha256": "b307a2ecc30878ac65a762f7bbc191e275cdef700942353fe19cc029f14f8b3a",
+    "patch": "build/fixpack-audit/18/113-enforce-ranch-wheat-storage-capacity.patch",
+    "files": [
+      "buildings/ehorseranch.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Caps ranch wheat intake at the existing capacity"
+  },
+  {
+    "id": "114",
+    "stage": 18,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-18-reviewed.zip",
+    "entry": "patches/114-credit-only-horses-actually-produced.patch",
+    "sha256": "0040d0214d77411d5218480d6d6dae31c36eda852c8f3cddcc1c6539eb579307",
+    "patch": "build/fixpack-audit/18/114-credit-only-horses-actually-produced.patch",
+    "files": [
+      "buildings/ehorseranch.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Credits ranch horses only after the enclosure accepts a spawn"
+  },
+  {
+    "id": "115",
+    "stage": 18,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-18-reviewed.zip",
+    "entry": "patches/115-prevent-invalid-horse-withdrawals-and-spawns.patch",
+    "sha256": "2e607b796d12896d7fff7619db9d13fbd0f7fea1b332a79e966ad52d551ea22e",
+    "patch": "build/fixpack-audit/18/115-prevent-invalid-horse-withdrawals-and-spawns.patch",
+    "files": [
+      "buildings/ehorseranchenclosure.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Rejects invalid enclosure withdrawals and tile spawns"
+  },
+  {
+    "id": "116",
+    "stage": 18,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-18-reviewed.zip",
+    "entry": "patches/116-normalize-ranch-feed-and-timers-after-load.patch",
+    "sha256": "55d5a08ce69f5ccb1d53270835cb54e7564b6648c5d229ed04ec6af4e0359dc0",
+    "patch": "build/fixpack-audit/18/116-normalize-ranch-feed-and-timers-after-load.patch",
+    "files": [
+      "buildings/ehorseranch.cpp"
+    ],
+    "outcome": "corrected-validated-release",
+    "reason": "Clamps negative ranch feed and timers while preserving positive legacy feed stock"
+  },
+  {
+    "id": "117",
+    "stage": 19,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-19.zip",
+    "entry": "patches/117-clamp-horse-feed-consumption.patch",
+    "sha256": "08ef7d1b360a9caf6601bad14cef8ff5279e94d4f21186643db1ccbdd81e62c4",
+    "patch": "build/fixpack-audit/19/117-clamp-horse-feed-consumption.patch",
+    "files": [
+      "buildings/ehorseranch.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Prevents negative feed consumption during ranch updates"
+  },
+  {
+    "id": "118",
+    "stage": 19,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-19.zip",
+    "entry": "patches/118-credit-produced-chariots.patch",
+    "sha256": "4e054f95bfe9ed41b91f393ca49155489d48b05c34f6eab3a21864eaeb4c98ad",
+    "patch": "build/fixpack-audit/19/118-credit-produced-chariots.patch",
+    "files": [
+      "buildings/echariotfactory.cpp"
+    ],
+    "outcome": "corrected-validated-release",
+    "reason": "Credits chariots only after production and retains the required game-board declaration"
+  },
+  {
+    "id": "119",
+    "stage": 19,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-19.zip",
+    "entry": "patches/119-ignore-horses-without-valid-tiles-when-drawing.patch",
+    "sha256": "964d9ea6435dbd86f895af60392b7472f37a1d428296f9bd4c33be391a75b7be",
+    "patch": "build/fixpack-audit/19/119-ignore-horses-without-valid-tiles-when-drawing.patch",
+    "files": [
+      "buildings/ehorseranchenclosure.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Guards horse rendering when its source building is unavailable"
+  },
+  {
+    "id": "120",
+    "stage": 19,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-19.zip",
+    "entry": "patches/120-guard-missing-horse-ranch-links.patch",
+    "sha256": "f3611496de8a45f95839f34c97a2a6683c1aeccbe520a5a738d6dc6e1a2dab51",
+    "patch": "build/fixpack-audit/19/120-guard-missing-horse-ranch-links.patch",
+    "files": [
+      "buildings/ehorseranch.cpp",
+      "buildings/ehorseranchenclosure.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Guards ranch and enclosure cross-links during use and cleanup"
+  },
+  {
+    "id": "121",
+    "stage": 19,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-19.zip",
+    "entry": "patches/121-keep-horse-production-ready-when-paddock-full.patch",
+    "sha256": "45948b1ff201a9040179bd95a6a2c5ccdf2beae25a59a7ad01a5f30f964aa128",
+    "patch": "build/fixpack-audit/19/121-keep-horse-production-ready-when-paddock-full.patch",
+    "files": [
+      "buildings/ehorseranch.cpp"
+    ],
+    "outcome": "corrected-validated-release",
+    "reason": "Resets horse timing only after a successful enclosure spawn and preserves a pending cycle when full"
+  },
+  {
+    "id": "122",
+    "stage": 20,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-20.zip",
+    "entry": "patches/122-track-ranch-links-with-weak-references.patch",
+    "sha256": "25baabbe139708a6ab7905750ddfd00d8a7162eca922f1e7711529c887dbed24",
+    "patch": "build/fixpack-audit/20/122-track-ranch-links-with-weak-references.patch",
+    "files": [
+      "buildings/ehorseranch.h",
+      "buildings/ehorseranchenclosure.h",
+      "buildings/ehorseranch.cpp",
+      "buildings/ehorseranchenclosure.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Uses weak ranch and enclosure cross-links to avoid stale dereferences"
+  },
+  {
+    "id": "123",
+    "stage": 20,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-20.zip",
+    "entry": "patches/123-rebuild-patrol-route-when-waypoints-change.patch",
+    "sha256": "54c8377ee5dec1571cad9f52c0ab27712aa603870154dbb1f71b49fad8310368",
+    "patch": "build/fixpack-audit/20/123-rebuild-patrol-route-when-waypoints-change.patch",
+    "files": [
+      "buildings/epatrolbuildingbase.cpp",
+      "buildings/epatrolbuildingbase.h"
+    ],
+    "outcome": "corrected-validated-release",
+    "reason": "Forces initial patrol route construction and invalidates paths when patrol guides or direction change"
+  },
+  {
+    "id": "124",
+    "stage": 20,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-20.zip",
+    "entry": "patches/124-rebuild-patrol-path-after-loading.patch",
+    "sha256": "4b79b08a0a03d2b1f68790fa7c83d6cf79e405a744bc958a59ee27589a9bbf67",
+    "patch": "build/fixpack-audit/20/124-rebuild-patrol-path-after-loading.patch",
+    "files": [
+      "buildings/epatrolbuildingbase.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Clears persisted patrol paths and rebuilds them after load"
+  },
+  {
+    "id": "125",
+    "stage": 20,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-20.zip",
+    "entry": "patches/125-protect-patrol-spawn-from-invalid-tile-and-index.patch",
+    "sha256": "824d662e9555903b356f000eb95e5a42f69a325aca7ce5e804464f83131ec551",
+    "patch": "build/fixpack-audit/20/125-protect-patrol-spawn-from-invalid-tile-and-index.patch",
+    "files": [
+      "buildings/epatrolbuildingbase.cpp"
+    ],
+    "outcome": "corrected-validated-release",
+    "reason": "Validates patrol road index and spawn tile before character publication"
+  },
+  {
+    "id": "126",
+    "stage": 20,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-20.zip",
+    "entry": "patches/126-repair-invalid-saved-farm-growth-state.patch",
+    "sha256": "c2337fcb41b2dd82092a782f4a63507886d4e8ad58bb217bc136eb2bcc8537f7",
+    "patch": "build/fixpack-audit/20/126-repair-invalid-saved-farm-growth-state.patch",
+    "files": [
+      "buildings/efarmbase.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Repairs farm runtime state after load without changing serialized fields"
+  },
+  {
+    "id": "127",
+    "stage": 21,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-21.zip",
+    "entry": "patches/127-reject-stale-patrol-route-results.patch",
+    "sha256": "8f45dd29362a732307fd3a317c7e6c205afa624696ca67653c081e2d5ac656b8",
+    "patch": "build/fixpack-audit/21/127-reject-stale-patrol-route-results.patch",
+    "files": [
+      "buildings/epatrolbuildingbase.h",
+      "buildings/epatrolbuildingbase.cpp",
+      "engine/eguidedmovepathtask.h",
+      "engine/eguidedmovepathtask.cpp"
+    ],
+    "outcome": "corrected-validated-release",
+    "reason": "Invalidates stale asynchronous patrol routes with a generation counter while retaining the required epathfinder.h include"
+  },
+  {
+    "id": "128",
+    "stage": 21,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-21.zip",
+    "entry": "patches/128-guard-out-of-bounds-guided-path-tiles.patch",
+    "sha256": "7291c6be9da2917775d4cb28d4d35410bc513cf7c39e6388f463ba7cddf89357",
+    "patch": "build/fixpack-audit/21/128-guard-out-of-bounds-guided-path-tiles.patch",
+    "files": [
+      "engine/eguidedmovepathtask.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Rejects out-of-bounds guided route endpoints and intermediate tiles"
+  },
+  {
+    "id": "129",
+    "stage": 21,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-21.zip",
+    "entry": "patches/129-avoid-ghost-patrol-after-failed-spawn.patch",
+    "sha256": "5308337510196651b918c6ff842ebe0db5b0db4cabea665202d9a117d23b7ac7",
+    "patch": "build/fixpack-audit/21/129-avoid-ghost-patrol-after-failed-spawn.patch",
+    "files": [
+      "buildings/epatrolbuildingbase.cpp"
+    ],
+    "outcome": "corrected-validated-release",
+    "reason": "Publishes patrol characters only after a valid spawn tile and character action are available"
+  },
+  {
+    "id": "130",
+    "stage": 21,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-21.zip",
+    "entry": "patches/130-break-cycles-when-discovering-race-track.patch",
+    "sha256": "b8ffb78bee05df510fbfbeaa8fa3b720c05e2d80017828342c9fbed26bf0daca",
+    "patch": "build/fixpack-audit/21/130-break-cycles-when-discovering-race-track.patch",
+    "files": [
+      "buildings/ehippodrome.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Breaks invalid, cyclic, or null hippodrome piece traversals safely"
+  },
+  {
+    "id": "131",
+    "stage": 21,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-21.zip",
+    "entry": "patches/131-do-not-start-patrol-on-failed-guided-route.patch",
+    "sha256": "8cf8f3f66c814a84492081c182efd5c0a01fb7cae28d20607bed20d0a503c36f",
+    "patch": "build/fixpack-audit/21/131-do-not-start-patrol-on-failed-guided-route.patch",
+    "files": [
+      "buildings/epatrolbuildingbase.cpp"
+    ],
+    "outcome": "corrected-validated-release",
+    "reason": "Suppresses patrol spawning after an empty or failed guided route computation"
+  },
+  {
+    "id": "132",
+    "stage": 22,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-22.zip",
+    "entry": "patches/132-cap-hippodrome-horse-deliveries.patch",
+    "sha256": "ad1e70673e8267da418fbb53c0d3a5b7e7109b0c93a0199e99920478c1bbc9e4",
+    "patch": "build/fixpack-audit/22/132-cap-hippodrome-horse-deliveries.patch",
+    "files": [
+      "buildings/ehippodromepiece.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Caps hippodrome horse intake and nonnegative available space"
+  },
+  {
+    "id": "133",
+    "stage": 22,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-22.zip",
+    "entry": "patches/133-reject-missing-hippodrome-pieces.patch",
+    "sha256": "07e07ac5041cc3598ed08c33f09ac1dc99c73ec3aef344d4fc48d3348a146cdb",
+    "patch": "build/fixpack-audit/22/133-reject-missing-hippodrome-pieces.patch",
+    "files": [
+      "buildings/ehippodrome.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Rejects missing hippodrome pieces before using route topology"
+  },
+  {
+    "id": "134",
+    "stage": 22,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-22.zip",
+    "entry": "patches/134-safely-clear-incomplete-hippodromes.patch",
+    "sha256": "afc065dbd6a9f32c018ec2cc597c6dd08757fdfb1685177b50fd4e81feb0d25e",
+    "patch": "build/fixpack-audit/22/134-safely-clear-incomplete-hippodromes.patch",
+    "files": [
+      "buildings/ehippodrome.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Clears incomplete hippodromes without dereferencing missing pieces"
+  },
+  {
+    "id": "135",
+    "stage": 22,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-22.zip",
+    "entry": "patches/135-require-valid-race-path-before-racing.patch",
+    "sha256": "5cc7373f43b42ea9fc3315cbeeeee7d5c5c334aadaf652a54d53c0264bd1df73",
+    "patch": "build/fixpack-audit/22/135-require-valid-race-path-before-racing.patch",
+    "files": [
+      "buildings/ehippodrome.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Requires a valid finish and both race paths before racing"
+  },
+  {
+    "id": "136",
+    "stage": 22,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-22.zip",
+    "entry": "patches/136-normalize-hippodrome-piece-ids.patch",
+    "sha256": "bea3dd0654affc8ae44df8d85644ff17377d5eddb98a187487e10b28e987a333",
+    "patch": "build/fixpack-audit/22/136-normalize-hippodrome-piece-ids.patch",
+    "files": [
+      "buildings/ehippodromepiece.h",
+      "buildings/ehippodromepiece.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Normalizes persisted hippodrome IDs into the supported range"
+  },
+  {
+    "id": "137",
+    "stage": 23,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-23.zip",
+    "entry": "patches/137-fix-fire-search-limits-and-callback-cycle.patch",
+    "sha256": "c5e91edd835a76089e1e95e650a8bb61d510cf89444cd711142c746836bab603",
+    "patch": "build/fixpack-audit/23/137-fix-fire-search-limits-and-callback-cycle.patch",
+    "files": [
+      "characters/actions/efirefighteraction.cpp"
+    ],
+    "outcome": "corrected-validated-release",
+    "reason": "Removes firefighter action self-capture and guards destroyed characters in both search stages"
+  },
+  {
+    "id": "138",
+    "stage": 23,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-23.zip",
+    "entry": "patches/138-skip-missing-fire-callback-targets.patch",
+    "sha256": "7c689f392d9748cee95c2f9f3b7bbf2c2270eed6f36c90f7d15c97ab555cd6a0",
+    "patch": "build/fixpack-audit/23/138-skip-missing-fire-callback-targets.patch",
+    "files": [
+      "characters/actions/efirefighteraction.h"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Skips missing firefighter callback targets"
+  },
+  {
+    "id": "139",
+    "stage": 23,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-23.zip",
+    "entry": "patches/139-fail-safely-for-missing-firefighter-or-position.patch",
+    "sha256": "90f60baa5de9ec58ae9e6ea28a08a8fd2e22cee4ba7f1025b9a2d11772f6fae0",
+    "patch": "build/fixpack-audit/23/139-fail-safely-for-missing-firefighter-or-position.patch",
+    "files": [
+      "characters/actions/efirefighteraction.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Fails firefighter actions safely when character or tile is unavailable"
+  },
+  {
+    "id": "140",
+    "stage": 23,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-23.zip",
+    "entry": "patches/140-use-weak-guild-reference-for-artisan.patch",
+    "sha256": "fdad8dfe94eb17c4d5797233de1deba0953a0b7b16925d7cd2ad920825d591e4",
+    "patch": "build/fixpack-audit/23/140-use-weak-guild-reference-for-artisan.patch",
+    "files": [
+      "characters/actions/eartisanaction.h",
+      "characters/actions/eartisanaction.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Uses a weak artisans-guild reference in the persistent action"
+  },
+  {
+    "id": "141",
+    "stage": 23,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-23.zip",
+    "entry": "patches/141-stop-artisan-after-finding-nearby-work.patch",
+    "sha256": "9f7f6c95787449d1ac9f8d88504dc58f301510a17d003db917ac092edbeca5fb",
+    "patch": "build/fixpack-audit/23/141-stop-artisan-after-finding-nearby-work.patch",
+    "files": [
+      "characters/actions/eartisanaction.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Stops adjacent artisan target scanning after selecting a target"
+  },
+  {
+    "id": "142",
+    "stage": 23,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-23.zip",
+    "entry": "patches/142-guard-patrol-movement-after-load.patch",
+    "sha256": "91e7b405f5bd4e08074b33b7464108a2c7647f1d16c373d693ae161c21b6eecb",
+    "patch": "build/fixpack-audit/23/142-guard-patrol-movement-after-load.patch",
+    "files": [
+      "characters/actions/epatrolmoveaction.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Fails patrol movement safely when loaded routing state is incomplete"
+  },
+  {
+    "id": "143",
+    "stage": 24,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-24.zip",
+    "entry": "patches/143-clamp-sanctuary-construction-stage-on-load.patch",
+    "sha256": "78e4335a319e515fd4f755193409d46cd5c092a97bee807bff27e6e56da11647",
+    "patch": "build/fixpack-audit/24/143-clamp-sanctuary-construction-stage-on-load.patch",
+    "files": [
+      "buildings/sanctuaries/esanctbuilding.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Clamps persisted sanctuary progress within the existing stage range"
+  },
+  {
+    "id": "144",
+    "stage": 24,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-24.zip",
+    "entry": "patches/144-avoid-accessing-sanctuary-before-monument-is-linked.patch",
+    "sha256": "57947d93020f274b5c614420b5599609931044ffb3362a2d920c33bacf2b9fa9",
+    "patch": "build/fixpack-audit/24/144-avoid-accessing-sanctuary-before-monument-is-linked.patch",
+    "files": [
+      "buildings/sanctuaries/esanctbuilding.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Treats unlinked sanctuaries as unable to consume resources"
+  },
+  {
+    "id": "145",
+    "stage": 24,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-24.zip",
+    "entry": "patches/145-do-not-progress-unlinked-or-invalid-sanctuary.patch",
+    "sha256": "25e6311411a8e58bc5e4d6a8a3128f8ded4c8d503124844127384cd143f97807",
+    "patch": "build/fixpack-audit/24/145-do-not-progress-unlinked-or-invalid-sanctuary.patch",
+    "files": [
+      "buildings/sanctuaries/esanctbuilding.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Prevents invalid sanctuary progress and failed work credits"
+  },
+  {
+    "id": "146",
+    "stage": 24,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-24.zip",
+    "entry": "patches/146-do-not-credit-failed-artisan-work.patch",
+    "sha256": "7ff50c12b17d1f957951fcdbeba3ba241ebe8140b7db7a7bd9a809fcecef27c1",
+    "patch": "build/fixpack-audit/24/146-do-not-credit-failed-artisan-work.patch",
+    "files": [
+      "characters/actions/eartisanaction.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Uses deletion handling when artisan construction fails"
+  },
+  {
+    "id": "147",
+    "stage": 24,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-24.zip",
+    "entry": "patches/147-retain-settler-count-when-population-record-is-unavailable.patch",
+    "sha256": "7f7c37ff1e2117ae6e1c0e583d96434a5a8716835a17b424c309fc1c0fb3b1d5",
+    "patch": "build/fixpack-audit/24/147-retain-settler-count-when-population-record-is-unavailable.patch",
+    "files": [
+      "characters/actions/esettleraction.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Preserves valid settler action count when population data is temporarily unavailable"
+  },
+  {
+    "id": "148",
+    "stage": 24,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-24.zip",
+    "entry": "patches/148-safely-erase-orphaned-sanctuary-part.patch",
+    "sha256": "fa311c5952813d85390855dec4b57f7d33394821e54518a66a62ef597f6d6927",
+    "patch": "build/fixpack-audit/24/148-safely-erase-orphaned-sanctuary-part.patch",
+    "files": [
+      "buildings/sanctuaries/esanctbuilding.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Erases an orphaned sanctuary component through its base building path"
+  },
+  {
+    "id": "149",
+    "stage": 24,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-24.zip",
+    "entry": "patches/149-guard-missing-ranch-links-when-collapsing.patch",
+    "sha256": "a3e879b11c47d5486fb6a622f1e2649b4484580f4b0140d4015e6210bdc2d997",
+    "patch": "build/fixpack-audit/24/149-guard-missing-ranch-links-when-collapsing.patch",
+    "files": [
+      "buildings/ebuilding.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Guards missing ranch links during collapse"
+  },
+  {
+    "id": "150",
+    "stage": 25,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-25.zip",
+    "entry": "patches/150-guard-patrol-origin-after-demolition.patch",
+    "sha256": "f94e27c38ed16c26336af6e908f32e23fc0d89aa5618f6417f9ef0062316ace0",
+    "patch": "build/fixpack-audit/25/150-guard-patrol-origin-after-demolition.patch",
+    "files": [
+      "characters/actions/epatrolaction.cpp",
+      "characters/actions/epatrolaction.h"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Uses a weak patrol origin and fails safely after demolition"
+  },
+  {
+    "id": "151",
+    "stage": 25,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-25.zip",
+    "entry": "patches/151-clear-reloaded-patrol-route.patch",
+    "sha256": "b56547c7c89f6f90b42b61c9f4a810894d0752ed28c7488f990d17982ef03164",
+    "patch": "build/fixpack-audit/25/151-clear-reloaded-patrol-route.patch",
+    "files": [
+      "characters/actions/epatrolaction.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Clears deserialized patrol route contents before reading"
+  },
+  {
+    "id": "152",
+    "stage": 25,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-25.zip",
+    "entry": "patches/152-guard-collector-workplace-after-demolition.patch",
+    "sha256": "8dc5026f34e95f01834b05ba71f08140f8d222b9f0394231f404de5034cadd8a",
+    "patch": "build/fixpack-audit/25/152-guard-collector-workplace-after-demolition.patch",
+    "files": [
+      "characters/actions/ecollectresourceaction.cpp",
+      "characters/actions/ecollectresourceaction.h"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Uses a weak collector workplace and guards delayed callbacks"
+  },
+  {
+    "id": "153",
+    "stage": 25,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-25.zip",
+    "entry": "patches/153-enforce-firefighter-water-limit.patch",
+    "sha256": "dfe7fdf511ab012bc92dd167854b5cd75ad9ce64287543e1063a0b2cfaae685e",
+    "patch": "build/fixpack-audit/25/153-enforce-firefighter-water-limit.patch",
+    "files": [
+      "characters/actions/efirefighteraction.cpp"
+    ],
+    "outcome": "corrected-validated-release",
+    "reason": "Enforces the firefighter water limit before selecting another fire and guards destroyed-character callbacks"
+  },
+  {
+    "id": "154",
+    "stage": 25,
+    "tier": "continuation",
+    "archive": "ezeus-fixpack-2026-10-08-continuation-25.zip",
+    "entry": "patches/154-guard-unlinked-monument-in-pathfinding-snapshot.patch",
+    "sha256": "ae1acb6c221bbc65cd0b328b460c413556c5a83d39536312549c2e9d5770fb2a",
+    "patch": "build/fixpack-audit/25/154-guard-unlinked-monument-in-pathfinding-snapshot.patch",
+    "files": [
+      "engine/thread/ethreadbuilding.cpp"
+    ],
+    "outcome": "integrated-validated-release",
+    "reason": "Treats an unlinked monument as unavailable in asynchronous building snapshots"
+  }
+]

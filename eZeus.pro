@@ -677,6 +677,7 @@ SOURCES += \
         widgets/epyramidwidget.cpp \
         widgets/equestionwidget.cpp \
         widgets/erequestdialog.cpp \
+        widgets/edisplaytransition.cpp \
         widgets/eresolution.cpp \
         widgets/eresourcebutton.cpp \
         widgets/erightbutton.cpp \
@@ -688,6 +689,7 @@ SOURCES += \
         widgets/escrollwidgetcomplete.cpp \
         widgets/eselectcolonywidget.cpp \
         widgets/esettingsmenu.cpp \
+        widgets/esoundsettingswidget.cpp \
         widgets/esmalldownbutton.cpp \
         widgets/esmallupbutton.cpp \
         widgets/espinbox.cpp \
@@ -2835,6 +2837,7 @@ HEADERS += \
     widgets/eeventbackground.h \
     widgets/eeventselectionwidget.h \
     widgets/eeventwidget.h \
+    widgets/esidebarnotificationstate.h \
     widgets/eexclamationbutton.h \
     widgets/efilewidget.h \
     widgets/eflatbutton.h \
@@ -2888,6 +2891,8 @@ HEADERS += \
     widgets/epyramidwidget.h \
     widgets/equestionwidget.h \
     widgets/erequestdialog.h \
+    widgets/edisplaymode.h \
+    widgets/edisplaytransition.h \
     widgets/eresolution.h \
     widgets/eresourcebutton.h \
     widgets/erightbutton.h \
@@ -2899,6 +2904,8 @@ HEADERS += \
     widgets/escrollwidgetcomplete.h \
     widgets/eselectcolonywidget.h \
     widgets/esettingsmenu.h \
+    widgets/esavepath.h \
+    widgets/esoundsettingswidget.h \
     widgets/esmalldownbutton.h \
     widgets/esmallupbutton.h \
     widgets/espinbox.h \

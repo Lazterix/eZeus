@@ -82,9 +82,32 @@ function Assert-StagedRuntime {
     Assert-True ($actualPath -eq $ExpectedZeusPath) 'zeus_path.txt does not contain the expected path relative to eZeus/Bin.'
 }
 
+function New-CrossVolumeFixtureRoot {
+    param([string]$ReferencePath)
+
+    $referenceRoot = [System.IO.Path]::GetPathRoot([System.IO.Path]::GetFullPath($ReferencePath))
+    foreach ($drive in Get-PSDrive -PSProvider FileSystem) {
+        $driveRoot = [System.IO.Path]::GetPathRoot([System.IO.Path]::GetFullPath($drive.Root))
+        if ([string]::Equals($driveRoot, $referenceRoot, [System.StringComparison]::OrdinalIgnoreCase)) {
+            continue
+        }
+
+        $candidate = Join-Path $drive.Root ('.ezeus-runtime-test-' + [guid]::NewGuid())
+        try {
+            New-Item -ItemType Directory -Path $candidate -ErrorAction Stop | Out-Null
+            return $candidate
+        }
+        catch {
+            continue
+        }
+    }
+
+    throw 'Cross-volume runtime fixture requires a writable filesystem volume distinct from the temporary fixture volume.'
+}
+
 $sourceScript = Join-Path $PSScriptRoot 'dev-runtime.ps1'
 $systemTemp = Join-Path ([System.IO.Path]::GetTempPath()) ("ezeus-runtime-test-" + [guid]::NewGuid())
-$workspaceTemp = Join-Path (Split-Path -Parent $PSScriptRoot) (".stage-root-test-" + [guid]::NewGuid())
+$crossVolumeTemp = New-CrossVolumeFixtureRoot $systemTemp
 $oldOriginal = $env:EZEUS_ORIGINAL_GAME_DIR
 $oldAssets = $env:EZEUS_RUNTIME_ASSETS_DIR
 $oldStageRoot = $env:EZEUS_STAGE_ROOT
@@ -107,7 +130,7 @@ try {
     & (Join-Path $sameDriveRepo 'scripts/dev-runtime.ps1') -Prepare -OriginalGameDir $sameDriveOriginal -RuntimeAssetsDir $sameDriveAssets
     Assert-True (-not (Test-Path -LiteralPath (Join-Path $sameDriveRuntime 'i15.e'))) 'An obsolete texture pack remained after preparing again.'
 
-    $crossDriveRepo = Join-Path $workspaceTemp 'cross-drive-repo'
+    $crossDriveRepo = Join-Path $crossVolumeTemp 'cross-drive-repo'
     $crossDriveOriginal = Join-Path $systemTemp 'Cross Drive Original'
     $crossDriveAssets = Join-Path $systemTemp 'Cross Drive Assets'
     New-Fixture $crossDriveRepo $crossDriveOriginal $crossDriveAssets $sourceScript
@@ -139,7 +162,7 @@ finally {
     $env:EZEUS_ORIGINAL_GAME_DIR = $oldOriginal
     $env:EZEUS_RUNTIME_ASSETS_DIR = $oldAssets
     $env:EZEUS_STAGE_ROOT = $oldStageRoot
-    foreach ($path in @($systemTemp, $workspaceTemp)) {
+    foreach ($path in @($systemTemp, $crossVolumeTemp)) {
         if (Test-Path -LiteralPath $path) {
             Remove-Item -LiteralPath $path -Recurse -Force
         }
