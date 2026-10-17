@@ -191,9 +191,8 @@ void eEpisodeIntroductionWidget::initialize(
         diffLabel->setNoPadding();
         diffLabel->setSmallFontSize();
         const auto diffText = eLanguage::zeusText(44, 219);
-        const auto defDiff = eDifficulty::hero;
+        const auto defDiff = c->difficulty();
         const auto diff = std::make_shared<eDifficulty>(defDiff);
-        c->setDifficulty(defDiff);
         const auto hdiff = eDifficultyHelpers::name(*diff);
         diffLabel->setText("  " + diffText + "  " + hdiff);
         diffLabel->fitContent();

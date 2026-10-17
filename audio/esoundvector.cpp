@@ -30,6 +30,7 @@ void eSoundVector::addPath(const std::string& path) {
 }
 
 void eSoundVector::play(const int id, const int chn) {
+    if(!Mix_QuerySpec(nullptr, nullptr, nullptr)) return;
     const int idMax = mPaths.size();
     if(id < 0 || id >= idMax) return;
     auto& p = mPaths[id];

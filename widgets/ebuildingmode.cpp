@@ -416,6 +416,7 @@ eBuildingType eBuildingModeHelpers::toBuildingType(const eBuildingMode mode) {
     case eBuildingMode::perseusMonument:
         return eBuildingType::customMonument;
     }
+    return eBuildingType::none;
 }
 
 int eBuildingModeHelpers::toCommemorativeId(const eBuildingMode mode) {

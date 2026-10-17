@@ -300,12 +300,12 @@ void eChooseGameEditMenu::initialize(const bool editor) {
         const auto w = window();
 
         if(editor) {
-            const auto e = new eEditorMainMenu(window());
-            e->resize(w->width(), w->height());
             const auto c = std::make_shared<eCampaign>();
             if(mSelected.fIsPak) c->readPak(mSelected.fTitle,
                                             mSelected.fPakPath);
-            else c->load(mSelected.fFolderName);
+            else if(!c->load(mSelected.fFolderName)) return;
+            const auto e = new eEditorMainMenu(window());
+            e->resize(w->width(), w->height());
             c->setEditorMode(true);
             e->initialize(c);
             w->setWidget(e);
@@ -313,7 +313,7 @@ void eChooseGameEditMenu::initialize(const bool editor) {
             const auto c = std::make_shared<eCampaign>();
             if(mSelected.fIsPak) c->readPak(mSelected.fTitle,
                                             mSelected.fPakPath);
-            else c->load(mSelected.fFolderName);
+            else if(!c->load(mSelected.fFolderName)) return;
             w->showEpisodeIntroduction(c);
         }
     });

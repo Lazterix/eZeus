@@ -2385,6 +2385,20 @@ bool eGameTextures::initialize(SDL_Renderer* const r) {
     return true;
 }
 
+void eGameTextures::shutdown() {
+    gMenuLoaders.clear();
+    gGameLoaders.clear();
+
+    sDestructionTextures.clear();
+    sInterfaceTextures.clear();
+    sCharacterTextures.clear();
+    sBuildingTextures.clear();
+    sGodTextures.clear();
+    sTerrainTextures.clear();
+
+    sInitialized = false;
+}
+
 bool eGameTextures::loadNextMenu(const eSettings& settings,
                                  std::string& text) {
     const int iMax = gMenuLoaders.size();

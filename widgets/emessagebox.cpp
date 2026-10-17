@@ -35,7 +35,8 @@ void eMessageBox::initialize(eGameBoard& board,
                              const eEventData& ed,
                              const eAction& viewTile,
                              const eAction& closeFunc,
-                             eMessage msg) {
+                             eMessage msg,
+                             const bool readOnly) {
     mCloseFunc = closeFunc;
     setType(eFrameType::message);
 
@@ -138,6 +139,9 @@ void eMessageBox::initialize(eGameBoard& board,
                                item);
     eStringHelpers::replaceAll(msg.fText, "[itemshort]",
                                itemshort);
+    const auto timeStr = std::to_string(ed.fTime);
+    eStringHelpers::replaceAll(msg.fText, "[time_allotted]", timeStr);
+    eStringHelpers::replaceAll(msg.fText, "[travel_time]", timeStr);
 
     const int giftSize = eGiftHelpers::giftCount(type);
     if(giftSize > 0) {
@@ -183,7 +187,9 @@ void eMessageBox::initialize(eGameBoard& board,
 
     eOkButton* ok = nullptr;
     eWidget* wid = nullptr;
-    const bool addOk = !ed.fCA0 && ed.fCCA0.empty() && !ed.fA0 && !ed.fA1 && !ed.fA2;
+    const bool addOk = readOnly ||
+                       (!ed.fCA0 && ed.fCCA0.empty() &&
+                        !ed.fA0 && !ed.fA1 && !ed.fA2);
     if(addOk) {
         ok = new eOkButton(window());
         ok->setPressAction([this]() {
@@ -191,7 +197,7 @@ void eMessageBox::initialize(eGameBoard& board,
         });
         addWidget(ok);
     }
-    if(ed.fType == eMessageEventType::invasion) {
+    if(!readOnly && ed.fType == eMessageEventType::invasion) {
         wid = new eWidget(window());
         wid->setNoPadding();
 
@@ -500,7 +506,7 @@ void eMessageBox::initialize(eGameBoard& board,
             if(ed.fA2) ed.fA2();
             close();
         });
-        a1B->setVisible(ed.fA2 != nullptr);
+        a2B->setVisible(ed.fA2 != nullptr);
 
         const int w = width() - 4*p;
         wid->setWidth(w);

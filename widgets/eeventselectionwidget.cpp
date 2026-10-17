@@ -66,6 +66,7 @@ void eEventSelectionWidget::initialize(
             eGameEventType::lavaFlow,
             eGameEventType::tidalWave,
             eGameEventType::sinkLand,
+            eGameEventType::landSlide,
             eGameEventType::cityBecomes,
             eGameEventType::tradeShutdowns,
             eGameEventType::tradeOpensUp,
@@ -92,6 +93,7 @@ void eEventSelectionWidget::initialize(
             eLanguage::zeusText(156, 24), // lava flow
             eLanguage::zeusText(156, 25), // tidal wave
             eLanguage::zeusText(156, 28), // sink land
+            eLanguage::zeusText(156, 5), // landslide
             eLanguage::zeusText(290, 35), // city status change
             eLanguage::zeusText(35, 2), // trade shuts down
             eLanguage::zeusText(35, 3), // trade opens up

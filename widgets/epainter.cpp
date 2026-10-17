@@ -34,6 +34,7 @@ void ePainter::setFont(TTF_Font* const font) {
 void ePainter::drawTexture(const int x, const int y,
                            const std::shared_ptr<eTexture>& tex,
                            const eAlignment align) const {
+    if(!tex || tex->isNull()) return;
     int xx = x;
     if(static_cast<bool>(align & eAlignment::left)) {
         xx -= tex->width();
@@ -54,6 +55,7 @@ void ePainter::drawTexture(const int x, const int y,
 void ePainter::drawTexture(const SDL_Rect& rect,
                            const std::shared_ptr<eTexture>& tex,
                            const eAlignment align) const {
+    if(!tex || tex->isNull()) return;
     int xx;
     if(static_cast<bool>(align & eAlignment::right)) {
         xx = rect.x + rect.w - tex->width();
@@ -77,6 +79,7 @@ void ePainter::drawTexture(const SDL_Rect& rect,
 
 void ePainter::drawTexture(const int x, const int y,
                            const std::shared_ptr<eTexture>& tex) const {
+    if(!tex || tex->isNull()) return;
     tex->render(mRenderer, mX + x, mY + y);
 }
 

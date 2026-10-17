@@ -17,10 +17,16 @@
 #include "audio/esounds.h"
 
 bool init() {
-    if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0) {
+    if(SDL_Init(SDL_INIT_VIDEO) < 0) {
         printf("SDL could not initialize! SDL Error: %s\n",
                SDL_GetError());
         return false;
+    }
+
+    if(SDL_InitSubSystem(SDL_INIT_AUDIO) < 0) {
+        printf("Warning: SDL audio could not initialize; "
+               "continuing without audio. SDL Error: %s\n",
+               SDL_GetError());
     }
 
     if(!SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1")) {
@@ -35,9 +41,9 @@ bool init() {
     }
 
     if(Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
-        printf("SDL_mixer could not initialize! SDL_mixer Error: %s\n",
+        printf("Warning: SDL_mixer could not open audio; "
+               "continuing without audio. SDL_mixer Error: %s\n",
                Mix_GetError());
-        return false;
     }
 
     if(TTF_Init()) {
@@ -52,6 +58,7 @@ bool init() {
 void close() {
     TTF_Quit();
     IMG_Quit();
+    Mix_CloseAudio();
     Mix_Quit();
     SDL_Quit();
 }
@@ -80,12 +87,15 @@ bool getDisplayResolutions(std::vector<SDL_DisplayMode>& resolutions) {
 
     SDL_Log("Number of displays: %i", display_count);
 
-    for(int display_index = 0; display_index <= display_count; display_index++) {
+    if(display_count < 1) return false;
+
+    for(int display_index = 0; display_index < display_count; display_index++) {
         SDL_Log("Display %i:", display_index);
 
         const int modes_count = SDL_GetNumDisplayModes(display_index);
+        if(modes_count < 1) continue;
 
-        for(int mode_index = 0; mode_index <= modes_count; mode_index++) {
+        for(int mode_index = 0; mode_index < modes_count; mode_index++) {
             SDL_DisplayMode mode = { SDL_PIXELFORMAT_UNKNOWN, 0, 0, 0, 0 };
 
             if (SDL_GetDisplayMode(display_index, mode_index, &mode) == 0) {
@@ -125,24 +135,6 @@ int main() {
 //            eResolution::sResolutions.emplace_back(m.w, m.h);
 //        }
 //    }
-    std::vector<SDL_DisplayMode> ress;
-    const int displayCount = SDL_GetNumVideoDisplays();
-
-    for(int i = 0; i < displayCount; i++) {
-        SDL_DisplayMode dm;
-        SDL_GetCurrentDisplayMode(i, &dm);
-        bool contains = false;
-        for(const auto& rr : eResolution::sResolutions) {
-            contains = dm.w == rr.width() &&
-                       dm.h == rr.height();
-            if(contains) break;
-        }
-        if(!contains) {
-            const auto res = eResolution(dm.w, dm.h);
-            eResolution::sResolutions.push_back(res);
-        }
-    }
-
     if(!std::filesystem::exists(eGameDir::iBinaryPath())) {
         printf("Could not find interface textures!\n"
                "Make sure you have interface.e file in eZeus directory.\n");
@@ -153,6 +145,7 @@ int main() {
     eNumbers::sLoad();
     eSettings settings;
     settings.read();
+    settings.applyAudio();
     bool found = false;
     const auto checkTextureSize = [&found](const std::string& path,
                                            bool& setting) {
@@ -164,6 +157,24 @@ int main() {
     checkTextureSize(eGameDir::i30BinaryPath(), settings.fSmallTextures);
     checkTextureSize(eGameDir::i45BinaryPath(), settings.fMediumTextures);
     checkTextureSize(eGameDir::i60BinaryPath(), settings.fLargeTextures);
+
+    if(!found) {
+        const auto enableIfPresent = [&found](const std::string& path,
+                                              bool& setting) {
+            if(found) return;
+            if(!std::filesystem::exists(path)) return;
+            setting = true;
+            found = true;
+        };
+
+        // Recover from stale/corrupt settings by preferring the classic
+        // 30px texture pack, then any other installed pack.
+        enableIfPresent(eGameDir::i30BinaryPath(), settings.fSmallTextures);
+        enableIfPresent(eGameDir::i15BinaryPath(), settings.fTinyTextures);
+        enableIfPresent(eGameDir::i45BinaryPath(), settings.fMediumTextures);
+        enableIfPresent(eGameDir::i60BinaryPath(), settings.fLargeTextures);
+    }
+
     if(!found) {
         printf("Could not find any textures!\n"
                "Make sure you have i15.e, i30.e, i45.e, or i60.e file in eZeus directory.\n");
@@ -176,11 +187,14 @@ int main() {
         eMusic music;
         eSounds sounds;
         eMainWindow w;
-        const bool i = w.initialize(settings);
-        if(!i) return 1;
-        const bool e = eGameTextures::initialize(w.renderer());
-
-        if(e) r = w.exec();
+        if(!w.initialize(settings)) {
+            r = 1;
+        } else if(!eGameTextures::initialize(w.renderer())) {
+            printf("Failed to initialize game textures.\n");
+            r = 1;
+        } else {
+            r = w.exec();
+        }
     }
 
     close();

@@ -288,6 +288,7 @@ std::shared_ptr<eTexture> gCharPortrait(
     default:
         return zgp.getTexture(0);
     }
+    return zgp.getTexture(0);
 }
 
 std::string gCharName(const eCharacterType c, const int seedId) {
@@ -377,7 +378,7 @@ std::string gCharName(const eCharacterType c, const int seedId) {
 
 std::string gCharOccupation(
     const eCharacter* const c) {
-    if(!c) return nullptr;
+    if(!c) return {};
     auto& board = c->getBoard();
     const auto cid = c->cityId();
     const auto cname = board.cityName(cid);

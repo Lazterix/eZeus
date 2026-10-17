@@ -17,6 +17,7 @@
 #include "widgets/earmymenu.h"
 #include "egamemainmenu.h"
 #include "etopbarwidget.h"
+#include "emessagehistory.h"
 
 #include "eviewmode.h"
 #include "emessage.h"
@@ -48,11 +49,6 @@ enum class eGodQuestId;
 enum class eWorldDirection;
 
 using eBuildingCreator = std::function<stdsptr<eBuilding>()>;
-
-struct eSavedMessage {
-    eEventData fEd;
-    eMessage fMsg;
-};
 
 struct eGameWidgetSettings {
     bool fPaused = false;
@@ -154,6 +150,17 @@ public:
     void closeTopMenu();
     void showSaveGameDialog();
     void showLoadGameDialog();
+    void showDeleteGameDialog();
+    void showMessageHistory(const eAction& closeAction = nullptr);
+    void showHistoryMessage(const std::size_t index);
+    void showAboutDialog();
+    const eMessageHistory& messageHistory() const { return mMessageHistory; }
+    void setMessageHistory(const eMessageHistory& history) {
+        mMessageHistory = history;
+        if(mGm) mGm->updateMessagePresentation();
+    }
+    void showSpeedOptions();
+    void showDifficultyOptions();
     void addWidget(eWidget* const widget);
 protected:
     void paintEvent(ePainter& p) override;
@@ -260,6 +267,12 @@ private:
                      const bool prepend = false);
     void showMessage(eEventData& ed, const eEventMessageType& msg,
                      const bool prepend = false);
+    void showMessagePair(eEventData& ed, const eMessage& full,
+                         const eMessage& condensed,
+                         const bool prepend);
+    void presentMessage(const eEventData& ed, const eMessage& msg,
+                        const bool prepend = false,
+                        const bool readOnly = false);
 
     void updateTipPositions();
 
@@ -294,6 +307,7 @@ private:
     eInfoWidget* openInfoWidget(const std::vector<eCharacter *> chars);
 
     void switchPause();
+    void setSpeedId(const int id);
 
     stdsptr<eTexture> getBasementTexture(
             const int tx, const int ty, eBuilding* const d,
@@ -378,6 +392,7 @@ private:
     eInfoWidget* mInfoWidget = nullptr;
     eMessageBox* mMsgBox = nullptr;
     std::deque<eSavedMessage> mSavedMsgs;
+    eMessageHistory mMessageHistory;
     eTerrainEditMenu* mTem = nullptr;
     eGameMenu* mGm = nullptr;
     eArmyMenu* mAm = nullptr;

@@ -354,7 +354,31 @@ void eEditorSettingsMenu::initialize(const bool first,
                     eBuildingType::chariotFactory,
 
                     eBuildingType::triremeWharf,
-                    eBuildingType::hippodromePiece
+                    eBuildingType::hippodromePiece,
+
+                    eBuildingType::templeAphrodite,
+                    eBuildingType::templeApollo,
+                    eBuildingType::templeAres,
+                    eBuildingType::templeArtemis,
+                    eBuildingType::templeAthena,
+                    eBuildingType::templeAtlas,
+                    eBuildingType::templeDemeter,
+                    eBuildingType::templeDionysus,
+                    eBuildingType::templeHades,
+                    eBuildingType::templeHephaestus,
+                    eBuildingType::templeHera,
+                    eBuildingType::templeHermes,
+                    eBuildingType::templePoseidon,
+                    eBuildingType::templeZeus,
+
+                    eBuildingType::achillesHall,
+                    eBuildingType::atalantaHall,
+                    eBuildingType::bellerophonHall,
+                    eBuildingType::herculesHall,
+                    eBuildingType::jasonHall,
+                    eBuildingType::odysseusHall,
+                    eBuildingType::perseusHall,
+                    eBuildingType::theseusHall
                 };
 
                 int w = 0;

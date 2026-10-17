@@ -86,6 +86,7 @@ void eEpisodeGoalWidget::initialize(const stdsptr<eEpisodeGoal>& e,
             b->setVisible(isNone);
             b->setValue(e->fRequiredCount);
             e->fEnumInt1 = static_cast<int>(type);
+            updateText();
         });
         detailsW->addWidget(p);
         auto t = static_cast<eBuildingType>(e->fEnumInt1);
@@ -313,11 +314,12 @@ void eEpisodeGoalWidget::initialize(const stdsptr<eEpisodeGoal>& e,
         const auto date = e->date();
         dateB->initialize();
         dateB->setDate(date);
-        dateB->setDateChangeAction([e](const eDate& date) {
+        dateB->setDateChangeAction([e, updateText](const eDate& date) {
             e->fEnumInt1 = date.day();
             const auto m = date.month();
             e->fEnumInt2 = static_cast<int>(m);
             e->fRequiredCount = date.year();
+            updateText();
         });
         detailsW->addWidget(dateB);
     } break;

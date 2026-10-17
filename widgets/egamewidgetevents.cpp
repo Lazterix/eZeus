@@ -34,10 +34,12 @@ void eGameWidget::handleGodQuestEvent(eEventData& ed,
     } else {
         emt = &qm->fQuest;
     }
-    auto msg = emt->fFull;
+    eMessageType msg = *emt;
     const auto hm = eHero::sHeroName(hero);
-    eStringHelpers::replaceAll(msg.fTitle, "[hero_needed]", hm);
-    eStringHelpers::replaceAll(msg.fText, "[hero_needed]", hm);
+    eStringHelpers::replaceAll(msg.fFull.fTitle, "[hero_needed]", hm);
+    eStringHelpers::replaceAll(msg.fFull.fText, "[hero_needed]", hm);
+    eStringHelpers::replaceAll(msg.fCondensed.fTitle, "[hero_needed]", hm);
+    eStringHelpers::replaceAll(msg.fCondensed.fText, "[hero_needed]", hm);
     showMessage(ed, msg);
 }
 
@@ -108,6 +110,7 @@ void eGameWidget::handleMonsterInvasionInitialEvent(eEventData& ed) {
     const auto timeStr = std::to_string(ed.fTime);
     eStringHelpers::replace(msg.fFull.fText, "[reason_phrase]", reason);
     eStringHelpers::replace(msg.fFull.fText, "[time_until_attack]", timeStr);
+    eStringHelpers::replace(msg.fCondensed.fText, "[reason_phrase]", reason);
     eStringHelpers::replace(msg.fCondensed.fText, "[time_until_attack]", timeStr);
     showMessage(ed, msg);
 }

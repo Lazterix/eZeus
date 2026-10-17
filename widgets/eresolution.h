@@ -10,7 +10,7 @@ enum class eUIScale {
 
 class eResolution {
 public:
-    eResolution() {}
+    eResolution() : eResolution(1280, 720) {}
     eResolution(const int width, const int height);
 
     int width() const { return mWidth; }

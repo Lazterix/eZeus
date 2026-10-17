@@ -8,6 +8,7 @@ eTextureCollection::eTextureCollection(SDL_Renderer* const r) :
 void eTextureCollection::draw(ePainter& p,
                               const int x, const int y,
                               const int id) const {
+    if(id < 0 || id >= static_cast<int>(mTexs.size())) return;
     p.drawTexture(x, y, mTexs[id]);
 }
 
@@ -15,6 +16,7 @@ void eTextureCollection::draw(ePainter& p,
                               const int x, const int y,
                               const int id,
                               const eAlignment align) const {
+    if(id < 0 || id >= static_cast<int>(mTexs.size())) return;
     p.drawTexture(x, y, mTexs[id], align);
 }
 
@@ -33,6 +35,10 @@ std::shared_ptr<eTexture> eTextureCollection::loadTexture(
 
 const std::shared_ptr<eTexture>&
 eTextureCollection::getTexture(const int id) const {
+    static const std::shared_ptr<eTexture> sNullTexture;
+    if(id < 0 || id >= static_cast<int>(mTexs.size())) {
+        return sNullTexture;
+    }
     return mTexs[id];
 }
 

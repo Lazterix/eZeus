@@ -336,10 +336,12 @@ eWidget* eWidget::lastAncestor() {
 }
 
 void eWidget::removeChildren() {
-    for(const auto w : mChildren) {
+    // deleteLater() removes the child from mChildren immediately. Avoid
+    // iterating a vector that is being mutated by the loop body.
+    while(!mChildren.empty()) {
+        const auto w = mChildren.back();
         w->deleteLater();
     }
-    mChildren.clear();
 }
 
 std::string eWidget::sTooltip() {

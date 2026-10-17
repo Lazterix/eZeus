@@ -71,6 +71,7 @@ double eResolution::multiplier() const {
     case eUIScale::large:
         return 2.0;
     }
+    return 1.0;
 }
 
 int eResolution::hugeFontSize() const {

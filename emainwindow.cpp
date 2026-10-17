@@ -10,6 +10,8 @@
 #include "widgets/echoosegameeditmenu.h"
 #include "widgets/eselectcolonywidget.h"
 
+#include "textures/egametextures.h"
+
 #include "audio/emusic.h"
 
 #include "engine/ethreadpool.h"
@@ -31,17 +33,54 @@
 #include "widgets/eepisodeintroductionwidget.h"
 #include "widgets/eepisodelostwidget.h"
 #include "widgets/erosterofleaders.h"
+#include "widgets/edisplaymode.h"
+#include "widgets/edisplaytransition.h"
+#include "widgets/esoundsettingswidget.h"
 
 eMainWindow::eMainWindow() {}
 
 eMainWindow::~eMainWindow() {
-    if(mSdlWindow) SDL_DestroyWindow(mSdlWindow);
+    // Destroy widgets while their renderer-backed textures are still valid.
+    if(mGW) {
+        mGW->setBoard(nullptr);
+        if(mWidget == mGW) mWidget = nullptr;
+        mGW->deleteLater();
+        mGW = nullptr;
+    }
+    if(mWW) {
+        if(mWidget == mWW) mWidget = nullptr;
+        mWW->deleteLater();
+        mWW = nullptr;
+    }
+    if(mWidget) {
+        mWidget->deleteLater();
+        mWidget = nullptr;
+    }
+
+    for(const auto& slot : mSlots) {
+        slot();
+    }
+    mSlots.clear();
+
+    // Global texture collections must release SDL_Texture instances before
+    // the renderer they belong to is destroyed.
+    eGameTextures::shutdown();
+
     if(mSdlRenderer) SDL_DestroyRenderer(mSdlRenderer);
-    setWidget(nullptr);
+    mSdlRenderer = nullptr;
+    if(mSdlWindow) SDL_DestroyWindow(mSdlWindow);
+    mSdlWindow = nullptr;
 }
 
 bool eMainWindow::initialize(const eSettings& settings) {
-    const auto& res = settings.fRes;
+    eSettings applied = settings;
+    auto resolutions = eDisplayTransition::availableResolutions(
+        nullptr, applied.fRes);
+    applied.fRes = eDisplayModeModel::validatedResolution(
+        applied.fRes, resolutions);
+    eResolution::sResolutions = resolutions;
+
+    const auto& res = applied.fRes;
     const int w = res.width();
     const int h = res.height();
     const auto window = SDL_CreateWindow("eZeus",
@@ -64,18 +103,46 @@ bool eMainWindow::initialize(const eSettings& settings) {
         return false;
     }
 
-    if(mSdlWindow) SDL_DestroyWindow(mSdlWindow);
     if(mSdlRenderer) SDL_DestroyRenderer(mSdlRenderer);
+    if(mSdlWindow) SDL_DestroyWindow(mSdlWindow);
     mSdlWindow = window;
     mSdlRenderer = renderer;
-    setResolution(res);
-    setFullscreen(settings.fFullscreen);
-    mSettings = settings;
-    SDL_SetWindowPosition(window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
+    mSettings = applied;
+    std::string displayError;
+    if(!eDisplayTransition::apply(window, renderer, res,
+                                  applied.fFullscreen,
+                                  mWindowedPlacement,
+                                  displayError)) {
+        printf("Display mode could not be applied: %s\n",
+               displayError.c_str());
+        applied.fFullscreen = false;
+        if(!eDisplayTransition::apply(window, renderer, res, false,
+                                      mWindowedPlacement,
+                                      displayError)) {
+            printf("Windowed display fallback failed: %s\n",
+                   displayError.c_str());
+            SDL_DestroyRenderer(renderer);
+            SDL_DestroyWindow(window);
+            mSdlRenderer = nullptr;
+            mSdlWindow = nullptr;
+            return false;
+        }
+        mSettings = applied;
+    }
+    eResolution::sResolutions =
+        eDisplayTransition::availableResolutions(window, res);
+
+    if(settings.fRes != applied.fRes ||
+       settings.fFullscreen != applied.fFullscreen) {
+        mSettings.write();
+    }
 
     const std::string icoPath = eGameDir::path("zeus.ico");
     const auto icon = IMG_Load(icoPath.c_str());
-    SDL_SetWindowIcon(window, icon);
+    if(icon) {
+        SDL_SetWindowIcon(window, icon);
+        SDL_FreeSurface(icon);
+    }
     eGameTextures::setSettings(mSettings);
     return true;
 }
@@ -102,20 +169,22 @@ void eMainWindow::addSlot(const eSlot& slot) {
     mSlots.push_back(slot);
 }
 
-void eMainWindow::setResolution(const eResolution& res) {
-    if(mSettings.fRes == res && !mFirstFullscrenSetting) return;
-    mFirstResolutionSetting = false;
-    mSettings.fRes = res;
-    const int w = res.width();
-    const int h = res.height();
-    SDL_SetWindowSize(mSdlWindow, w, h);
-}
+bool eMainWindow::applyDisplaySettings(const eResolution& res,
+                                       const bool fullscreen) {
+    const auto found = std::find(eResolution::sResolutions.begin(),
+                                 eResolution::sResolutions.end(), res);
+    if(found == eResolution::sResolutions.end()) return false;
 
-void eMainWindow::setFullscreen(const bool f) {
-    if(mSettings.fFullscreen == f && !mFirstFullscrenSetting) return;
-    mFirstFullscrenSetting = false;
-    mSettings.fFullscreen = f;
-    SDL_SetWindowFullscreen(mSdlWindow, f ? SDL_WINDOW_FULLSCREEN : 0);
+    std::string error;
+    if(!eDisplayTransition::apply(mSdlWindow, mSdlRenderer,
+                                  res, fullscreen,
+                                  mWindowedPlacement, error)) {
+        printf("Display mode could not be applied: %s\n", error.c_str());
+        return false;
+    }
+    mSettings.fRes = res;
+    mSettings.fFullscreen = fullscreen;
+    return true;
 }
 
 void eMainWindow::startGameAction(eGameBoard* const board,
@@ -252,6 +321,8 @@ void eMainWindow::episodeLost() {
 }
 
 bool eMainWindow::saveGame(const std::string& path) {
+    if(!mCampaign) return false;
+
     const auto fsp = std::filesystem::path(path);
     const auto fspd = fsp.parent_path();
     std::filesystem::create_directories(fspd);
@@ -274,12 +345,22 @@ bool eMainWindow::saveGame(const std::string& path) {
     return true;
 }
 
+void eMainWindow::setAutosave(const bool enabled) {
+    if(mSettings.fAutosave == enabled) return;
+    mSettings.fAutosave = enabled;
+    mSettings.write();
+}
+
 bool eMainWindow::loadGame(const std::string& path) {
     std::ifstream file(path, std::ios::in | std::ios::binary);
     if(!file) return false;
     eReadSource source(&file);
     eReadStream src(source);
     src.readFormat();
+    if(src.failed()) {
+        printf("Cannot read '%s': truncated file header.\n", path.c_str());
+        return false;
+    }
     const auto& format = src.format();
     const int version = src.formatVersion();
     if(format != "eZeus.ez") {
@@ -288,13 +369,19 @@ bool eMainWindow::loadGame(const std::string& path) {
         return false;
     }
     if(version > eFileFormat::version) {
-        printf("Attempting to read '%s' format '%s' version '%i' newer than the executable.\n",
-               path.c_str(), format.c_str(), version);
+        printf("Cannot read '%s' format '%s' version '%i': newer than executable version '%i'.\n",
+               path.c_str(), format.c_str(), version,
+               eFileFormat::version);
+        return false;
     }
     eGameWidgetSettings s;
     s.read(src);
     const auto c = std::make_shared<eCampaign>();
     c->read(src);
+    if(src.failed()) {
+        printf("Cannot read '%s': truncated save data.\n", path.c_str());
+        return false;
+    }
     c->loadStrings();
     c->loadNumbers();
     src.handlePostFuncs();
@@ -377,7 +464,7 @@ void eMainWindow::showMainMenu() {
     };
 
     const auto settingsAction = [this]() {
-        showSettingsMenu();
+        showSettingsMenu([this]() { showMainMenu(); });
     };
 
     const auto quitAction = [this]() {
@@ -396,31 +483,126 @@ void eMainWindow::showMainMenu() {
                    leaderAction);
 }
 
-void eMainWindow::showSettingsMenu() {
+void eMainWindow::showSettingsMenu(const eAction& returnAction,
+                                   const bool displayOnly) {
+    const bool activeGame = mGW && mWidget == mGW;
+    const eGameWidgetSettings gameSettings =
+        activeGame ? mGW->settings() : eGameWidgetSettings{};
+    const eMessageHistory messageHistory =
+        activeGame ? mGW->messageHistory() : eMessageHistory{};
+
+    eResolution::sResolutions = eDisplayTransition::availableResolutions(
+        mSdlWindow, mSettings.fRes);
     const auto esm = new eSettingsMenu(mSettings, this);
     esm->resize(width(), height());
 
-    const auto applyA = [this](const eSettings& settings) {
-        const bool loadNeeded = settings.fRes != mSettings.fRes;
-        setResolution(settings.fRes);
-        setFullscreen(settings.fFullscreen);
-        mSettings = settings;
-        mSettings.write();
-        if(!mSettings.fTinyTextures &&
-           !mSettings.fSmallTextures &&
-           !mSettings.fMediumTextures &&
-           !mSettings.fLargeTextures) {
-            mSettings.fSmallTextures = true;
+    const auto applyA = [this, activeGame, gameSettings, messageHistory,
+                         returnAction, displayOnly](const eSettings& settings) {
+        eSettings applied = settings;
+
+        if(displayOnly) {
+            applied.fTinyTextures = mSettings.fTinyTextures;
+            applied.fSmallTextures = mSettings.fSmallTextures;
+            applied.fMediumTextures = mSettings.fMediumTextures;
+            applied.fLargeTextures = mSettings.fLargeTextures;
         }
+
+        if(!applied.fTinyTextures &&
+           !applied.fSmallTextures &&
+           !applied.fMediumTextures &&
+           !applied.fLargeTextures) {
+            const auto enableIfPresent = [](const std::string& path,
+                                            bool& enabled) {
+                if(!std::filesystem::exists(path)) return false;
+                enabled = true;
+                return true;
+            };
+
+            bool recovered =
+                enableIfPresent(eGameDir::i30BinaryPath(),
+                                applied.fSmallTextures);
+            if(!recovered) {
+                recovered = enableIfPresent(eGameDir::i15BinaryPath(),
+                                            applied.fTinyTextures);
+            }
+            if(!recovered) {
+                recovered = enableIfPresent(eGameDir::i45BinaryPath(),
+                                            applied.fMediumTextures);
+            }
+            if(!recovered) {
+                enableIfPresent(eGameDir::i60BinaryPath(),
+                                applied.fLargeTextures);
+            }
+        }
+
+        const bool textureSetChanged =
+            applied.fTinyTextures != mSettings.fTinyTextures ||
+            applied.fSmallTextures != mSettings.fSmallTextures ||
+            applied.fMediumTextures != mSettings.fMediumTextures ||
+            applied.fLargeTextures != mSettings.fLargeTextures;
+        const bool resolutionChanged = applied.fRes != mSettings.fRes;
+        if(!applyDisplaySettings(applied.fRes, applied.fFullscreen)) return;
+
+        mSettings.fTinyTextures = applied.fTinyTextures;
+        mSettings.fSmallTextures = applied.fSmallTextures;
+        mSettings.fMediumTextures = applied.fMediumTextures;
+        mSettings.fLargeTextures = applied.fLargeTextures;
+        mSettings.fAutosave = applied.fAutosave;
+        mSettings.write();
         eGameTextures::setSettings(mSettings);
-        if(loadNeeded) showMenuLoading();
+
+        if(activeGame && resolutionChanged) {
+            if(mGW) {
+                mGW->setBoard(nullptr);
+                mGW->deleteLater();
+                mGW = nullptr;
+            }
+            if(mWW) {
+                mWW->deleteLater();
+                mWW = nullptr;
+            }
+            mGW = new eGameWidget(this);
+            mGW->setBoard(mBoard);
+            mGW->resize(width(), height());
+            mGW->initialize();
+            mGW->setMessageHistory(messageHistory);
+            mGW->setSettings(gameSettings);
+            setWidget(mGW);
+        } else if(activeGame) {
+            returnToGame();
+        } else if(resolutionChanged || textureSetChanged) {
+            showMenuLoading();
+        } else if(returnAction) {
+            returnAction();
+        } else {
+            showMainMenu();
+        }
+    };
+    const auto cancelA = [this, returnAction, activeGame]() {
+        if(activeGame) returnToGame();
+        else if(returnAction) returnAction();
         else showMainMenu();
     };
-    const auto fullscrennA = [this](const bool f) {
-        setFullscreen(f);
-    };
-    esm->initialize(applyA, fullscrennA);
+    esm->initialize(applyA, cancelA, displayOnly);
     setWidget(esm);
+}
+
+void eMainWindow::returnToGame() {
+    if(mGW) setWidget(mGW);
+}
+
+void eMainWindow::showSoundSettings() {
+    const auto soundSettings = new eSoundSettingsWidget(this);
+    soundSettings->initialize(mSettings, [this](const eSettings& settings) {
+        mSettings.fMusicEnabled = settings.fMusicEnabled;
+        mSettings.fSoundsEnabled = settings.fSoundsEnabled;
+        mSettings.fMusicVolume = settings.fMusicVolume;
+        mSettings.fSoundsVolume = settings.fSoundsVolume;
+        mSettings.applyAudio();
+        mSettings.write();
+    });
+    execDialog(soundSettings, true, nullptr, mGW);
+    soundSettings->align(eAlignment::center);
 }
 
 void eMainWindow::showChooseGameMenu() {
@@ -439,8 +621,10 @@ void eMainWindow::showChooseGameEditMenu() {
 
 void eMainWindow::showGame(const stdsptr<eCampaign>& c,
                            const eGameWidgetSettings& settings) {
-    mCampaign = c;
+    if(!c) return;
     const auto e = c->currentEpisode();
+    if(!e || !e->fBoard) return;
+    mCampaign = c;
     showGame(e->fBoard, settings);
 }
 

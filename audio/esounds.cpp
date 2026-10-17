@@ -578,6 +578,7 @@ void eSounds::playGodSound(const eGodType g, const eGodSound s) {
     case eGodType::zeus:
         god = &sInstance->mZeus; break;
     }
+    if(!god) return;
     god->play(s);
 }
 
@@ -601,6 +602,7 @@ void eSounds::playHeroSound(const eHeroType h, const eHeroSound s) {
     case eHeroType::theseus:
         hero = &sInstance->mTheseus; break;
     }
+    if(!hero) return;
     hero->play(s);
 }
 
@@ -645,6 +647,7 @@ void eSounds::playMonsterSound(const eMonsterType m,
         return;
     } break;
     }
+    if(!monster) return;
     monster->play(s);
 }
 
@@ -1559,11 +1562,6 @@ void eSounds::loadImpl() {
         mAgoraFleece.addPath(layer2Dir + s);
     }
 
-    for(const auto& s : {"agora_fleece1.wav",
-                         "agora_fleece2.wav"}) {
-        mAgoraFleece.addPath(layer2Dir + s);
-    }
-
     for(const auto& s : {"agora_oil.wav",
                          "agora_gen1.wav"}) {
         mAgoraOil.addPath(layer2Dir + s);
@@ -1964,7 +1962,7 @@ void eSounds::loadImpl() {
                              pref + "_e_3.mp3"}) {
             vec.addPath(walkerDir + s);
         }
-        const auto e4Path = pref + "_e_4.mp3";
+        const auto e4Path = walkerDir + pref + "_e_4.mp3";
         const bool e4 = std::filesystem::exists(e4Path);
         if(e4) vec.addPath(e4Path);
     };

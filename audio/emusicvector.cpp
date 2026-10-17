@@ -27,6 +27,10 @@ void eMusicVector::addPath(const std::string& path) {
 }
 
 void eMusicVector::play(const int id, const bool loop) {
+    if(!Mix_QuerySpec(nullptr, nullptr, nullptr)) return;
+    const int idMax = static_cast<int>(mPaths.size());
+    if(id < 0 || id >= idMax) return;
+
     auto& p = mPaths[id];
     if(!p.first) p.first = loadMusic(p.second);
     if(p.first) Mix_PlayMusic(p.first, loop ? -1 : 0);

@@ -41,7 +41,7 @@ void eMessages::load(eGodMessages& god, const std::string& godName) {
     god.fMonster.fFull.fTitle = loadMessage("PHRASE_" + godName + "_unleashes_monster_title");
     god.fMonster.fFull.fText = loadMessage("PHRASE_" + godName + "_unleashes_monster_city_attacked_alert");
     god.fMonster.fNoReason = loadMessage("PHRASE_" + godName + "_unleashes_monster_no_reason");
-    eStringHelpers::replaceAll(god.fMonster.fFull.fText, "[reason_phrase)", god.fMonster.fNoReason);
+    eStringHelpers::replaceAll(god.fMonster.fFull.fText, "[reason_phrase]", god.fMonster.fNoReason);
     god.fMonster.fReason = loadMessage("PHRASE_" + godName + "_unleashes_monster_reason");
     god.fMonster.fCondensed.fTitle = loadMessage("PHRASE_CONDENSED_" + godName + "_unleashes_monster_title");
     god.fMonster.fCondensed.fText = loadMessage("PHRASE_CONDENSED_" + godName + "_unleashes_monster_city_attacked_alert");
@@ -76,17 +76,17 @@ void eMessages::load(eGodMessages& god, const std::string& godName) {
 
     god.fSanctuaryComplete.fFull.fTitle = loadMessage("PHRASE_" + godName + "_sanctuary_complete_title");
     god.fSanctuaryComplete.fFull.fText = loadMessage("PHRASE_" + godName + "_sanctuary_complete_initial_announcement");
-    god.fSanctuaryComplete.fCondensed.fTitle = loadMessage("PHRASE_" + godName + "_sanctuary_complete_title");
+    god.fSanctuaryComplete.fCondensed.fTitle = loadMessage("PHRASE_CONDENSED_" + godName + "_sanctuary_complete_title");
     god.fSanctuaryComplete.fCondensed.fText = loadMessage("PHRASE_CONDENSED_" + godName + "_sanctuary_complete_initial_announcement");
 
     god.fDisaster.fFull.fTitle = loadMessage("PHRASE_" + godName + "_disaster_title");
     god.fDisaster.fFull.fText = loadMessage("PHRASE_" + godName + "_disaster_initial_announcement");
-    god.fDisaster.fCondensed.fTitle = loadMessage("PHRASE_" + godName + "_disaster_title");
+    god.fDisaster.fCondensed.fTitle = loadMessage("PHRASE_CONDENSED_" + godName + "_disaster_title");
     god.fDisaster.fCondensed.fText = loadMessage("PHRASE_CONDENSED_" + godName + "_disaster_initial_announcement");
 
     god.fDisasterEnds.fFull.fTitle = loadMessage("PHRASE_" + godName + "_disaster_ends_title");
     god.fDisasterEnds.fFull.fText = loadMessage("PHRASE_" + godName + "_disaster_ends_initial_announcement");
-    god.fDisasterEnds.fCondensed.fTitle = loadMessage("PHRASE_" + godName + "_disaster_ends_title");
+    god.fDisasterEnds.fCondensed.fTitle = loadMessage("PHRASE_CONDENSED_" + godName + "_disaster_ends_title");
     god.fDisasterEnds.fCondensed.fText = loadMessage("PHRASE_CONDENSED_" + godName + "_disaster_ends_initial_announcement");
 }
 
@@ -276,7 +276,7 @@ void eMessages::loadMessage(eMessageType& m,
                             const std::string& textKey) {
     m.fFull.fTitle = loadMessage("PHRASE_" + titleKey);
     m.fFull.fText = loadMessage("PHRASE_" + textKey);
-    m.fCondensed.fText = loadMessage("PHRASE_CONDENSED_" + titleKey);
+    m.fCondensed.fTitle = loadMessage("PHRASE_CONDENSED_" + titleKey);
     m.fCondensed.fText = loadMessage("PHRASE_CONDENSED_" + textKey);
 }
 
@@ -390,11 +390,13 @@ void eMessages::load(eTroopsRequestedAttackMessages &troops,
 }
 
 bool eMessages::loadImpl() {
-    if(mLoaded) return false;
-    mLoaded = true;
+    if(mLoaded) return true;
 
     const std::string path = eGameDir::path("Model/Zeus eventmsg.txt");
-    eLoadTextHelper::load(path, fMessages);
+    fMessages.clear();
+    if(!eLoadTextHelper::load(path, fMessages)) return false;
+
+    mLoaded = true;
 
     fPop100.fFull.fTitle = loadMessage("PHRASE_population_100_title");
     fPop100.fFull.fText = loadMessage("PHRASE_population_100_initial_announcement");
@@ -812,10 +814,10 @@ bool eMessages::loadImpl() {
     fDecreasedFavor.fCondensed.fTitle = loadMessage("PHRASE_CONDENSED_favor_change_title_D");
     fDecreasedFavor.fCondensed.fText = loadMessage("PHRASE_CONDENSED_favor_change_initial_announcement_D");
 
-    fUnemployment.fFull.fTitle = loadMessage(";PHRASE_unemployment_title");
-    fUnemployment.fFull.fText = loadMessage(";PHRASE_unemployment_initial_announcement");
-    fUnemployment.fCondensed.fTitle = loadMessage(";PHRASE_CONDENSED_unemployment_title");
-    fUnemployment.fCondensed.fText = loadMessage(";PHRASE_CONDENSED_unemployment_initial_announcement");
+    fUnemployment.fFull.fTitle = loadMessage("PHRASE_unemployment_title");
+    fUnemployment.fFull.fText = loadMessage("PHRASE_unemployment_initial_announcement");
+    fUnemployment.fCondensed.fTitle = loadMessage("PHRASE_CONDENSED_unemployment_title");
+    fUnemployment.fCondensed.fText = loadMessage("PHRASE_CONDENSED_unemployment_initial_announcement");
 
     fEmployees.fFull.fTitle = loadMessage("PHRASE_employees_needed_title");
     fEmployees.fFull.fText = loadMessage("PHRASE_employees_needed_initial_announcement");
@@ -1112,18 +1114,20 @@ std::string eMessages::message(const std::string& key) {
 eMessageType eMessages::favorMessage(const eMessageType& reason) {
     const auto& ifavor = instance.fIncreasedFavor;
     eMessageType msg = ifavor;
-    auto& text = msg.fFull.fText;
-    eStringHelpers::replaceAll(text, "[reason_phrase]",
+    eStringHelpers::replaceAll(msg.fFull.fText, "[reason_phrase]",
                                reason.fFull.fText);
+    eStringHelpers::replaceAll(msg.fCondensed.fText, "[reason_phrase]",
+                               reason.fCondensed.fText);
     return msg;
 }
 
 eMessageType eMessages::dfavorMessage(const eMessageType& reason) {
     const auto& ifavor = instance.fDecreasedFavor;
     eMessageType msg = ifavor;
-    auto& text = msg.fFull.fText;
-    eStringHelpers::replaceAll(text, "[reason_phrase]",
+    eStringHelpers::replaceAll(msg.fFull.fText, "[reason_phrase]",
                                reason.fFull.fText);
+    eStringHelpers::replaceAll(msg.fCondensed.fText, "[reason_phrase]",
+                               reason.fCondensed.fText);
     return msg;
 }
 
@@ -1131,16 +1135,22 @@ eMessageType eMessages::invasionMessage(const eMessageType& baseMsg,
                                         const std::string& reason,
                                         const int months) {
     eMessageType msg = baseMsg;
-    auto& text = msg.fFull.fText;
     if(reason.empty()) {
         const auto& inst = eMessages::instance;
-        eStringHelpers::replaceAll(text, "[reason_phrase]",
+        eStringHelpers::replaceAll(msg.fFull.fText, "[reason_phrase]",
+                                   inst.fInvasionNoReason);
+        eStringHelpers::replaceAll(msg.fCondensed.fText, "[reason_phrase]",
                                    inst.fInvasionNoReason);
     } else {
-        eStringHelpers::replaceAll(text, "[reason_phrase]",
+        eStringHelpers::replaceAll(msg.fFull.fText, "[reason_phrase]",
+                                   reason);
+        eStringHelpers::replaceAll(msg.fCondensed.fText, "[reason_phrase]",
                                    reason);
     }
-    eStringHelpers::replaceAll(text, "[time_until_attack]",
+    const auto monthsStr = std::to_string(months);
+    eStringHelpers::replaceAll(msg.fFull.fText, "[time_until_attack]",
+                               monthsStr);
+    eStringHelpers::replaceAll(msg.fCondensed.fText, "[time_until_attack]",
                                std::to_string(months));
     return msg;
 }

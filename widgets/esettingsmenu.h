@@ -16,13 +16,20 @@ public:
                   eMainWindow* const window);
 
     using eApplyAction = std::function<void(const eSettings&)>;
-    using eFullscreenA = std::function<void(const bool)>;
     void initialize(const eApplyAction& settingsA,
-                    const eFullscreenA& fullscreenA);
+                    const eAction& cancelA,
+                    bool displayOnly = false);
+
+protected:
+    bool keyPressEvent(const eKeyPressEvent& e) override;
+    bool mousePressEvent(const eMouseEvent& e) override;
 
 private:
+    void cancel();
+
     const eSettings mIniSettings;
     eSettings mSettings;
+    eAction mCancelAction;
 };
 
 #endif // ESETTINGSMENU_H

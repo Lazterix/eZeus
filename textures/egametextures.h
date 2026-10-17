@@ -352,6 +352,7 @@ public:
     static void loadEliteCitizen();
 
     static bool initialize(SDL_Renderer* const r);
+    static void shutdown();
     static bool loadNextMenu(const eSettings& settings,
                              std::string& text);
     static bool loadNextGame(const eSettings& settings,

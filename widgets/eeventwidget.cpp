@@ -4,17 +4,17 @@
 #include "engine/eevent.h"
 #include "textures/egametextures.h"
 #include "engine/eeventdata.h"
+#include <algorithm>
 
 void eEventWidget::pushEvent(const eEvent e, const eEventData& ed) {
+    const auto state = mAlertState.push(e, mFrame);
+    if(!state.fAccepted) return;
+    if(state.fReplacedId >= 0) removeAlert(state.fReplacedId, false);
+
     const auto button = new eEventButton(e, window());
-    mButtons.insert(mButtons.begin(), button);
-    if(mButtons.size() > 4) {
-        const auto b = mButtons.back();
-        b->deleteLater();
-        mButtons.pop_back();
-    }
+    mButtons.insert(mButtons.begin(), {button, state.fId});
     prependWidget(button);
-    button->setPressAction([this, ed]() {
+    button->setPressAction([this, ed, id = state.fId]() {
         if(mViewTileHandler) {
             const auto ch = ed.fChar;
             if(ch) {
@@ -25,18 +25,43 @@ void eEventWidget::pushEvent(const eEvent e, const eEventData& ed) {
                 mViewTileHandler(tile);
             }
         }
+
+        removeAlert(id, true);
     });
     setHeight(button->height());
     setWidth(4*button->width());
     stackHorizontally();
+    if(mEmptyChangedAction) mEmptyChangedAction(false);
+}
+
+void eEventWidget::incUiFrame() {
+    mFrame++;
+    const auto expired = mAlertState.expire(mFrame);
+    for(const int id : expired) removeAlert(id, false);
 }
 
 void eEventWidget::clear() {
     removeChildren();
+    mButtons.clear();
+    mAlertState.clear();
+    if(mEmptyChangedAction) mEmptyChangedAction(true);
 }
 
 void eEventWidget::setViewTileHandler(const eViewTileHandler& h) {
     mViewTileHandler = h;
+}
+
+void eEventWidget::removeAlert(const int id, const bool dismiss) {
+    if(dismiss && !mAlertState.dismiss(id)) return;
+    const auto entry = std::find_if(
+        mButtons.begin(), mButtons.end(),
+        [id](const eButtonState& state) { return state.fAlertId == id; });
+    if(entry == mButtons.end()) return;
+
+    entry->fButton->deleteLater();
+    mButtons.erase(entry);
+    stackHorizontally();
+    if(mEmptyChangedAction) mEmptyChangedAction(mAlertState.empty());
 }
 
 eEventButton::eEventButton(const eEvent e,

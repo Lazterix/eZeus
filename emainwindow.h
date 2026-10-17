@@ -8,6 +8,7 @@
 #include "textures/ebuildingtextures.h"
 #include "textures/echaractertextures.h"
 #include "widgets/esettingsmenu.h"
+#include "widgets/edisplaytransition.h"
 
 using eSlot = std::function<void()>;
 
@@ -15,6 +16,7 @@ class eGameBoard;
 class eGameWidget;
 class eWorldWidget;
 class eCampaign;
+class eMessageHistory;
 
 struct eGameWidgetSettings;
 
@@ -39,8 +41,7 @@ public:
     SDL_Window* window() const { return mSdlWindow; }
     SDL_Renderer* renderer() const { return mSdlRenderer; }
 
-    void setResolution(const eResolution& res);
-    void setFullscreen(const bool f);
+    bool applyDisplaySettings(const eResolution& res, bool fullscreen);
 
     void startGameAction(eGameBoard* const board,
                          const eGameWidgetSettings& settings);
@@ -58,7 +59,10 @@ public:
     void showRosterOfLeaders();
     void showMenuLoading();
     void showMainMenu();
-    void showSettingsMenu();
+    void showSettingsMenu(const eAction& returnAction = nullptr,
+                          bool displayOnly = false);
+    void showSoundSettings();
+    void returnToGame();
     void showChooseGameMenu();
     void showChooseGameEditMenu();
     void showGame(const stdsptr<eCampaign>& c,
@@ -71,6 +75,7 @@ public:
     eWorldWidget* worldWidget() const { return mWW; }
 
     const eSettings& settings() const { return mSettings; }
+    void setAutosave(const bool enabled);
 
     void execDialog(eWidget* const d,
                     const bool closable = true,
@@ -91,8 +96,7 @@ private:
     std::string mLeader;
 
     bool mQuit = false;
-    bool mFirstFullscrenSetting = true;
-    bool mFirstResolutionSetting = true;
+    eWindowedPlacement mWindowedPlacement;
 
     std::vector<eSlot> mSlots;
 

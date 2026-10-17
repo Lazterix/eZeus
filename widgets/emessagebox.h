@@ -21,7 +21,8 @@ public:
                     const eEventData& ed,
                     const eAction& viewTile,
                     const eAction& closeFunc,
-                    eMessage msg);
+                    eMessage msg,
+                    const bool readOnly = false);
 
     void close();
     bool closable() const { return mClosable; }
