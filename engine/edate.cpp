@@ -219,6 +219,7 @@ int eMonthHelper::days(const eMonth m) {
     case eMonth::december:
         return 31;
     }
+    return 31;
 }
 
 eMonth eMonthHelper::nextMonth(const eMonth m, bool& nextYear) {

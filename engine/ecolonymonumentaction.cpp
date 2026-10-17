@@ -15,6 +15,7 @@ eColonyMonumentAction::eColonyMonumentAction() :
 
 void eColonyMonumentAction::trigger(eGameBoard& board) {
     const auto capital = board.currentCity();
+    if(!capital) return;
     const auto cid = capital->cityId();
     eEventData ed(cid);
     ed.fCity = mCity;

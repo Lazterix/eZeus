@@ -2,6 +2,8 @@
 
 #include "ehasnonbusyresourceobject.h"
 
+#include <stdexcept>
+
 stdsptr<eHasResourceObject> eHasResourceObject::sCreate(
         const eHasResourceObjectType type) {
     switch(type) {
@@ -17,6 +19,7 @@ stdsptr<eHasResourceObject> eHasResourceObject::sCreate(
     case eHasResourceObjectType::blackMarble:
         return std::make_shared<eHasResourceObject>(type);
     }
+    throw std::runtime_error("Unsupported serialized resource predicate");
 }
 
 stdsptr<eHasResourceObject> eHasResourceObject::sCreateNonBusy(

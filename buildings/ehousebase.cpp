@@ -156,7 +156,9 @@ void eHouseBase::setLevel(const int l) {
     if(mLevel == l) return;
 
     const int ov = vacancies();
-    const int maxLevel = mMaxPeople.size();
+    if(mMaxPeople.empty()) return;
+    const int maxLevel =
+        static_cast<int>(mMaxPeople.size()) - 1;
     mLevel = std::clamp(l, 0, maxLevel);
     const int nv = vacancies();
 
@@ -174,17 +176,18 @@ int eHouseBase::evict() {
 }
 
 void eHouseBase::setPeople(const int p) {
-    if(p == 0) setOnFire(false);
-    if(p == mPeople) return;
+    const int people = std::clamp(p, 0, mMaxPeople[mLevel]);
+    if(people == 0) setOnFire(false);
+    if(people == mPeople) return;
 
     auto& board = getBoard();
     const auto cid = cityId();
 
-    const int pc = p - mPeople;
+    const int pc = people - mPeople;
     board.incPopulation(cid, pc);
 
     const int vb = vacancies();
-    mPeople = p;
+    mPeople = people;
     const int va = vacancies();
 
     const auto popData = board.populationData(cid);

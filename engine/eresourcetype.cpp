@@ -1,5 +1,7 @@
 #include "eresourcetype.h"
 
+#include <algorithm>
+
 #include "textures/egametextures.h"
 
 #include "elanguage.h"
@@ -326,6 +328,12 @@ int eResourceTypeHelpers::transportSize(const eResourceType type) {
     return 0;
 }
 
+int eResourceTypeHelpers::normalizedTransportCount(
+        const eResourceType type, const int count) {
+    if(!isSingleType(type)) return 0;
+    return std::clamp(count, 0, transportSize(type));
+}
+
 int eResourceTypeHelpers::defaultPrice(const eResourceType type) {
     switch(type) {
     case eResourceType::urchin:
@@ -390,5 +398,5 @@ int eResourceTypeHelpers::defaultPrice(const eResourceType type) {
 
 bool eResourceTypeHelpers::isSingleType(const eResourceType type) {
     const int v = static_cast<int>(type);
-    return v == (v & -v);
+    return v > 0 && (v & (v - 1)) == 0;
 }

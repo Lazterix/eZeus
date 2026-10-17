@@ -44,7 +44,7 @@ public:
     getOverlays(const eTileSize size) const override;
 
     int id() const { return mId; }
-    void setId(const int i) { mId = i % 8; }
+    void setId(const int i) { mId = (i % 8 + 8) % 8; }
 
     void setPartId(const int i) { mPartId = i; }
 

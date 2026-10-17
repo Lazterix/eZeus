@@ -56,7 +56,7 @@ public:
 
     void read(eReadStream& src) {
         src.readBuilding(&board(), [this](eBuilding* const b) {
-            mTarget = static_cast<eAgoraBase*>(b);
+            mTarget = dynamic_cast<eAgoraBase*>(b);
         });
     }
 

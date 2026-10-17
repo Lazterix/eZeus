@@ -23,12 +23,12 @@ void eRequestAidEvent::trigger() {
     ed.fCity = mCity;
 
     const auto date = board->date();
-    const auto entryPoint = board->entryPoint(onCid);
-    if(!entryPoint) return;
 
     if(mEnd) {
         const auto ma = board->militaryAid(onCid, mCity);
+        if(!ma) return;
         if(ma->allDead()) {
+            board->removeMilitaryAid(onCid, mCity);
             board->event(eEvent::aidDefeated, ed);
         } else {
             const auto& ivhs = board->invasionHandlers(onCid);
@@ -36,17 +36,19 @@ void eRequestAidEvent::trigger() {
             const bool needed = !ivhs.empty() || !ivs.empty();
             const int days = date - mArrivalDate;
             if(!needed || (ivhs.empty() && days > 600)) {
-                if(ma) {
-                    ma->goBack();
-                    const int t = mCity->troops();
-                    mCity->setTroops(t + ma->count());
-                    board->removeMilitaryAid(onCid, mCity);
-                }
+                const int survivors = ma->count();
+                ma->goBack();
+                const int t = mCity->troops();
+                mCity->setTroops(t + survivors);
+                board->removeMilitaryAid(onCid, mCity);
                 board->event(eEvent::aidDeparts, ed);
             }
         }
         return;
     } else {
+        const auto entryPoint = board->entryPoint(onCid);
+        if(!entryPoint) return;
+
         const int t = mCity->troops();
         const int arrived = t/3;
         mCity->setTroops(t - arrived);

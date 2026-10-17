@@ -106,13 +106,13 @@ void eTradePost::timeChanged(const int by) {
     mRouteTimer += by;
     if(mRouteTimer > eNumbers::sTraderSpawnPeriod) {
         mRouteTimer = 0;
-        if(trades()) spawnTrader();
+        if(enabled() && trades()) spawnTrader();
     }
     eWarehouseBase::timeChanged(by);
 }
 
 void eTradePost::erase() {
-    if(mUnpackBuilding) {
+    if(mUnpackBuilding && mUnpackBuilding != this) {
         mUnpackBuilding->eBuilding::erase();
     }
     eBuilding::erase();
@@ -147,9 +147,12 @@ eTile* eTradePost::entryPoint() const {
 
 void eTradePost::spawnTrader() {
     const auto entryPoint = eTradePost::entryPoint();
+    // Routes can exist in scenarios without a matching entry point.
+    if(!entryPoint || !mUnpackBuilding || !mWalkable || !mCharGen) return;
     auto& board = getBoard();
 
     const auto r = mCharGen(entryPoint, board);
+    if(!r) return;
     r->setOnCityId(cityId());
     r->setCityId(mCity.cityId());
 
@@ -185,13 +188,13 @@ int eTradePost::buy(const int cash) {
         const auto es = eResourceTypeHelpers::extractResourceTypes(mExports);
         for(const auto e : es) {
             const int price = brd.price(e);
-            if(price > cash) continue;
+            if(price < 0 || price > cash - spent) continue;
             const int c = count(e);
             if(c <= 0) continue;
             const int max = e == eResourceType::sculpture ? eNumbers::sTwoWayTradeMax :
                                                             4*eNumbers::sTwoWayTradeMax;
-            if(thisC->exported(targetCid, e) > max) continue;
-            take(e, 1);
+            if(thisC->exported(targetCid, e) >= max) continue;
+            if(take(e, 1) != 1) continue;
             thisC->addExported(targetCid, e, 1);
             spent += price;
         }
@@ -202,10 +205,10 @@ int eTradePost::buy(const int cash) {
             const bool exp = static_cast<bool>(expt);
             if(!exp) continue;
             if(b.used(thisPid) >= b.fMax) continue;
-            if(price > cash) continue;
+            if(price < 0 || price > cash - spent) continue;
             const int c = count(b.fType);
             if(c <= 0) continue;
-            take(b.fType, 1);
+            if(take(b.fType, 1) != 1) continue;
             b.incUsed(thisPid, 1);
             spent += price;
         }
@@ -230,10 +233,10 @@ int eTradePost::sell(const int items) {
         for(const auto& e : es) {
             if(e.second < 1) continue;
             const int price = brd.price(e.first);
-            if(price > items) continue;
+            if(price < 0 || price > items - earned) continue;
             const int c = spaceLeftDontAccept(e.first);
             if(c <= 0) continue;
-            addNotAccept(e.first, 1);
+            if(addNotAccept(e.first, 1) != 1) continue;
             srcC->removeExported(thisCid, e.first, 1);
             earned += price;
         }
@@ -244,10 +247,10 @@ int eTradePost::sell(const int items) {
             const int price = brd.price(b.fType);
             if(!imp) continue;
             if(b.used(thisPid) >= b.fMax) continue;
-            if(price > items) continue;
+            if(price < 0 || price > items - earned) continue;
             const int c = spaceLeftDontAccept(b.fType);
             if(c <= 0) continue;
-            addNotAccept(b.fType, 1);
+            if(addNotAccept(b.fType, 1) != 1) continue;
             b.incUsed(thisPid, 1);
             earned += price;
         }

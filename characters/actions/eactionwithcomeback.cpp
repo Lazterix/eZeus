@@ -53,6 +53,10 @@ void eActionWithComeback::goBack(stdsptr<eWalkableObject> walkable) {
 
 void eActionWithComeback::goBack(eBuilding* const b,
                                  const stdsptr<eWalkableObject>& walkable) {
+    if(!b) {
+        setState(eCharacterActionState::failed);
+        return;
+    }
     const auto type = b->type();
     if(type == eBuildingType::commonAgora ||
        type == eBuildingType::grandAgora) {
@@ -81,7 +85,15 @@ void eActionWithComeback::goBackInternal(stdsptr<eWalkableObject> walkable) {
         }
     }
     const auto c = character();
+    if(!c || !mStartTile) {
+        setState(eCharacterActionState::failed);
+        return;
+    }
     const auto ct = c->tile();
+    if(!ct) {
+        setState(eCharacterActionState::failed);
+        return;
+    }
     if(ct == mStartTile) return teleportDecision();
 
     const int startX = mStartTile->x();
@@ -120,6 +132,10 @@ void eActionWithComeback::goBackInternal(stdsptr<eWalkableObject> walkable) {
 
 void eActionWithComeback::teleportDecision() {
     const auto c = character();
+    if(!c || !mStartTile) {
+        setState(eCharacterActionState::failed);
+        return;
+    }
 
     c->changeTile(mStartTile);
     c->setX(0.5);

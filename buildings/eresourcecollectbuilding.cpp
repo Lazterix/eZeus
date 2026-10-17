@@ -7,6 +7,7 @@
 #include "enumbers.h"
 
 #include <algorithm>
+#include <cmath>
 
 eResourceCollectBuilding::eResourceCollectBuilding(
         eGameBoard& board,
@@ -65,7 +66,6 @@ std::vector<eOverlay> eResourceCollectBuilding::
         o.fTex = ov.getTexture(id);
         o.fX = mWaitingOX;
         o.fY = mWaitingOY;
-        result.push_back(o);
     } else if(mOverlays) {
         const auto& coll = btexs.*mOverlays;
         const int texId = textureTime() % coll.size();
@@ -162,7 +162,7 @@ void eResourceCollectBuilding::read(eReadStream& src) {
     eResourceCollectBuildingBase::read(src);
     src >> mCollectedAction;
     src.readCharacter(&getBoard(), [this](eCharacter* const c) {
-        mCollector = static_cast<eResourceCollectorBase*>(c);
+        mCollector = dynamic_cast<eResourceCollectorBase*>(c);
     });
     src >> mSpawnEnabled;
     src >> mAddResource;
@@ -173,6 +173,14 @@ void eResourceCollectBuilding::read(eReadStream& src) {
     src >> mProcessTime;
     src >> mWaitTime;
     src >> mSpawnTime;
+    // Recover safe production counters without changing the save format.
+    mRawCount = std::max(0, mRawCount);
+    mRawCountCollect = std::max(0, mRawCountCollect);
+    if(mRawInc <= 0) mRawInc = 1;
+    if(mProcessDuration <= 0) mProcessDuration = 10000;
+    if(mWaitTime <= 0) mWaitTime = 5000;
+    if(!std::isfinite(mProcessTime) || mProcessTime < 0) mProcessTime = 0;
+    if(!std::isfinite(mSpawnTime) || mSpawnTime < 0) mSpawnTime = 0;
 }
 
 void eResourceCollectBuilding::write(eWriteStream& dst) const {
@@ -192,9 +200,11 @@ void eResourceCollectBuilding::write(eWriteStream& dst) const {
 
 bool eResourceCollectBuilding::spawn() {
     if(resource() >= maxResource()) return false;
-    if(!mSpawnEnabled) return false;
+    if(!mSpawnEnabled || !mCharGenerator || !mHasRes) return false;
     const auto t = centerTile();
+    if(!t) return false;
     const auto c = mCharGenerator();
+    if(!c) return false;
     c->setBothCityIds(cityId());
     mCollector = c.get();
     c->changeTile(t);

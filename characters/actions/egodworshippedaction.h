@@ -48,7 +48,7 @@ public:
 
     void read(eReadStream& src) {
         src.readCharacterAction(&board(), [this](eCharacterAction* const ca) {
-            mTptr = static_cast<eGodWorshippedAction*>(ca);
+            mTptr = dynamic_cast<eGodWorshippedAction*>(ca);
         });
     }
 

@@ -48,4 +48,5 @@ double eTaxRateHelpers::getRate(const eTaxRate tr) {
     case eTaxRate::outrageous:
         return 0.20;
     }
+    return 0.0;
 }

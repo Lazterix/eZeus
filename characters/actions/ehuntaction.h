@@ -23,7 +23,7 @@ private:
     void goBackDecision();
     void waitDecision();
 
-    eHuntingLodge* mLodge = nullptr;
+    stdptr<eHuntingLodge> mLodge;
     eHunter* mHunter = nullptr;
 
     bool mNoResource = false;

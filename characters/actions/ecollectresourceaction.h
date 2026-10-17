@@ -51,7 +51,7 @@ private:
     void waitDecision();
 
     stdsptr<eHasResourceObject> mHasResource;
-    eResourceCollectBuildingBase* mBuilding = nullptr;
+    stdptr<eResourceCollectBuildingBase> mBuilding;
     eTileActionType mCollectedAction = eTileActionType::none;
     stdsptr<eWalkableObject> mWalkable =
             eWalkableObject::sCreateDefault();
@@ -89,7 +89,7 @@ public:
     void read(eReadStream& src) override {
         mTile = src.readTile(board());
         src.readCharacterAction(&board(), [this](eCharacterAction* const ca) {
-            mPtr = static_cast<eCollectResourceAction*>(ca);
+            mPtr = dynamic_cast<eCollectResourceAction*>(ca);
         });
     }
 
@@ -142,7 +142,7 @@ public:
 
     void read(eReadStream& src) override {
         src.readBuilding(&board(), [this](eBuilding* const b) {
-            mBptr = static_cast<eResourceCollectBuildingBase*>(b);
+            mBptr = dynamic_cast<eResourceCollectBuildingBase*>(b);
         });
     }
 

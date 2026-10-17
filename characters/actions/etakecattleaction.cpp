@@ -30,6 +30,10 @@ bool eTakeCattleAction::decide() {
 void eTakeCattleAction::increment(const int by) {
     if(mStage == eTakeCattleActionStage::get) {
         const auto c = character();
+        if(!c || !c->tile()) {
+            setState(eCharacterActionState::failed);
+            return;
+        }
         const auto tile = c->tile();
         const auto& chars = tile->characters();
         for(const auto& cc : chars) {
@@ -40,6 +44,7 @@ void eTakeCattleAction::increment(const int by) {
 
             mStage = eTakeCattleActionStage::goBack;
             goBack(eWalkableObject::sCreateDefault());
+            break;
         }
     }
     eActionWithComeback::increment(by);
@@ -50,7 +55,7 @@ void eTakeCattleAction::read(eReadStream& src) {
     src >> mStage;
     auto& board = this->board();
     src.readBuilding(&board, [this](eBuilding* const b) {
-        mCorral = static_cast<eCorral*>(b);
+        mCorral = dynamic_cast<eCorral*>(b);
     });
     src >> mNoCattle;
 }
@@ -102,14 +107,15 @@ void eTakeCattleAction::goGetCattle() {
     a->setFoundAction([tptr, this, cptr, c]() {
         if(tptr) {
             mNoCattle = false;
-            mCorral->setNoCattle(false);
+            if(mCorral) mCorral->setNoCattle(false);
         }
         if(cptr) c->setActionType(eCharacterActionType::walk);
     });
     const auto findFailFunc = [tptr, this, foundAny]() {
         if(tptr) {
             mNoCattle = true;
-            mCorral->setNoCattle(!*foundAny);
+            mStage = eTakeCattleActionStage::goBack;
+            if(mCorral) mCorral->setNoCattle(!*foundAny);
             goBack(eWalkableObject::sCreateDefault());
         }
     };

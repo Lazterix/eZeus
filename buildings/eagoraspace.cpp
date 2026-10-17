@@ -11,5 +11,9 @@ stdsptr<eTexture> eAgoraSpace::getTexture(const eTileSize size) const {
     const int sizeId = static_cast<int>(size);
     const auto& texs = eGameTextures::buildings();
     const auto& coll = texs[sizeId].fAgora;
-    return coll.getTexture(seed() % coll.size());
+    const int count = coll.size();
+    if(count <= 0) return nullptr;
+    const int raw = seed() % count;
+    const int id = raw < 0 ? raw + count : raw;
+    return coll.getTexture(id);
 }

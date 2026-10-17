@@ -39,7 +39,9 @@ eBlackMarbleWorkshop::getOverlays(const eTileSize size) const {
     const int rc = rawCount();
     if(rc) {
         const auto& stones = btexs.fBlackMarbleWorkshopStones;
-        const int sid = std::clamp(8 - rc, 0, stones.size());
+        const int stoneCount = stones.size();
+        if(stoneCount <= 0) return os;
+        const int sid = std::clamp(8 - rc, 0, stoneCount - 1);
 
         eOverlay& o = os.emplace_back();
         o.fAlignTop = true;
@@ -64,6 +66,7 @@ eBlackMarbleWorkshop::getOverlays(const eTileSize size) const {
         if(sid < 4) {
             eOverlay& o = os.emplace_back();
             const auto& ov = btexs.fMasonryShopOverlay1[0];
+            if(ov.size() <= 0) return os;
             const int id = t % ov.size();
             o.fTex = ov.getTexture(id);
             o.fX = 0.50;
@@ -71,6 +74,7 @@ eBlackMarbleWorkshop::getOverlays(const eTileSize size) const {
         } else {
             eOverlay& o = os.emplace_back();
             const auto& ov = btexs.fMasonryShopOverlay2[0];
+            if(ov.size() <= 0) return os;
             const int id = t % ov.size();
             o.fTex = ov.getTexture(id);
             o.fX = 0.50;

@@ -20,12 +20,7 @@ void eDemandChangeEvent::trigger() {
     chooseCount();
     const auto type = this->resourceType();
     const int by = this->count();
-    auto& buys = city->buys();
-    for(auto& b : buys) {
-        if(b.fType != type) continue;
-        b.fMax += by;
-        break;
-    }
+    city->changeDemand(type, by);
     const auto board = gameBoard();
     if(!board) return;
     eEventData ed((ePlayerCityTarget()));

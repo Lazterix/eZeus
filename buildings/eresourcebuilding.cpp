@@ -122,13 +122,13 @@ void eResourceBuilding::timeChanged(const int by) {
         if(mRipe >= 5) {
             mRipe = 0;
             mResource = 0;
+            if(const auto tile = centerTile()) tile->scheduleTerrainUpdate();
             return;
         }
         if(++mRipe == 5) {
             mResource = 1;
         }
-        const auto tile = centerTile();
-        tile->scheduleTerrainUpdate();
+        if(const auto tile = centerTile()) tile->scheduleTerrainUpdate();
     }
 }
 

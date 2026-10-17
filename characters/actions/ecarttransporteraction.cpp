@@ -19,12 +19,21 @@ eCartTransporterAction::eCartTransporterAction(eCharacter* const c) :
     eCartTransporterAction(c, nullptr){}
 
 void eCartTransporterAction::increment(const int by) {
+    const auto c = character();
+    if(!c || !mBuilding || !c->tile()) {
+        setState(eCharacterActionState::failed);
+        return;
+    }
     updateWaiting();
     eActionWithComeback::increment(by);
 }
 
 bool eCartTransporterAction::decide() {
     const auto c = static_cast<eCartTransporter*>(character());
+    if(!c || !mBuilding || !c->tile()) {
+        setState(eCharacterActionState::failed);
+        return true;
+    }
     const bool r = eWalkableHelpers::sTileUnderBuilding(
                        c->tile(), mBuilding);
     const int count = c->resCount();
@@ -139,9 +148,9 @@ void eCartTransporterAction::findTarget(const std::vector<eCartTask>& tasks) {
         if(!t->isUnderBuilding()) return false;
         const bool r = eWalkableHelpers::sTileUnderBuilding(t, buildingRect);
         if(r) return false;
-        bool found = false;
         const auto& ub = t->underBuilding();
         for(const auto& task : tasks) {
+            bool found = false;
             const auto res = task.fResource;
             if(task.fType == eCartActionType::take) {
                 if(bType == eBuildingType::warehouse ||
@@ -171,10 +180,10 @@ void eCartTransporterAction::findTarget(const std::vector<eCartTask>& tasks) {
                 *ttask = task;
                 *bx = t->x();
                 *by = t->y();
-                break;
+                return true;
             }
         }
-        return found;
+        return false;
     };
     const stdptr<eCartTransporterAction> tptr(this);
 
@@ -186,16 +195,21 @@ void eCartTransporterAction::findTarget(const std::vector<eCartTask>& tasks) {
                          eStateRelevance::buildings);
     a->setFinishAction(finishAction);
 
-    a->setFoundAction([tptr, this, c, ttask, bx, by, finishAction]() {
-        finishAction->setXY(*bx, *by);
-        if(!tptr) return;
+    const stdptr<eCharacter> cptr(c);
+    a->setFoundAction([tptr, this, cptr, ttask, bx, by, finishAction]() {
+        if(!tptr || !cptr) return;
         const auto& board = this->board();
         const auto b = board.buildingAt(*bx, *by);
+        if(!b) {
+            mNoTarget = true;
+            return;
+        }
+        finishAction->setXY(*bx, *by);
         mTarget = b;
         mWaitOutside = false;
         mTask = *ttask;
         startResourceAction(mTask);
-        c->setActionType(eCharacterActionType::walk);
+        cptr->setActionType(eCharacterActionType::walk);
     });
     a->setFindFailAction([tptr, this]() {
         if(!tptr) return;
@@ -214,7 +228,7 @@ void eCartTransporterAction::findTarget(const std::vector<eCartTask>& tasks) {
 void eCartTransporterAction::goBack() {
     const auto w = getWalkable();
     eActionWithComeback::goBack(w);
-    mTarget = mBuilding;
+    mTarget = mBuilding.get();
 }
 
 void eCartTransporterAction::targetResourceAction(const int bx, const int by) {
@@ -222,6 +236,7 @@ void eCartTransporterAction::targetResourceAction(const int bx, const int by) {
     const auto ct = static_cast<eCartTransporter*>(c);
     auto& brd = ct->getBoard();
     const auto t = brd.tile(bx, by);
+    if(!t) return;
     const auto b = t->underBuilding();
     if(!b) return;
     const auto rb = dynamic_cast<eBuildingWithResource*>(b);
@@ -229,7 +244,7 @@ void eCartTransporterAction::targetResourceAction(const int bx, const int by) {
 }
 
 void eCartTransporterAction::targetResourceAction(eBuildingWithResource* const rb) {
-    if(!rb) return;
+    if(!rb || !mBuilding || !character()) return;
     const auto c = character();
     const auto ct = static_cast<eCartTransporter*>(c);
     const int takenGiven = targetProcessTask(rb, mTask);
@@ -315,7 +330,7 @@ void eCartTransporterAction::finishResourceAction(const eCartTask& task) {
 void eCartTransporterAction::read(eReadStream& src) {
     eActionWithComeback::read(src);
     src.readBuilding(&board(), [this](eBuilding* const b) {
-        mBuilding = static_cast<eBuildingWithResource*>(b);
+        mBuilding = dynamic_cast<eBuildingWithResource*>(b);
     });
 
     src >> mTask.fMaxCount;
@@ -350,13 +365,15 @@ void eCartTransporterAction::write(eWriteStream& dst) const {
 }
 
 stdsptr<eWalkableObject> eCartTransporterAction::getWalkable() const {
-    const auto buildingRect = mBuilding->tileRect();
     auto w = eWalkableObject::sCreateRoadAvenue();
+    if(!mBuilding) return w;
+    const auto buildingRect = mBuilding->tileRect();
     w = eWalkableObject::sCreateRect(buildingRect, w);
     const auto type = mBuilding->type();
     if(type == eBuildingType::horseRanch) {
-        const auto hr = static_cast<eHorseRanch*>(mBuilding);
+        const auto hr = static_cast<eHorseRanch*>(mBuilding.get());
         const auto e = hr->enclosure();
+        if(!e) return w;
         const auto eRect = e->tileRect();
         w = eWalkableObject::sCreateRect(eRect, w);
     }

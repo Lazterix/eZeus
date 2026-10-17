@@ -161,7 +161,7 @@ void eThreadBuilding::load(eBuilding* const src) {
             const auto b = static_cast<eSanctBuilding*>(src);
             mWorkedOn = b->workedOn();
             const auto s = b->monument();
-            const bool h = s->constructionHalted() || b->halted();
+            const bool h = !s || s->constructionHalted() || b->halted();
             if(h) {
                 mResourcesAvailable = false;
             } else {

@@ -28,7 +28,7 @@ void eTraderAction::read(eReadStream& src) {
     src >> mCash;
     src >> mItems;
     src.readBuilding(&board(), [this](eBuilding* const b) {
-        mTradePost = static_cast<eTradePost*>(b);
+        mTradePost = dynamic_cast<eTradePost*>(b);
     });
     src.readBuilding(&board(), [this](eBuilding* const b) {
         mUnpackBuilding = b;
@@ -64,6 +64,11 @@ void eTraderAction::setWalkable(const stdsptr<eWalkableObject>& w) {
 
 void eTraderAction::goToTradePost() {
     const auto c = character();
+    if(!mUnpackBuilding) {
+        mNotFound = true;
+        goBack(mWalkable);
+        return;
+    }
 
     const stdptr<eTraderAction> tptr(this);
     const auto fail = std::make_shared<eTA_tradeFail>(

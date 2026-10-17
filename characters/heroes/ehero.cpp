@@ -80,6 +80,7 @@ stdsptr<eHero> eHero::sCreateHero(const eHeroType type, eGameBoard& board) {
     case eHeroType::theseus:
         return e::make_shared<eTheseus>(board);
     }
+    return {};
 }
 
 std::string eHero::sHeroName(const eHeroType ht) {
@@ -110,6 +111,8 @@ std::string eHero::sHeroName(const eHeroType ht) {
     case eHeroType::theseus:
         string = 5;
         break;
+    default:
+        return {};
     }
     return eLanguage::zeusText(group, string);
 }

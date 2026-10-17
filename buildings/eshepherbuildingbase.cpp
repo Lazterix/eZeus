@@ -62,7 +62,7 @@ void eShepherBuildingBase::timeChanged(const int by) {
 void eShepherBuildingBase::read(eReadStream& src) {
     eResourceBuildingBase::read(src);
     src.readCharacter(&getBoard(), [this](eCharacter* const c) {
-        mShepherd = static_cast<eResourceCollectorBase*>(c);
+        mShepherd = dynamic_cast<eResourceCollectorBase*>(c);
     });
     src >> mSpawnTime;
 }
@@ -74,8 +74,9 @@ void eShepherBuildingBase::write(eWriteStream& dst) const {
 }
 
 bool eShepherBuildingBase::spawn() {
-    if(resource() >= maxResource()) return false;
+    if(!enabled() || mShepherd || resource() >= maxResource()) return false;
     const auto t = centerTile();
+    if(!t) return false;
     const auto s = mCharGenerator(getBoard());
     s->setBothCityIds(cityId());
     mShepherd = s.get();

@@ -8,6 +8,8 @@
 #include <algorithm>
 
 void eAvailableBuildings::read(eReadStream& src) {
+    fPyramids.clear();
+
     src >> fEliteHousing;
 
     src >> fWheatFarm;
@@ -371,10 +373,14 @@ bool eAvailableBuildings::available(
         if(id == 6) return fHeroicMonument;
         if(id == 7) return fDiplomacyMonument;
         if(id == 8) return fScholarMonument;
-        break;
+        return false;
     case eBuildingType::godMonument: {
+        if(id < static_cast<int>(eGodType::aphrodite) ||
+           id > static_cast<int>(eGodType::zeus)) return false;
         const auto t = static_cast<eGodType>(id);
-        return mGodMonuments.at(t);
+        const auto it = mGodMonuments.find(t);
+        if(it == mGodMonuments.end()) return false;
+        return it->second > 0;
     } break;
     default:
         return true;
@@ -409,6 +415,8 @@ void eAvailableBuildings::built(
         *c = std::max(0, *c - 1);
     } break;
     case eBuildingType::godMonument: {
+        if(id < static_cast<int>(eGodType::aphrodite) ||
+           id > static_cast<int>(eGodType::zeus)) return;
         const auto t = static_cast<eGodType>(id);
         int& c = mGodMonuments[t];
         c = std::max(0, c - 1);
@@ -500,6 +508,8 @@ void eAvailableBuildings::allow(
     } break;
 
     case eBuildingType::godMonument: {
+        if(id < static_cast<int>(eGodType::aphrodite) ||
+           id > static_cast<int>(eGodType::zeus)) return;
         const auto t = static_cast<eGodType>(id);
         int& c = mGodMonuments[t];
         c++;
@@ -545,6 +555,16 @@ void eAvailableBuildings::disallow(
 }
 
 void eAvailableBuildings::startEpisode(const eAvailableBuildings& o) {
+    for(auto it = fPyramids.begin(); it != fPyramids.end();) {
+        const bool built = it->second.fA == eAvailable::built;
+        const bool availableNextEpisode = o.fPyramids.count(it->first) > 0;
+        if(!built && !availableNextEpisode) {
+            it = fPyramids.erase(it);
+        } else {
+            ++it;
+        }
+    }
+
     for(auto& op : o.fPyramids) {
         auto& oa = op.second;
         auto& a = fPyramids[op.first];
@@ -604,6 +624,15 @@ void eAvailableBuildings::startEpisode(const eAvailableBuildings& o) {
     startEpisode(o, &eAvailableBuildings::fHermesSanctuary);
     startEpisode(o, &eAvailableBuildings::fPoseidonSanctuary);
     startEpisode(o, &eAvailableBuildings::fZeusSanctuary);
+
+    startEpisode(o, &eAvailableBuildings::fAchillesHall);
+    startEpisode(o, &eAvailableBuildings::fAtalantaHall);
+    startEpisode(o, &eAvailableBuildings::fBellerophonHall);
+    startEpisode(o, &eAvailableBuildings::fHerculesHall);
+    startEpisode(o, &eAvailableBuildings::fJasonHall);
+    startEpisode(o, &eAvailableBuildings::fOdysseusHall);
+    startEpisode(o, &eAvailableBuildings::fPerseusHall);
+    startEpisode(o, &eAvailableBuildings::fTheseusHall);
 }
 
 void eAvailableBuildings::startEpisode(const eAvailableBuildings& o,

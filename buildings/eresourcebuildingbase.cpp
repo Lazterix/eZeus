@@ -38,11 +38,11 @@ void eResourceBuildingBase::timeChanged(const int by) {
 
 int eResourceBuildingBase::add(const eResourceType type,
                                const int count) {
-    if(type != mResType) return 0;
+    if(type != mResType || count <= 0) return 0;
 
-    const int r = std::clamp(mResource + count, 0, mMaxResource);
-    const int result = r - mResource;
-    mResource = r;
+    const int space = std::max(0, mMaxResource - mResource);
+    const int result = std::min(count, space);
+    mResource += result;
     return result;
 }
 
@@ -83,8 +83,11 @@ void eResourceBuildingBase::read(eReadStream& src) {
     eEmployingBuilding::read(src);
 
     src >> mResource;
+    // Negative or over-capacity stock from a damaged save must not reach
+    // std::clamp in take() with an invalid upper bound.
+    mResource = std::clamp(mResource, 0, mMaxResource);
     src.readCharacter(&getBoard(), [this](eCharacter* const c) {
-        mCart = static_cast<eCartTransporter*>(c);
+        mCart = dynamic_cast<eCartTransporter*>(c);
     });
 }
 

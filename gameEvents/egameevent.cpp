@@ -1,5 +1,7 @@
 ﻿#include "egameevent.h"
 
+#include <vector>
+
 #include "engine/egameboard.h"
 
 #include "egodvisitevent.h"
@@ -59,25 +61,23 @@ eGameEvent::~eGameEvent() {
 }
 
 stdsptr<eGameEvent> eGameEvent::makeCopy() const {
-    const size_t size = 1000000;
-    void* mem = malloc(size);
+    std::vector<char> mem;
     {
         worldBoard()->setIOIDs();
-        eWriteTarget target(mem);
+        eWriteTarget target(&mem);
         eWriteStream dst(target);
         dst.writeFormat("eZeus");
         write(dst);
     }
     const auto result = sCreate(mCid, mType, mBranch, mBoard);
     {
-        eReadSource source(mem);
+        eReadSource source(&mem);
         eReadStream src(source);
         src.readFormat();
         result->read(src);
         src.handlePostFuncs();
     }
 
-    free(mem);
 
     return result;
 }
@@ -427,12 +427,18 @@ void eGameEvent::read(eReadStream& src) {
         eGameEventBranch branch;
         src >> branch;
         const auto e = eGameEvent::sCreate(mCid, type, branch, mBoard);
+        if(!e) {
+            src.fail();
+            return;
+        }
         e->read(src);
+        if(src.failed()) return;
         addConsequence(e);
     }
 
     for(const auto& et : mTriggers) {
         et->read(src);
+        if(src.failed()) return;
     }
 
     src >> mEpisodeEvent;

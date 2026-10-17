@@ -224,7 +224,7 @@ void eGodAttackAction::read(eReadStream& src) {
     src >> mLookForSpecial;
     auto& board = this->board();
     src.readBuilding(&board, [this](eBuilding* const b) {
-        mSanctuary = static_cast<eSanctuary*>(b);
+        mSanctuary = dynamic_cast<eSanctuary*>(b);
     });
 }
 

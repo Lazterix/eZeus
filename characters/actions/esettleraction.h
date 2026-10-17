@@ -43,7 +43,7 @@ public:
 
     void read(eReadStream& src) override {
         src.readCharacterAction(&board(), [this](eCharacterAction* const ca) {
-            mTptr = static_cast<eSettlerAction*>(ca);
+            mTptr = dynamic_cast<eSettlerAction*>(ca);
         });
     }
 
@@ -74,7 +74,7 @@ public:
 
     void read(eReadStream& src) override {
         src.readCharacterAction(&board(), [this](eCharacterAction* const ca) {
-            mTptr = static_cast<eSettlerAction*>(ca);
+            mTptr = dynamic_cast<eSettlerAction*>(ca);
         });
     }
 

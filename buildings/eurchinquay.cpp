@@ -24,14 +24,23 @@ void eUrchinQuay::timeChanged(const int by) {
         mStateCount += by;
         if(!mGatherer) {
             spawnGatherer();
-            mState = eUrchinQuayState::waiting;
+            if(mState != eUrchinQuayState::unpacking) {
+                mState = eUrchinQuayState::waiting;
+            }
         }
         switch(mState) {
         case eUrchinQuayState::unpacking: {
             if(mStateCount > eNumbers::sUrchinQuayUnpackTime) {
-                mStateCount = 0;
-                mState = eUrchinQuayState::waiting;
-                addProduced(eResourceType::urchin, 3);
+                if(spaceLeft(eResourceType::urchin) >= 3) {
+                    const int stored = addProduced(eResourceType::urchin, 3);
+                    if(stored == 3) {
+                        mStateCount = 0;
+                        mState = eUrchinQuayState::waiting;
+                    }
+                } else {
+                    // Keep the complete catch queued until there is room.
+                    mStateCount = eNumbers::sUrchinQuayUnpackTime;
+                }
                 updateDisabled();
             }
         } break;
@@ -39,6 +48,8 @@ void eUrchinQuay::timeChanged(const int by) {
         }
     }
     eResourceBuildingBase::timeChanged(by);
+    // The delivery cart can free space without calling this dock's take().
+    updateDisabled();
 }
 
 std::shared_ptr<eTexture> eUrchinQuay::getTexture(const eTileSize size) const {
@@ -146,6 +157,7 @@ std::vector<eOverlay> eUrchinQuay::getOverlays(const eTileSize size) const {
 void eUrchinQuay::addRaw() {
     mState = eUrchinQuayState::unpacking;
     mStateCount = 0;
+    updateDisabled();
     if(mGatherer) {
         eDiagonalOrientation o;
         switch(mO) {
@@ -171,11 +183,9 @@ int eUrchinQuay::take(const eResourceType type, const int count) {
 
 void eUrchinQuay::spawnGatherer() {
     if(mGatherer) return;
-    const auto b = e::make_shared<eUrchinGatherer>(getBoard());
-    b->setBothCityIds(cityId());
-    mGatherer = b.get();
-    eTile* t;
     const auto ct = centerTile();
+    if(!ct) return;
+    eTile* t = nullptr;
     switch(mO) {
     case eDiagonalOrientation::topRight: {
         const auto tr = ct->topRight<eTile>();
@@ -196,7 +206,10 @@ void eUrchinQuay::spawnGatherer() {
     } break;
     }
     if(!t) return;
+    const auto b = e::make_shared<eUrchinGatherer>(getBoard());
+    b->setBothCityIds(cityId());
     b->changeTile(t);
+    mGatherer = b.get();
 
     const auto hasRes = eHasResourceObject::sCreate(
                             eHasResourceObjectType::urchin);
@@ -206,14 +219,19 @@ void eUrchinQuay::spawnGatherer() {
     a->setWalkable(w);
     a->setWaitTime(eNumbers::sUrchinQuayUnpackTime);
     a->setFinishOnce(false);
+    a->setDisabled(mDisabled);
     b->setAction(a);
 }
 
 void eUrchinQuay::updateDisabled() {
     const int s = eResourceBuildingBase::spaceLeft(eResourceType::urchin);
-    const bool d = s <= 0;
+    const bool d = !enabled() || s <= 0 || mState == eUrchinQuayState::unpacking;
     if(mDisabled == d) return;
     mDisabled = d;
+    if(mGatherer) {
+        const auto a = dynamic_cast<eCollectResourceAction*>(mGatherer->action());
+        if(a) a->setDisabled(d);
+    }
 }
 
 void eUrchinQuay::read(eReadStream& src) {
@@ -223,7 +241,7 @@ void eUrchinQuay::read(eReadStream& src) {
     src >> mStateCount;
     src >> mState;
     src.readCharacter(&getBoard(), [this](eCharacter* const c) {
-        mGatherer = static_cast<eUrchinGatherer*>(c);
+        mGatherer = dynamic_cast<eUrchinGatherer*>(c);
     });
 }
 

@@ -1,6 +1,7 @@
 #include "ehippodrome.h"
 
 #include "characters/eracinghorse.h"
+#include <unordered_set>
 
 eHippodrome::eHippodrome(const eCityId cid, eGameBoard& board) :
     mCid(cid), mBoard(board) {}
@@ -18,6 +19,11 @@ void eHippodrome::nextMonth() {
 void eHippodrome::addPieces(eHippodromePiece * const start) {
     mPieces.clear();
     mFinish = -1;
+    if(!start) {
+        updatePaths();
+        return;
+    }
+    std::unordered_set<eHippodromePiece*> visited{start};
     auto current = addPiece(eN{start, eDiagonalOrientation::topRight});
     eHippodromePiece* prev = nullptr;
     while(current) {
@@ -30,7 +36,8 @@ void eHippodrome::addPieces(eHippodromePiece * const start) {
         for(const auto& n : ns) {
             if(n.fPtr == prev) continue;
             current->fO = n.fO;
-            if(n.fPtr == start) {
+            if(n.fPtr == start || !n.fPtr || !visited.insert(n.fPtr).second) {
+                // Closed loop, invalid neighbour, or another previously visited part.
                 current = nullptr;
                 break;
             }
@@ -44,6 +51,10 @@ void eHippodrome::addPieces(eHippodromePiece * const start) {
 
 bool eHippodrome::closed() const {
     if(mPieces.size() < 4) return false;
+    // A save can reference a demolished or missing piece.
+    for(const auto& piece : mPieces) {
+        if(!piece.fPtr) return false;
+    }
     const auto first = mPieces.front().fPtr;
     const auto last = mPieces.back().fPtr;
     const auto ns = last->neighbours();
@@ -55,7 +66,9 @@ bool eHippodrome::closed() const {
 
 void eHippodrome::clear() {
     for(const auto p : mPieces) {
-        p.fPtr->setHippodrome(nullptr);
+        if(p.fPtr && p.fPtr->hippodrome() == this) {
+            p.fPtr->setHippodrome(nullptr);
+        }
     }
     mPieces.clear();
     for(const auto& h : mHorses) {
@@ -66,6 +79,7 @@ void eHippodrome::clear() {
 }
 
 void eHippodrome::spawnHorses() {
+    if(mNHorses <= 0 || mPath1.empty() || mPath2.empty()) return;
     for(int i = 0; i < mNHorses;) {
         for(int j = 0; j < 2 && i < mNHorses; j++, i++) {
             const auto h = e::make_shared<eRacingHorse>(
@@ -105,8 +119,9 @@ int eHippodrome::drachmasPerMonth() const {
 }
 
 bool eHippodrome::working() const {
-    const bool c = closed();
-    if(!c) return false;
+    if(!closed() || mFinish < 0 ||
+       mFinish >= static_cast<int>(mPieces.size()) ||
+       mPath1.empty() || mPath2.empty()) return false;
     const int needed = neededHorses();
     return mNHorses >= needed;
 }
@@ -147,7 +162,7 @@ void eHippodrome::read(eReadStream& src) {
     src >> mFinish;
     src >> mNHorses;
     src.readCharacter(&mBoard, [this](eCharacter* const c) {
-        mCart = static_cast<eCartTransporter*>(c);
+        mCart = dynamic_cast<eCartTransporter*>(c);
     });
     int n;
     src >> n;
@@ -155,7 +170,8 @@ void eHippodrome::read(eReadStream& src) {
         auto& p = mPieces.emplace_back();
         src >> p.fO;
         src.readBuilding(&mBoard, [this, i](eBuilding* const b) {
-            const auto hp = static_cast<eHippodromePiece*>(b);
+            const auto hp = dynamic_cast<eHippodromePiece*>(b);
+            if(!hp) return;
             mPieces[i].fPtr = hp;
             hp->setHippodrome(this);
             hp->setPartId(i);
@@ -188,9 +204,11 @@ void eHippodrome::updatePaths() {
     mPath2.clear();
     const bool c = closed();
     if(!c) return;
+    if(mFinish < 0 || mFinish >= static_cast<int>(mPieces.size())) return;
     int i = mFinish;
     const eN* start = &mPieces[i];
     const eN* current = start;
+    if(!current->fPtr) return;
     const auto next = [&]() {
         i++;
         if(i >= (int)mPieces.size()) {

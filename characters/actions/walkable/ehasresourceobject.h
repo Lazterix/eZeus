@@ -22,6 +22,7 @@ public:
         mType(t) {}
 
     virtual bool has(eTileBase* const t) const {
+        if(!t) return false;
         switch(mType) {
         case eHasResourceObjectType::fish:
             return t->hasFish();
@@ -48,6 +49,7 @@ public:
         case eHasResourceObjectType::nonBusy:
             return false;
         }
+        return false;
     }
 
     virtual void read(eReadStream&) {}

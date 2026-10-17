@@ -37,7 +37,7 @@ public:
 
     void read(eReadStream& src) override {
         src.readCharacterAction(&board(), [this](eCharacterAction* const a) {
-            mButcherA = static_cast<eReplaceCattleAction*>(a);
+            mButcherA = dynamic_cast<eReplaceCattleAction*>(a);
         });
         src.readCharacter(&board(), [this](eCharacter* const c) {
             mButcher = c;

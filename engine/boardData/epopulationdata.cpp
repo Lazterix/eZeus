@@ -1,24 +1,26 @@
 #include "epopulationdata.h"
 
+#include <algorithm>
+
 ePopulationData::ePopulationData() {
 
 }
 
 void ePopulationData::incPopulation(const int p) {
-    mPop += p;
+    mPop = std::max(0, mPop + p);
 }
 
 void ePopulationData::incVacancies(const int v) {
-    mVacs += v;
+    mVacs = std::max(0, mVacs + v);
 }
 
 void ePopulationData::incSettlers(const int s) {
-    mSettlers += s;
+    mSettlers = std::max(0, mSettlers + s);
     if(s > 0) mArrivedThisMonth += s;
 }
 
 void ePopulationData::incLeft(const int s) {
-    mLeftThisMonth += s;
+    if(s > 0) mLeftThisMonth += s;
 }
 
 void ePopulationData::nextMonth() {

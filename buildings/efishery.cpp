@@ -37,9 +37,16 @@ void eFishery::timeChanged(const int by) {
         } break;
         case eFisheryState::unpacking: {
             if(mStateCount > eNumbers::sFisheryUnpackTime) {
-                mStateCount = 0;
-                mState = eFisheryState::waiting;
-                addProduced(eResourceType::fish, 3);
+                if(spaceLeft(eResourceType::fish) >= 3) {
+                    const int stored = addProduced(eResourceType::fish, 3);
+                    if(stored == 3) {
+                        mStateCount = 0;
+                        mState = eFisheryState::waiting;
+                    }
+                } else {
+                    // Do not discard the catch while waiting for room.
+                    mStateCount = eNumbers::sFisheryUnpackTime;
+                }
                 updateDisabled();
             }
         } break;
@@ -47,6 +54,8 @@ void eFishery::timeChanged(const int by) {
         }
     }
     eResourceBuildingBase::timeChanged(by);
+    // The transport cart may have freed storage without calling take().
+    updateDisabled();
 }
 
 std::shared_ptr<eTexture> eFishery::getTexture(const eTileSize size) const {
@@ -212,11 +221,9 @@ int eFishery::take(const eResourceType type, const int count) {
 
 void eFishery::spawnBoat() {
     if(mBoat) return;
-    const auto b = e::make_shared<eFishingBoat>(getBoard());
-    b->setBothCityIds(cityId());
-    mBoat = b.get();
-    eTile* t;
     const auto ct = centerTile();
+    if(!ct) return;
+    eTile* t = nullptr;
     switch(mO) {
     case eDiagonalOrientation::topRight: {
         const auto tr = ct->topRight<eTile>();
@@ -237,6 +244,9 @@ void eFishery::spawnBoat() {
     } break;
     }
     if(!t) return;
+    const auto b = e::make_shared<eFishingBoat>(getBoard());
+    b->setBothCityIds(cityId());
+    mBoat = b.get();
     b->changeTile(t);
 
     const auto hasRes = eHasResourceObject::sCreate(
@@ -247,14 +257,20 @@ void eFishery::spawnBoat() {
     a->setWalkable(w);
     a->setWaitTime(eNumbers::sFisheryUnpackTime);
     a->setFinishOnce(false);
+    a->setDisabled(mDisabled);
     b->setAction(a);
 }
 
 void eFishery::updateDisabled() {
     const int s = eResourceBuildingBase::spaceLeft(eResourceType::fish);
-    const bool d = s <= 0;
+    // A catch being unloaded must not be overwritten by another return.
+    const bool d = !enabled() || s <= 0 || mState == eFisheryState::unpacking;
     if(mDisabled == d) return;
     mDisabled = d;
+    if(mBoat) {
+        const auto a = dynamic_cast<eCollectResourceAction*>(mBoat->action());
+        if(a) a->setDisabled(d);
+    }
 }
 
 void eFishery::read(eReadStream& src) {
@@ -264,7 +280,7 @@ void eFishery::read(eReadStream& src) {
     src >> mStateCount;
     src >> mState;
     src.readCharacter(&getBoard(), [this](eCharacter* const c) {
-        mBoat = static_cast<eFishingBoat*>(c);
+        mBoat = dynamic_cast<eFishingBoat*>(c);
     });
 }
 

@@ -184,7 +184,7 @@ void eTower::read(eReadStream& src) {
     });
     src >> mSpawnTime;
     src.readCharacter(&getBoard(), [this](eCharacter* const c) {
-        mArcher = static_cast<eArcher*>(c);
+        mArcher = dynamic_cast<eArcher*>(c);
     });
 }
 

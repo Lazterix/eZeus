@@ -6,6 +6,7 @@
 #include "enumbers.h"
 
 #include <algorithm>
+#include <cmath>
 
 eProcessingBuilding::eProcessingBuilding(
         eGameBoard& board,
@@ -60,11 +61,11 @@ void eProcessingBuilding::timeChanged(const int by) {
             mTakeCart = spawnCart(eCartActionTypeSupport::take);
             mTakeCart->setMaxDistance(eNumbers::sProcessingBuildingMaxResourceTakeDistance);
         }
-        mProcessTime += by*effectiveness();
-        if(mProcessTime > mProcessWaitTime) {
-            mProcessTime -= mProcessWaitTime;
-            if(mRawCount >= mRawUse) {
-                const auto type = resourceType();
+        const auto type = resourceType();
+        if(mRawCount >= mRawUse && spaceLeft(type) > 0) {
+            mProcessTime += by*effectiveness();
+            if(mProcessTime > mProcessWaitTime) {
+                mProcessTime -= mProcessWaitTime;
                 const int c = addProduced(type, 1);
                 mRawCount -= c*mRawUse;
             }
@@ -80,10 +81,11 @@ int eProcessingBuilding::count(const eResourceType type) const {
 
 int eProcessingBuilding::add(const eResourceType type, const int count) {
     if(type == mRawMaterial) {
-        const int r = std::clamp(mRawCount + count, 0, mMaxRaw);
-        const int result = r - mRawCount;
-        mRawCount = r;
-        return result;
+        if(count <= 0) return 0;
+        const int space = std::max(0, mMaxRaw - mRawCount);
+        const int added = std::min(count, space);
+        mRawCount += added;
+        return added;
     }
     return eResourceBuildingBase::add(type, count);
 }
@@ -111,11 +113,15 @@ void eProcessingBuilding::read(eReadStream& src) {
     eResourceBuildingBase::read(src);
 
     src.readCharacter(&getBoard(), [this](eCharacter* const c) {
-        mTakeCart = static_cast<eCartTransporter*>(c);
+        mTakeCart = dynamic_cast<eCartTransporter*>(c);
     });
 
     src >> mRawCount;
     src >> mProcessTime;
+    mRawCount = std::clamp(mRawCount, 0, mMaxRaw);
+    if(!std::isfinite(mProcessTime) || mProcessTime < 0) {
+        mProcessTime = 0;
+    }
 }
 
 void eProcessingBuilding::write(eWriteStream& dst) const {

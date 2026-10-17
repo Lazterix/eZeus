@@ -21,7 +21,7 @@ private:
     void workOnDecision(eTile* const tile);
     void goBackDecision();
 
-    eArtisansGuild* mGuild = nullptr;
+    stdptr<eArtisansGuild> mGuild;
 
     bool mNoTarget = false;
 };
@@ -45,7 +45,7 @@ public:
 
     void read(eReadStream& src) override {
         src.readBuilding(&board(), [this](eBuilding* const b) {
-            mBptr = static_cast<eSanctBuilding*>(b);
+            mBptr = dynamic_cast<eSanctBuilding*>(b);
         });
     }
 
@@ -72,7 +72,7 @@ public:
 
     void read(eReadStream& src) override {
         src.readBuilding(&board(), [this](eBuilding* const b) {
-            mBptr = static_cast<eSanctBuilding*>(b);
+            mBptr = dynamic_cast<eSanctBuilding*>(b);
         });
     }
 

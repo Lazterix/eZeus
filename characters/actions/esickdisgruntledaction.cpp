@@ -29,7 +29,7 @@ void eSickDisgruntledAction::read(eReadStream& src) {
     eActionWithComeback::read(src);
 
     src.readBuilding(&board(), [this](eBuilding* const b) {
-        mBuilding = static_cast<eSmallHouse*>(b);
+        mBuilding = dynamic_cast<eSmallHouse*>(b);
     });
     src >> mGoBackNext;
 }

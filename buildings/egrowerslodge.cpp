@@ -51,6 +51,7 @@ std::vector<eOverlay> eGrowersLodge::
     switch(mType) {
     case eGrowerType::grapesAndOlives: {
         const auto& coll = texs.fGrowersLodgeOverlay;
+        if(coll.size() <= 0) break;
         const int texId = textureTime() % coll.size();
         eOverlay o;
         o.fTex = coll.getTexture(texId);
@@ -60,6 +61,7 @@ std::vector<eOverlay> eGrowersLodge::
     } break;
     case eGrowerType::oranges: {
         const auto& coll = texs.fOrangeTendersLodgeOverlay;
+        if(coll.size() <= 0) break;
         const int texId = textureTime() % coll.size();
         eOverlay o;
         o.fTex = coll.getTexture(texId);
@@ -72,6 +74,7 @@ std::vector<eOverlay> eGrowersLodge::
     if(mGrapes > 0) {
         eOverlay grapes;
         const auto& coll = texs.fWaitingGrapes;
+        if(coll.size() <= 0) return os;
         const int resMax = coll.size() - 1;
         const int res = std::clamp(mGrapes - 1, 0, resMax);
         grapes.fTex = coll.getTexture(res);
@@ -82,6 +85,7 @@ std::vector<eOverlay> eGrowersLodge::
     if(mOlives > 0) {
         eOverlay olives;
         const auto& coll = texs.fWaitingOlives;
+        if(coll.size() <= 0) return os;
         const int resMax = coll.size() - 1;
         const int res = std::clamp(mOlives - 1, 0, resMax);
         olives.fTex = coll.getTexture(res);
@@ -92,6 +96,7 @@ std::vector<eOverlay> eGrowersLodge::
     if(mOranges > 0) {
         eOverlay oranges;
         const auto& coll = texs.fWaitingOranges;
+        if(coll.size() <= 0) return os;
         const int resMax = coll.size() - 1;
         const int res = std::clamp(mOranges - 1, 0, resMax);
         oranges.fTex = coll.getTexture(res);
@@ -108,13 +113,19 @@ void eGrowersLodge::timeChanged(const int by) {
         if(!mCart) {
             mCart = spawnCart(eCartActionTypeSupport::give);
         } else if(mCart && mCart->waiting() && hasRes) {
-            if(mGrapes > 0) {
+            // A partially loaded cart can only accept its existing product.
+            const auto cargo = mCart->resCount() > 0 ?
+                mCart->resType() : eResourceType::none;
+            if(mGrapes > 0 &&
+               (cargo == eResourceType::none || cargo == eResourceType::grapes)) {
                 const int a = mCart->add(eResourceType::grapes, mGrapes);
                 mGrapes -= a;
-            } else if(mOlives > 0) {
+            } else if(mOlives > 0 &&
+                      (cargo == eResourceType::none || cargo == eResourceType::olives)) {
                 const int a = mCart->add(eResourceType::olives, mOlives);
                 mOlives -= a;
-            } else if(mOranges > 0) {
+            } else if(mOranges > 0 &&
+                      (cargo == eResourceType::none || cargo == eResourceType::oranges)) {
                 const int a = mCart->add(eResourceType::oranges, mOranges);
                 mOranges -= a;
             }
@@ -134,8 +145,12 @@ void eGrowersLodge::timeChanged(const int by) {
 }
 
 int eGrowersLodge::add(const eResourceType type, const int count) {
-    const int sl = mMaxResource - mGrapes - mOlives - mOranges;
-    const int r = std::clamp(count, 0, sl);
+    if(count <= 0) return 0;
+    if(mType == eGrowerType::grapesAndOlives &&
+       type != eResourceType::olives && type != eResourceType::grapes) return 0;
+    if(mType == eGrowerType::oranges && type != eResourceType::oranges) return 0;
+    const int sl = std::max(0, mMaxResource - mGrapes - mOlives - mOranges);
+    const int r = std::min(count, sl);
     if(type == eResourceType::olives) {
         mOlives += r;
     } else if(type == eResourceType::grapes) {
@@ -179,18 +194,13 @@ int eGrowersLodge::count(const eResourceType type) const {
 int eGrowersLodge::spaceLeft(const eResourceType type) const {
     switch(mType) {
     case eGrowerType::grapesAndOlives:
-        if(type == eResourceType::olives ||
-           type == eResourceType::grapes) {
-            return mMaxResource - mOlives - mGrapes;
-        }
+        if(type != eResourceType::olives && type != eResourceType::grapes) return 0;
         break;
     case eGrowerType::oranges:
-        if(type == eResourceType::oranges) {
-            return mMaxResource - mOranges;
-        }
+        if(type != eResourceType::oranges) return 0;
         break;
     }
-    return 0;
+    return std::max(0, mMaxResource - mOlives - mGrapes - mOranges);
 }
 
 std::vector<eCartTask> eGrowersLodge::cartTasks() const {
@@ -231,11 +241,11 @@ void eGrowersLodge::read(eReadStream& src) {
     src >> mOlives;
     src >> mOranges;
     src.readCharacter(&getBoard(), [this](eCharacter* const c) {
-        mCart = static_cast<eCartTransporter*>(c);
+        mCart = dynamic_cast<eCartTransporter*>(c);
     });
     src >> mSpawnTime;
     src.readCharacter(&getBoard(), [this](eCharacter* const c) {
-        mGrower = static_cast<eGrower*>(c);
+        mGrower = dynamic_cast<eGrower*>(c);
     });
 }
 
@@ -253,6 +263,7 @@ void eGrowersLodge::write(eWriteStream& dst) const {
 
 bool eGrowersLodge::spawnGrower(const eGrowerPtr grower) {
     const auto t = centerTile();
+    if(!t) return false;
     const auto g = e::make_shared<eGrower>(getBoard());
     g->setGrowerType(mType);
     g->setBothCityIds(cityId());

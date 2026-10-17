@@ -214,6 +214,7 @@ int eEliteHousing::provide(const eProvide p, const int n) {
 }
 
 void eEliteHousing::timeChanged(const int by) {
+    mUpdateLevel += by;
     const int lupdate = 1000;
     if(mUpdateLevel > lupdate) {
         mUpdateLevel -= lupdate;

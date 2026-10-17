@@ -82,6 +82,7 @@ void eRC_finishAction::call() {
 }
 
 void eRC_finishWalkingAction::call() {
+    if(!mCattle) return;
     const auto t = mCattle->tile();
     if(!t) return;
     const auto ub = t->underBuilding();
@@ -89,6 +90,7 @@ void eRC_finishWalkingAction::call() {
     const auto ubt = ub->type();
     if(ubt != eBuildingType::cattle) return;
     const auto ab = static_cast<eAnimalBuilding*>(ub);
+    if(ab->animal() && ab->animal() != mCattle.get()) return;
     ab->setAnimal(mCattle);
     const int tx = t->x();
     const int ty = t->y();

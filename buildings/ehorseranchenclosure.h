@@ -27,14 +27,14 @@ public:
     bool takeHorse();
 
     void setRanch(eHorseRanch* const ranch);
-    eHorseRanch* ranch() const { return mRanch; }
+    eHorseRanch* ranch() const;
 
     void read(eReadStream& src) override;
     void write(eWriteStream& dst) const override;
 private:
     std::vector<stdsptr<eHorse>> mHorses;
 
-    eHorseRanch* mRanch = nullptr;
+    stdptr<eHorseRanch> mRanch;
 };
 
 #endif // EHORSERANCHENCLOSURE_H

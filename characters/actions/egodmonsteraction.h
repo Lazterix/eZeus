@@ -185,10 +185,10 @@ public:
 
     void read(eReadStream& src) override {
         src.readCharacterAction(&board(), [this](eCharacterAction* const ca) {
-            mWinnerPtr = static_cast<eGodMonsterAction*>(ca);
+            mWinnerPtr = dynamic_cast<eGodMonsterAction*>(ca);
         });
         src.readCharacterAction(&board(), [this](eCharacterAction* const ca) {
-            mLoserPtr = static_cast<eGodMonsterAction*>(ca);
+            mLoserPtr = dynamic_cast<eGodMonsterAction*>(ca);
         });
         src >> mWt;
         src >> mLt;
@@ -224,7 +224,7 @@ public:
 
     void read(eReadStream& src) override {
         src.readCharacterAction(&board(), [this](eCharacterAction* const ca) {
-            mTptr = static_cast<eGodMonsterAction*>(ca);
+            mTptr = dynamic_cast<eGodMonsterAction*>(ca);
         });
         mFinishAct = src.readCharActFunc(board());
     }
@@ -256,7 +256,7 @@ public:
 
     void read(eReadStream& src) override {
         src.readCharacterAction(&board(), [this](eCharacterAction* const ca) {
-            mTptr = static_cast<eGodMonsterAction*>(ca);
+            mTptr = dynamic_cast<eGodMonsterAction*>(ca);
         });
         mFinishAct = src.readCharActFunc(board());
         src >> mDist;
@@ -291,7 +291,7 @@ public:
 
     void read(eReadStream& src) override {
         src.readCharacterAction(&board(), [this](eCharacterAction* const ca) {
-            mTptr = static_cast<eGodMonsterAction*>(ca);
+            mTptr = dynamic_cast<eGodMonsterAction*>(ca);
         });
         mFinishAct = src.readCharActFunc(board());
         src >> mDist;
@@ -386,7 +386,7 @@ public:
 
     void read(eReadStream& src) override {
         src.readCharacterAction(&board(), [this](eCharacterAction* const ca) {
-            mTptr = static_cast<eGodMonsterAction*>(ca);
+            mTptr = dynamic_cast<eGodMonsterAction*>(ca);
         });
         src >> mAt;
         src >> mChart;

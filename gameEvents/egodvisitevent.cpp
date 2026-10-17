@@ -5,6 +5,7 @@
 #include "engine/eeventdata.h"
 #include "characters/actions/egodvisitaction.h"
 #include "elanguage.h"
+#include "eeventstatehelpers.h"
 
 eGodVisitEvent::eGodVisitEvent(const eCityId cid,
                                const eGameEventBranch branch,
@@ -14,7 +15,7 @@ eGodVisitEvent::eGodVisitEvent(const eCityId cid,
 void eGodVisitEvent::setTypes(const std::vector<eGodType>& types) {
     mTypes = types;
     const int nTypes = mTypes.size();
-    if(mNextId >= nTypes) mNextId = 0;
+    mNextId = eEventStateHelpers::normalizeCycleIndex(mNextId, nTypes);
 }
 
 void eGodVisitEvent::setRandom(const bool r) {
@@ -45,14 +46,8 @@ void eGodVisitEvent::trigger() {
     if(mRandom) {
         tid = eRand::rand() % types.size();
     } else {
-        tid = mNextId;
-        if(tid >= nTypes) {
-            tid = 0;
-            mNextId = 0;
-        }
-        if(++mNextId >= nTypes) {
-            mNextId = 0;
-        }
+        tid = eEventStateHelpers::normalizeCycleIndex(mNextId, nTypes);
+        mNextId = eEventStateHelpers::nextCycleIndex(tid, nTypes);
     }
     const auto t = types.at(tid);
     const auto god = eGod::sCreateGod(t, *board);
@@ -86,6 +81,8 @@ void eGodVisitEvent::write(eWriteStream& dst) const {
 
 void eGodVisitEvent::read(eReadStream& src) {
     eGameEvent::read(src);
+    if(src.failed()) return;
+    mTypes.clear();
     int n;
     src >> n;
     for(int i = 0; i < n; i++) {
@@ -95,4 +92,6 @@ void eGodVisitEvent::read(eReadStream& src) {
     }
     src >> mRandom;
     src >> mNextId;
+    mNextId = eEventStateHelpers::normalizeCycleIndex(
+        mNextId, static_cast<int>(mTypes.size()));
 }

@@ -21,6 +21,7 @@ std::vector<eOverlay> eGranary::getOverlays(const eTileSize size) const {
     const auto& texs = mTextures[sizeId];
     if(enabled()) {
         const auto& coll = texs.fGranaryOverlay;
+        if(coll.size() <= 0) return os;
         const int texId = textureTime() % coll.size();
         auto& o = os.emplace_back();
         o.fTex = coll.getTexture(texId);

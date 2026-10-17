@@ -53,7 +53,7 @@ void ePyramidBuildingPart::read(eReadStream& src) {
     ePyramidElement::read(src);
     auto& board = getBoard();
     src.readBuilding(&board, [this](eBuilding* const b) {
-        mPaint = static_cast<ePyramidElement*>(b);
+        mPaint = dynamic_cast<ePyramidElement*>(b);
     });
     src >> mPaintDir;
 }

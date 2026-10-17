@@ -55,6 +55,10 @@ eDomesticatedAnimal* tryToCollect(eTile* const tile,
 bool eShepherdAction::decide() {
     const bool r = eActionWithComeback::decide();
     if(r) return r;
+    if(!mShed || !mCharacter || !mCharacter->tile()) {
+        setState(eCharacterActionState::failed);
+        return true;
+    }
 
     const auto t = mCharacter->tile();
 
@@ -67,10 +71,10 @@ bool eShepherdAction::decide() {
     if(coll > 0) {
         if(inShed) {
             const auto rType = mShed->resourceType();
-            mShed->addProduced(rType, coll);
-            mCharacter->incCollected(-coll);
+            const int stored = mShed->addProduced(rType, coll);
+            mCharacter->incCollected(-stored);
 
-            if(mFinishOnce) {
+            if(mFinishOnce && mCharacter->collected() == 0) {
                 setState(eCharacterActionState::finished);
                 return true;
             } else {
@@ -122,10 +126,10 @@ void eShepherdAction::read(eReadStream& src) {
     eActionWithComeback::read(src);
     src >> mAnimalType;
     src.readCharacter(&board(), [this](eCharacter* const c) {
-        mCharacter = static_cast<eResourceCollectorBase*>(c);
+        mCharacter = dynamic_cast<eResourceCollectorBase*>(c);
     });
     src.readBuilding(&board(), [this](eBuilding* const b) {
-        mShed = static_cast<eShepherBuildingBase*>(b);
+        mShed = dynamic_cast<eShepherBuildingBase*>(b);
     });
     src >> mFinishOnce;
     src >> mGroomed;
@@ -211,7 +215,11 @@ void eShepherdAction::goBackDecision() {
         mCharacter->setActionType(eCharacterActionType::walk);
     }
 
-    goBack(mShed, eWalkableObject::sCreateDefault());
+    if(!mShed) {
+        setState(eCharacterActionState::failed);
+        return;
+    }
+    goBack(mShed.get(), eWalkableObject::sCreateDefault());
 }
 
 void eShepherdAction::waitDecision() {

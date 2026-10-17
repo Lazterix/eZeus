@@ -18,7 +18,15 @@ void eMoveToAction::start(const eTileFinal& final,
                           stdsptr<eWalkableObject> moveWalkable,
                           const eTileGetter& endTile) {
     const auto c = character();
+    if(!c || !pathFindWalkable) {
+        setState(eCharacterActionState::failed);
+        return;
+    }
     const auto t = c->tile();
+    if(!t) {
+        setState(eCharacterActionState::failed);
+        return;
+    }
     auto& brd = c->getBoard();
     auto& tp = brd.threadPool();
 
@@ -113,6 +121,10 @@ void eMoveToAction::start(eTile* const final,
                           const stdsptr<eWalkableObject>& pathFindWalkable,
                           const stdsptr<eWalkableObject>& moveWalkable,
                           const eTileGetter& endTile) {
+    if(!final) {
+        setState(eCharacterActionState::failed);
+        return;
+    }
     const int tx = final->x();
     const int ty = final->y();
     const auto finalFunc = [tx, ty](eTileBase* const t) {
@@ -142,6 +154,10 @@ void eMoveToAction::start(eBuilding* const final,
                           const stdsptr<eWalkableObject>& pathFindWalkable,
                           const stdsptr<eWalkableObject>& moveWalkable,
                           const eTileGetter& endTile) {
+    if(!final) {
+        setState(eCharacterActionState::failed);
+        return;
+    }
     const auto rect = final->tileRect();
     return start(rect, pathFindWalkable, moveWalkable, endTile);
 }

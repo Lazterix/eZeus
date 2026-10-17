@@ -40,8 +40,15 @@ eRacingHorse::getTexture(const eTileSize size) const {
     } else { // if(dir == eWorldDirection::W) {
         da = 135;
     }
-    const int aid = int(std::round((a - da)/22.5) - 1) % race.size();
+    const int raceSize = static_cast<int>(race.size());
+    if(raceSize <= 0) return nullptr;
+
+    const int rawAid = static_cast<int>(
+        std::round((a - da)/22.5) - 1);
+    const int aid = (rawAid % raceSize + raceSize) % raceSize;
     const auto& coll = race[aid];
+    if(coll.size() <= 0) return nullptr;
+
     const int time = 5*textureTime();
     return coll.getTexture(time % coll.size());
 }

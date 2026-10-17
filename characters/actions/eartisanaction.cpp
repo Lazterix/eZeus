@@ -25,9 +25,13 @@ bool eArtisanAction::decide() {
     if(r) return r;
 
     const auto c = character();
+    if(!c || !c->tile() || !mGuild) {
+        setState(eCharacterActionState::failed);
+        return true;
+    }
     const auto t = c->tile();
 
-    const bool inGuild = eWalkableHelpers::sTileUnderBuilding(t, mGuild);
+    const bool inGuild = eWalkableHelpers::sTileUnderBuilding(t, mGuild.get());
 
     if(inGuild) {
         if(mNoTarget) {
@@ -58,6 +62,7 @@ bool eArtisanAction::decide() {
                     break;
                 }
             }
+            if(tt) break;
         }
         if(tt) {
             workOnDecision(tt);
@@ -72,14 +77,14 @@ bool eArtisanAction::decide() {
 void eArtisanAction::read(eReadStream& src) {
     eActionWithComeback::read(src);
     src.readBuilding(&board(), [this](eBuilding* const b) {
-        mGuild = static_cast<eArtisansGuild*>(b);
+        mGuild = dynamic_cast<eArtisansGuild*>(b);
     });
     src >> mNoTarget;
 }
 
 void eArtisanAction::write(eWriteStream& dst) const {
     eActionWithComeback::write(dst);
-    dst.writeBuilding(mGuild);
+    dst.writeBuilding(mGuild.get());
     dst << mNoTarget;
 }
 
@@ -152,15 +157,19 @@ void eArtisanAction::workOnDecision(eTile* const tile) {
     c->setOrientation(o);
     const auto w = e::make_shared<eBuildAction>(c);
     const auto finish = std::make_shared<eArtA_buildFinish>(board(), bb);
-    w->setFailAction(finish);
-    w->setFinishAction(finish);
     const auto deleteFail = std::make_shared<eArtA_buildDelete>(board(), bb);
+    w->setFailAction(deleteFail);
+    w->setFinishAction(finish);
     w->setDeleteFailAction(deleteFail);
     setCurrentAction(w);
 }
 
 void eArtisanAction::goBackDecision() {
     const auto c = character();
+    if(!c || !mGuild) {
+        setState(eCharacterActionState::failed);
+        return;
+    }
     c->setActionType(eCharacterActionType::walk);
-    goBack(mGuild, eWalkableObject::sCreateArtisan());
+    goBack(mGuild.get(), eWalkableObject::sCreateArtisan());
 }

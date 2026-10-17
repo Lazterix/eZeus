@@ -80,7 +80,9 @@ private:
             std::make_shared<eDirectionTimes>();
 
     bool mSpawnOnPathSet = false;
-    int mPathState = 0;
+    // A loaded/new patrol route must be built even when the city's road state is zero.
+    int mPathState = -1;
+    unsigned long long mPathGeneration = 0;
     std::vector<eOrientation> mPath;
     std::vector<eOrientation> mReversePath;
 

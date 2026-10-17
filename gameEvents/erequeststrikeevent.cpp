@@ -37,13 +37,15 @@ void eRequestStrikeEvent::trigger() {
         } else {
             board->event(eEvent::strikeUnsuccessful, ed);
         }
-        {
+        if(rstr > 0) {
             const int troops = mRivalCity->troops();
             const double killFrac = std::clamp(0.5*str/rstr, 0., 1.);
             mRivalCity->setTroops((1 - killFrac)*troops);
+        } else {
+            mRivalCity->setTroops(0);
         }
 
-        {
+        if(str > 0) {
             const int troops = mCity->troops();
             const double killFrac = std::clamp(0.5*rstr/str, 0., 1.);
             mCity->setTroops((1 - gStrikeFrac*killFrac)*troops);

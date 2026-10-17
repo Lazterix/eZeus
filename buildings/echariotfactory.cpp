@@ -2,6 +2,7 @@
 
 #include "textures/egametextures.h"
 #include "enumbers.h"
+#include "engine/egameboard.h"
 
 #include <algorithm>
 
@@ -36,6 +37,7 @@ eChariotFactory::getOverlays(const eTileSize size) const {
         eOverlay& o = os.emplace_back();
         const int collId = std::min(3, mHorses - 1);
         const auto& coll = hcoll[collId];
+        if(coll.size() <= 0) return os;
         const int texId = textureTime() % coll.size();
         o.fTex = coll.getTexture(texId);
         o.fX = -1.68;
@@ -46,6 +48,7 @@ eChariotFactory::getOverlays(const eTileSize size) const {
     if(mChariots == 0) {
         eOverlay& o = os.emplace_back();
         const auto& coll = texs.fChariotFactoryOverlay;
+        if(coll.size() <= 0) return os;
         const int texId = textureTime() % coll.size();
         o.fTex = coll.getTexture(texId);
         o.fX = -0.63;
@@ -61,6 +64,7 @@ eChariotFactory::getOverlays(const eTileSize size) const {
     if(mWood > 0) {
         {
             const auto& coll = texs.fChariotFactoryOverlay1;
+            if(coll.size() <= 0) return os;
             const int texId = textureTime() % coll.size();
             eOverlay& o = os.emplace_back();
             o.fTex = coll.getTexture(texId);
@@ -70,6 +74,7 @@ eChariotFactory::getOverlays(const eTileSize size) const {
 
         {
             const auto& coll = texs.fWaitingWood;
+            if(coll.size() <= 0) return os;
             const int resMax = coll.size() - 1;
             const int res = std::clamp(mWood - 1, 0, resMax);
             eOverlay& o = os.emplace_back();
@@ -86,20 +91,29 @@ void eChariotFactory::timeChanged(const int by) {
     if(enabled()) {
         if(!mWoodCart) {
             mWoodCart = spawnCart(eCartActionTypeSupport::take);
-            mWoodCart->setSupportResource(eResourceType::wood);
+            if(mWoodCart) {
+                mWoodCart->setSupportResource(eResourceType::wood);
+            }
         }
         if(!mHorseCart) {
             mHorseCart = spawnCart(eCartActionTypeSupport::take);
-            mHorseCart->setSupportResource(eResourceType::horse);
-            mHorseCart->setType(eCartTransporterType::horse);
+            if(mHorseCart) {
+                mHorseCart->setSupportResource(eResourceType::horse);
+                mHorseCart->setType(eCartTransporterType::horse);
+            }
         }
-        if(mWood > 2 && mChariots < 4) {
+        // A chariot costs exactly two units of wood, not three.
+        if(mWood >= 2 && mChariots < 4) {
             const int chariotBuildingType = eNumbers::sChariotBuildingTime;
             mChariotBuildingTime += by;
             if(mChariotBuildingTime > chariotBuildingType) {
                 mChariotBuildingTime = 0;
                 mChariots++;
                 mWood -= 2;
+                // Match the production counter used by horse ranches.
+                if(isPersonPlayer()) {
+                    getBoard().incProduced(eResourceType::chariot, 1);
+                }
             }
 
         }
@@ -116,17 +130,20 @@ int eChariotFactory::count(const eResourceType type) const {
 
 int eChariotFactory::add(const eResourceType type, const int count) {
     if(type == eResourceType::wood) {
-        mWood += count;
-        return count;
+        const int added = std::clamp(count, 0, spaceLeft(type));
+        mWood += added;
+        return added;
     } else if(type == eResourceType::horse) {
-        mHorses += count;
-        return count;
+        const int added = std::clamp(count, 0, spaceLeft(type));
+        mHorses += added;
+        return added;
     }
     return eEmployingBuilding::add(type, count);
 }
 
 int eChariotFactory::take(const eResourceType type, const int count) {
     if(type == eResourceType::chariot) {
+        if(count <= 0) return 0;
         const int t = std::min(mHorses, std::min(mChariots, count));
         mChariots -= t;
         mHorses -= t;
@@ -168,12 +185,15 @@ void eChariotFactory::read(eReadStream& src) {
     src >> mWood;
     src >> mHorses;
     src >> mChariots;
+    mWood = std::max(0, mWood);
+    mHorses = std::max(0, mHorses);
+    mChariots = std::max(0, mChariots);
     auto& board = getBoard();
     src.readCharacter(&board, [this](eCharacter* const c) {
-        mWoodCart = static_cast<eCartTransporter*>(c);
+        mWoodCart = dynamic_cast<eCartTransporter*>(c);
     });
     src.readCharacter(&board, [this](eCharacter* const c) {
-        mHorseCart = static_cast<eCartTransporter*>(c);
+        mHorseCart = dynamic_cast<eCartTransporter*>(c);
     });
 }
 

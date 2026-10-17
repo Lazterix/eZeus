@@ -17,12 +17,16 @@ eFireFighterAction::eFireFighterAction(eCharacter* const c) :
     ePatrolAction(c, eCharActionType::fireFighterAction) {}
 
 void eFireFighterAction::increment(const int by) {
+    const auto c = character();
+    if(!c || !c->tile()) {
+        setState(eCharacterActionState::failed);
+        return;
+    }
     if(!mFireFighting) {
         const int fireCheckInc = 1000;
         mFireCheck += by;
         if(mFireCheck > fireCheckInc) {
             mFireCheck -= fireCheckInc;
-            const auto c = character();
             auto& brd = c->getBoard();
             const auto ct = c->tile();
             const int tx = ct->x();
@@ -67,7 +71,16 @@ eTile* neighbourOnFire(eTile* const tile, eOrientation& oo) {
 
 bool eFireFighterAction::decide() {
     const auto c = character();
+    if(!c || !c->tile()) {
+        setState(eCharacterActionState::failed);
+        return true;
+    }
     if(mFireFighting) {
+        if(mUsedWater >= 5) {
+            c->setActionType(eCharacterActionType::walk);
+            goBackDecision(eWalkableObject::sCreateDefault());
+            return true;
+        }
         const auto tile = c->tile();
         eOrientation oo;
         const auto n = neighbourOnFire(tile, oo);
@@ -76,13 +89,8 @@ bool eFireFighterAction::decide() {
             putOutFire(n);
             mUsedWater++;
         } else {
-            if(mUsedWater >= 5) {
-                c->setActionType(eCharacterActionType::walk);
-                goBackDecision(eWalkableObject::sCreateDefault());
-            } else {
-                c->setActionType(eCharacterActionType::stand);
-                lookForFire(true);
-            }
+            c->setActionType(eCharacterActionType::stand);
+            lookForFire(true);
         }
         return true;
     } else {
@@ -109,6 +117,10 @@ void eFireFighterAction::write(eWriteStream& dst) const {
 
 bool eFireFighterAction::lookForFire(const bool second) {
     const auto c = character();
+    if(!c) {
+        setState(eCharacterActionState::failed);
+        return false;
+    }
 
     const auto failFunc = std::make_shared<eFFA_lookForFireFail>(
                               board(), this);
@@ -119,13 +131,17 @@ bool eFireFighterAction::lookForFire(const bool second) {
 
     const auto a = e::make_shared<eMoveToAction>(c);
     a->setFailAction(failFunc);
-    a->setMaxFindDistance(50);
+    a->setMaxFindDistance(40);
     const stdptr<eFireFighterAction> tptr(this);
-    a->setFoundAction([tptr, a, second, this]() {
+    a->setFoundAction([tptr, second, this]() {
         if(!tptr) return;
         if(second) {
             mFireFighting = true;
             const auto c = character();
+            if(!c) {
+                setState(eCharacterActionState::failed);
+                return;
+            }
             c->setActionType(eCharacterActionType::carry);
         } else {
             lookForFire(true);
@@ -135,10 +151,8 @@ bool eFireFighterAction::lookForFire(const bool second) {
 
     a->setWait(mFireFighting || second);
     a->start(onFire);
-    a->setMaxFindDistance(40);
-    if(second) {
-        setCurrentAction(a);
-    }
+    // Keep both stages alive through the parent action, not via a self-capture.
+    setCurrentAction(a);
 
     return true;
 }

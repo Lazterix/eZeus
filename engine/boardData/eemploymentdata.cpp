@@ -16,7 +16,7 @@ eEmploymentData::eEmploymentData(const ePopulationData& popData,
 }
 
 void eEmploymentData::incTotalJobVacancies(const int v) {
-    mTotalJobVacs += v;
+    mTotalJobVacs = std::max(0, mTotalJobVacs + v);
 }
 
 int eEmploymentData::employable() const {
@@ -26,11 +26,12 @@ int eEmploymentData::employable() const {
     const auto wageRate = mCity.wageRate();
     const double frac = eDifficultyHelpers::workerFrac(
                             diff, wageRate);
-    return frac*mPopData.population();
+    return std::max(0, static_cast<int>(
+        frac*std::max(0, mPopData.population())));
 }
 
 int eEmploymentData::employed() const {
-    return std::min(employable(), totalJobVacancies());
+    return std::max(0, std::min(employable(), totalJobVacancies()));
 }
 
 int eEmploymentData::pensions() const {
@@ -45,7 +46,7 @@ int eEmploymentData::unemployed() const {
 }
 
 int eEmploymentData::freeJobVacancies() const {
-    return totalJobVacancies() - employed();
+    return std::max(0, totalJobVacancies() - employed());
 }
 
 int eEmploymentData::totalJobVacancies() const {

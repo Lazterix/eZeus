@@ -12,6 +12,7 @@ eRegrowForestAction::eRegrowForestAction() :
 
 void eRegrowForestAction::trigger(eGameBoard& board) {
     (void)board;
+    if(!mTile) return;
     if(mTile->terrain() != eTerrain::choppedForest) return;
     mTile->setTerrain(eTerrain::forest);
 }

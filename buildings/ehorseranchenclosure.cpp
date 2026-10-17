@@ -23,12 +23,12 @@ eHorseRanchEnclosure::~eHorseRanchEnclosure() {
 }
 
 void eHorseRanchEnclosure::erase() {
-    mRanch->eBuilding::erase();
+    if(mRanch) mRanch->eBuilding::erase();
     eBuilding::erase();
 }
 
 int eHorseRanchEnclosure::provide(const eProvide p, const int n) {
-    mRanch->eEmployingBuilding::provide(p, n);
+    if(mRanch) mRanch->eEmployingBuilding::provide(p, n);
     return eBuildingWithResource::provide(p, n);
 }
 
@@ -47,9 +47,11 @@ std::vector<eOverlay> eHorseRanchEnclosure::getOverlays(
     const int cty = ct->y();
     std::vector<eOverlay> os;
     for(const auto& h : mHorses) {
+        if(!h) continue;
+        const auto t = h->tile();
+        if(!t) continue;
         auto& o = os.emplace_back();
         o.fTex = h->getNotRotatedTexture(size);
-        const auto t = h->tile();
         const int tx = t->x();
         const int ty = t->y();
         o.fX = tx + h->x() - ctx - 0.5;
@@ -65,6 +67,7 @@ int eHorseRanchEnclosure::count(const eResourceType type) const {
 
 int eHorseRanchEnclosure::take(const eResourceType type, const int count) {
     if(type == eResourceType::horse) {
+        if(count <= 0) return 0;
         const int max = horseCount();
         const int t = std::min(max, count);
         for(int i = 0; i < t; i++) {
@@ -76,10 +79,11 @@ int eHorseRanchEnclosure::take(const eResourceType type, const int count) {
 }
 
 bool eHorseRanchEnclosure::spawnHorse() {
-    if(mHorses.size() > 5) return false;
+    if(mHorses.size() >= 6) return false;
+    const auto tile = centerTile();
+    if(!tile) return false;
     const auto h = e::make_shared<eHorse>(getBoard());
     h->setBothCityIds(cityId());
-    const auto tile = centerTile();
     h->changeTile(tile);
     const auto walkable = eWalkableObject::sCreateRanch();
     const int tx = tile->x();
@@ -103,6 +107,10 @@ bool eHorseRanchEnclosure::takeHorse() {
 
 void eHorseRanchEnclosure::setRanch(eHorseRanch* const ranch) {
     mRanch = ranch;
+}
+
+eHorseRanch* eHorseRanchEnclosure::ranch() const {
+    return mRanch.get();
 }
 
 void eHorseRanchEnclosure::read(eReadStream& src) {

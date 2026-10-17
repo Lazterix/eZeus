@@ -24,6 +24,7 @@ std::vector<eOverlay> eArtisansGuild::
     const auto& texs = eGameTextures::buildings()[sizeId];
 
     const auto& coll = texs.fArtisansGuildOverlay;
+    if(coll.size() <= 0) return {};
     const int texId = textureTime() % coll.size();
     eOverlay o;
     o.fTex = coll.getTexture(texId);
@@ -62,7 +63,7 @@ void eArtisansGuild::read(eReadStream& src) {
     src >> mSpawnTime;
     auto& board = getBoard();
     src.readCharacter(&board, [this](eCharacter* const c) {
-        mArtisan = static_cast<eArtisan*>(c);
+        mArtisan = dynamic_cast<eArtisan*>(c);
     });
 }
 

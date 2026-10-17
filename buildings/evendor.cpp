@@ -75,6 +75,7 @@ std::vector<eOverlay> eVendor::getOverlays(const eTileSize size) const {
 void eVendor::erase() {
     deleteLater();
     const auto a = agora();
+    if(!a) return;
     a->setBuilding(this, nullptr);
     a->fillSpaces();
 }
@@ -99,8 +100,8 @@ int eVendor::count(const eResourceType type) const {
 }
 
 int eVendor::spaceLeft(const eResourceType type) const {
-    if(type != mResType) return 0;
-    return (mMaxResource - mResource)/mResMult;
+    if(type != mResType || mResMult <= 0) return 0;
+    return std::max(0, (mMaxResource - mResource)/mResMult);
 }
 
 void eVendor::timeChanged(const int by) {
@@ -189,9 +190,10 @@ int eVendor::takeForPeddler(const int t) {
 void eVendor::read(eReadStream& src) {
     eEmployingBuilding::read(src);
     src >> mResource;
+    mResource = std::clamp(mResource, 0, std::max(0, mMaxResource));
     src >> mVendorEnabled;
     src.readCharacter(&getBoard(), [this](eCharacter* const c) {
-        mCart = static_cast<eCartTransporter*>(c);
+        mCart = dynamic_cast<eCartTransporter*>(c);
     });
 }
 

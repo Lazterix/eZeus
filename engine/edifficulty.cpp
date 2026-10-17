@@ -15,6 +15,7 @@ std::string eDifficultyHelpers::name(const eDifficulty diff) {
     case eDifficulty::olympian:
         return "olympian";
     }
+    return "unknown";
 }
 
 int costBase(const eBuildingType type) {
@@ -360,6 +361,7 @@ int costBase(const eBuildingType type) {
     case eBuildingType::crosswalk:
         return 25;
     }
+    return 0;
 }
 
 double costMultiplier(const eDifficulty diff) {
@@ -676,6 +678,7 @@ int eDifficultyHelpers::taxSentiment(
         const eDifficulty diff,
         const eTaxRate taxRate) {
     const int id = static_cast<int>(taxRate);
+    if(id < 0 || id >= 7) return 0;
     switch(diff) {
     case eDifficulty::beginner: {
         const int vals[]{7, 5, 3, 2, 0, -1, -2};
@@ -698,6 +701,7 @@ int eDifficultyHelpers::taxSentiment(
         return vals[id];
     }
     }
+    return 0;
 }
 
 double eDifficultyHelpers::workerFrac(

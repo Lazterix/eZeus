@@ -18,6 +18,7 @@
 #include "buildings/pyramids/epyramid.h"
 
 #include "evectorhelpers.h"
+#include "gameEvents/eeventstatehelpers.h"
 
 #include "gameEvents/einvasionevent.h"
 #include "gameEvents/eplayerconquestevent.h"
@@ -257,6 +258,7 @@ void eBoardCity::incTime(const int by) {
                     const bool w = eBuilding::sWalkableBuilding(type);
                     if(w) continue;
                     const auto ub = t->underBuilding();
+                    if(!ub) continue;
                     ub->collapse();
 
                     eEventData ed;
@@ -285,6 +287,7 @@ void eBoardCity::updateCoverage() {
     int totalHygiene = 0;
     int totalMaintanance = 0;
     for(const auto b : mTimedBuildings) {
+        if(!b) continue;
         if(const auto h = dynamic_cast<eHouseBase*>(b)) {
             const int p = h->people();
             if(h->athletesScholars() > 0) {
@@ -332,7 +335,8 @@ void eBoardCity::updateCoverage() {
         mUnrest = std::round(100.*totalUnrest/commonPeople);
         mPopularity = std::round(1.*totalSatisfaction/commonPeople);
         mHealth = std::round(1.*totalHygiene/commonPeople);
-        mMaintanance = std::round(1.*totalMaintanance/totalBuildings);
+        mMaintanance = totalBuildings > 0 ?
+            std::round(1.*totalMaintanance/totalBuildings) : 100;
     }
 }
 
@@ -474,7 +478,9 @@ void eBoardCity::updateCityDefense() {
     eTile* defendTile = nullptr;
     if(!mInvasionHandlers.empty()) {
         const auto& inv = mInvasionHandlers[0];
-        defendTile = inv->currentTile();
+        if(inv) {
+            defendTile = inv->currentTile();
+        }
     } else {
         const auto i = mBoard.invasionToDefend(mId);
         if(i) defendTile = i->landInvasionTile();
@@ -484,6 +490,7 @@ void eBoardCity::updateCityDefense() {
         const int ty = defendTile->y();
         std::vector<eSoldierBanner*> bs;
         for(const auto& b : mSoldierBanners) {
+            if(!b) continue;
             if(b->isAbroad()) continue;
             b->backFromHome();
             bs.push_back(b.get());
@@ -492,6 +499,7 @@ void eBoardCity::updateCityDefense() {
         mDefending = true;
     } else {
         for(const auto& b : mSoldierBanners) {
+            if(!b) continue;
             if(b->isAbroad()) continue;
             b->moveToDefault();
             b->goHome();
@@ -507,6 +515,7 @@ void eBoardCity::nextMonth() {
         int nTot = 0;
         int nCalled = 0;
         for(const auto& s : mPalaceSoldierBanners) {
+            if(!s) continue;
             const bool a = s->isAbroad();
             if(a) continue;
             const int c = s->count();
@@ -516,7 +525,8 @@ void eBoardCity::nextMonth() {
             nCalled += c;
         }
         if(nTot == 0 || static_cast<double>(nCalled)/nTot < 0.25) {
-            mExcessiveMilitaryServiceCount--;
+            mExcessiveMilitaryServiceCount =
+                std::max(0, mExcessiveMilitaryServiceCount - 1);
             mMonthsOfMilitaryService = 0;
         } else {
             mMonthsOfMilitaryService++;
@@ -528,6 +538,7 @@ void eBoardCity::nextMonth() {
 
     mPopData.nextMonth();
     for(const auto& h : mHippodromes) {
+        if(!h) continue;
         h->nextMonth();
     }
 
@@ -559,13 +570,17 @@ void eBoardCity::nextMonth() {
                     const auto targetCid = enemyCids[0];
                     const auto& wboard = mBoard.world();
                     const auto wc = wboard.cityWithId(targetCid);
+                    if(!wc) return;
+
                     eEnlistedForces forces;
                     for(const auto& b : mSoldierBanners) {
+                        if(!b) continue;
                         const auto type = b->type();
                         if(type == eBannerType::rockThrower) continue;
                         forces.fSoldiers.push_back(b);
                     }
                     for(const auto hh : mHeroHalls) {
+                        if(!hh) continue;
                         const auto stage = hh->stage();
                         if(stage != eHeroSummoningStage::arrived) continue;
                         const bool abroad = hh->heroOnQuest();
@@ -606,7 +621,10 @@ void eBoardCity::setWageRate(const eWageRate wr) {
 void eBoardCity::saveEditorCityPlan() {
     mCityPlan = eAICityPlan(mId);
     for(const auto b : mAllBuildings) {
+        if(!b) continue;
         const int did = b->districtId();
+        if(did < 0) continue;
+
         while(did >= mCityPlan.districtCount()) {
             const int id = mCityPlan.districtCount();
             eAIDistrict d;
@@ -629,14 +647,18 @@ void eBoardCity::saveEditorCityPlan() {
                 ab.fTradingPartner = city.cityId();
                 if(ab.fTradePostType == eTradePostType::pier) {
                     const auto pier = p->unpackBuilding();
-                    ab.fOtherRect = pier->tileRect();
+                    if(pier) {
+                        ab.fOtherRect = pier->tileRect();
+                    }
                 }
             }
         } else if(ab.fType == eBuildingType::pier) {
             continue;
         } else if(const auto hr = dynamic_cast<eHorseRanch*>(b)) {
             const auto e = hr->enclosure();
-            ab.fOtherRect = e->tileRect();
+            if(e) {
+                ab.fOtherRect = e->tileRect();
+            }
         } else if(ab.fType == eBuildingType::horseRanchEnclosure) {
             continue;
         } else if(ab.fType == eBuildingType::agoraSpace) {
@@ -720,6 +742,8 @@ void eBoardCity::buildScheduled() {
 bool eBoardCity::previousDistrictFulfilled() {
     const int id = mCityPlan.lastBuiltDistrictId();
     if(id == -1) return true;
+    if(id < 0 || id >= mCityPlan.districtCount()) return false;
+
     const auto& d = mCityPlan.district(id);
     const auto& cs = d.fReadyConditions;
     if(cs.empty()) return true;
@@ -734,6 +758,7 @@ bool eBoardCity::previousDistrictFulfilled() {
             } else {
                 const bool totalType = c.fType == eType::totalResourceCount;
                 for(const auto b : mStorBuildings) {
+                    if(!b) continue;
                     if(!totalType) {
                         const int did = b->districtId();
                         if(did != id) continue;
@@ -747,6 +772,7 @@ bool eBoardCity::previousDistrictFulfilled() {
         } else if(c.fType == eType::districtPopulation) {
             int total = 0;
             for(const auto& b : mTimedBuildings) {
+                if(!b) continue;
                 if(const auto hb = dynamic_cast<eHouseBase*>(b)) {
                     const int did = b->districtId();
                     if(did != id) continue;
@@ -795,34 +821,58 @@ bool eBoardCity::buildNextDistrict(const int drachmas) {
 }
 
 std::vector<eBoardCity::eCondition> eBoardCity::getDistrictReadyConditions() {
-    const auto& v = mEditorDistrictConditions[mCurrentDistrictId];
-    return v;
+    if(mCurrentDistrictId < 0) return {};
+
+    const auto it = mEditorDistrictConditions.find(mCurrentDistrictId);
+    if(it != mEditorDistrictConditions.end()) {
+        return it->second;
+    }
+
     if(mCurrentDistrictId >= mCityPlan.districtCount()) return {};
     const auto& d = mCityPlan.district(mCurrentDistrictId);
     return d.fReadyConditions;
 }
 
 void eBoardCity::addDistrictReadyCondition(const eCondition& c) {
+    if(mCurrentDistrictId < 0) return;
+
     auto& v = mEditorDistrictConditions[mCurrentDistrictId];
     v.push_back(c);
     if(mCurrentDistrictId >= mCityPlan.districtCount()) return;
+
     auto& d = mCityPlan.district(mCurrentDistrictId);
     d.fReadyConditions.push_back(c);
 }
 
 void eBoardCity::removeDistrictReadyCondition(const int id) {
-    auto& v = mEditorDistrictConditions[mCurrentDistrictId];
+    if(mCurrentDistrictId < 0 || id < 0) return;
+
+    const auto it = mEditorDistrictConditions.find(mCurrentDistrictId);
+    if(it == mEditorDistrictConditions.end()) return;
+
+    auto& v = it->second;
+    if(id >= static_cast<int>(v.size())) return;
     v.erase(v.begin() + id);
+
     if(mCurrentDistrictId >= mCityPlan.districtCount()) return;
     auto& d = mCityPlan.district(mCurrentDistrictId);
+    if(id >= static_cast<int>(d.fReadyConditions.size())) return;
     d.fReadyConditions.erase(d.fReadyConditions.begin() + id);
 }
 
 void eBoardCity::setDistrictReadyCondition(const int id, const eCondition& c) {
-    auto& v = mEditorDistrictConditions[mCurrentDistrictId];
+    if(mCurrentDistrictId < 0 || id < 0) return;
+
+    const auto it = mEditorDistrictConditions.find(mCurrentDistrictId);
+    if(it == mEditorDistrictConditions.end()) return;
+
+    auto& v = it->second;
+    if(id >= static_cast<int>(v.size())) return;
     v[id] = c;
+
     if(mCurrentDistrictId >= mCityPlan.districtCount()) return;
     auto& d = mCityPlan.district(mCurrentDistrictId);
+    if(id >= static_cast<int>(d.fReadyConditions.size())) return;
     d.fReadyConditions[id] = c;
 }
 
@@ -1162,6 +1212,14 @@ void eBoardCity::setManTowers(const bool m) {
 void eBoardCity::distributeEmployees(const eSector s) {
     int e = mEmplDistributor.employees(s);
     const int maxE = mEmplDistributor.maxEmployees(s);
+    if(maxE <= 0) {
+        const auto& sb = mSectorBuildings[s];
+        for(const auto b : sb) {
+            if(b) b->setEmployed(0);
+        }
+        return;
+    }
+
     const double frac = e/static_cast<double>(maxE);
     const auto& sb = mSectorBuildings[s];
     struct eSectorReminder {
@@ -1171,6 +1229,7 @@ void eBoardCity::distributeEmployees(const eSector s) {
 
     std::vector<eSectorReminder> reminders;
     for(const auto b : sb) {
+        if(!b) continue;
         const auto type = b->type();
         if(type == eBuildingType::triremeWharf) {
             const bool sd = b->shutDown();
@@ -1184,8 +1243,13 @@ void eBoardCity::distributeEmployees(const eSector s) {
             b->setShutDown(false);
         }
         const int me = b->maxEmployees();
+        if(me <= 0) {
+            b->setEmployed(0);
+            continue;
+        }
         const double eeF = frac*me;
-        const int ee = std::floor(eeF);
+        const int ee = std::clamp(
+            static_cast<int>(std::floor(eeF)), 0, me);
         b->setEmployed(ee);
         e -= ee;
         reminders.push_back({(eeF - ee)/me, b});
@@ -1363,13 +1427,15 @@ int eBoardCity::countAllowed(const eBuildingType t) const {
     }
     const int already = countBuildings(t);
 
-    return 8*countBuildings(parent) - already;
+    return std::max(0, 8*countBuildings(parent) - already);
 }
 
 eBuilding* eBoardCity::randomBuilding(const eBuildingValidator& v) const {
+    if(!v) return nullptr;
     auto blds = mTimedBuildings;
     eRand::randomShuffle(blds);
     for(const auto b : blds) {
+        if(!b) continue;
         const bool r = v(b);
         if(r) return b;
     }
@@ -1432,6 +1498,7 @@ void eBoardCity::updateResources() {
         count = 0;
         const auto type = r.first;
         for(const auto s : mStorBuildings) {
+            if(!s) continue;
             count += s->count(type);
         }
     }
@@ -1452,9 +1519,12 @@ int eBoardCity::resourceCount(const eResourceType type) const {
 }
 
 int eBoardCity::takeResource(const eResourceType type, const int count) {
+    if(count <= 0) return 0;
+
     if(type == eResourceType::drachmas) {
         const auto p = owningPlayer();
-        if(p) p->incDrachmas(-count, eFinanceTarget::giftsAndAidGiven);
+        if(!p) return 0;
+        p->incDrachmas(-count, eFinanceTarget::giftsAndAidGiven);
         return count;
     }
     int r = 0;
@@ -1462,6 +1532,7 @@ int eBoardCity::takeResource(const eResourceType type, const int count) {
     const auto takeFunc = [&](const eValidator& v) {
         if(r >= count) return;
         for(const auto s : mStorBuildings) {
+            if(!s) continue;
             if(!v(s)) continue;
             if(r >= count) return;
             r += s->take(type, count - r);
@@ -1484,9 +1555,12 @@ int eBoardCity::takeResource(const eResourceType type, const int count) {
 }
 
 int eBoardCity::addResource(const eResourceType type, const int count) {
+    if(count <= 0) return 0;
+
     if(type == eResourceType::drachmas) {
         const auto p = owningPlayer();
-        if(p) p->incDrachmas(count, eFinanceTarget::giftsReceived);
+        if(!p) return 0;
+        p->incDrachmas(count, eFinanceTarget::giftsReceived);
         return count;
     }
     int rem = count;
@@ -1494,6 +1568,7 @@ int eBoardCity::addResource(const eResourceType type, const int count) {
     const auto addFunc = [&](const eValidator& v) {
         if(rem <= 0) return;
         for(const auto s : mStorBuildings) {
+            if(!s) continue;
             if(!v(s)) continue;
             const int c = s->add(type, rem);
             rem -= c;
@@ -1516,6 +1591,7 @@ int eBoardCity::spaceForResource(const eResourceType type) const {
     }
     int r = 0;
     for(const auto s : mStorBuildings) {
+        if(!s) continue;
         r += s->spaceLeft(type);
     }
     return r;
@@ -1524,9 +1600,11 @@ int eBoardCity::spaceForResource(const eResourceType type) const {
 int eBoardCity::maxSingleSpaceForResource(
         const eResourceType type,
         eStorageBuilding** b) const {
+    if(!b) return 0;
     *b = nullptr;
     int r = 0;
     for(const auto s : mStorBuildings) {
+        if(!s) continue;
         const int ss = s->spaceLeft(type);
         if(ss > r) {
             *b = s;
@@ -1557,9 +1635,11 @@ void eBoardCity::incWaitingCount(const eResourceType type, const int by) {
 
 int eBoardCity::maxMonumentSpaceForResource(
         eMonument** b) const {
+    if(!b) return 0;
     *b = nullptr;
     int r = 0;
     for(const auto s : mMonuments) {
+        if(!s) continue;
         int ss = s->spaceLeft(eResourceType::wood);
         ss += s->spaceLeft(eResourceType::marble);
         ss += s->spaceLeft(eResourceType::sculpture);
@@ -1577,6 +1657,7 @@ void eBoardCity::killCommonFolks(int toKill) {
     auto bs = mTimedBuildings;
     eRand::randomShuffle(bs);
     for(const auto b : bs) {
+        if(!b) continue;
         const auto bt = b->type();
         if(bt == eBuildingType::commonHouse) {
             const auto sh = static_cast<eSmallHouse*>(b);
@@ -1601,6 +1682,7 @@ void eBoardCity::hopliteKilled() {
     auto bs = mTimedBuildings;
     eRand::randomShuffle(bs);
     for(const auto b : bs) {
+        if(!b) continue;
         const auto bt = b->type();
         if(bt == eBuildingType::eliteHousing) {
             const auto eh = static_cast<eEliteHousing*>(b);
@@ -1617,6 +1699,7 @@ void eBoardCity::horsemanKilled() {
     auto bs = mTimedBuildings;
     eRand::randomShuffle(bs);
     for(const auto b : bs) {
+        if(!b) continue;
         const auto bt = b->type();
         if(bt == eBuildingType::eliteHousing) {
             const auto eh = static_cast<eEliteHousing*>(b);
@@ -1757,6 +1840,7 @@ void eBoardCity::consolidateSoldiers() {
     eSoldierBanners hoplites;
     eSoldierBanners horsemen;
     for(const auto& s : mPalaceSoldierBanners) {
+        if(!s) continue;
         if(s->isAbroad()) continue;
         const auto tile = s->tile();
         if(!tile) s->moveToDefault();
@@ -1778,12 +1862,16 @@ void eBoardCity::consolidateSoldiers() {
     const auto consolidator = [](const eSoldierBanners& banners) {
         for(int i = 0; i < static_cast<int>(banners.size()); i++) {
             const auto s = banners[i];
+            if(!s) continue;
             const int sc = s->count();
             int sSpace = eNumbers::sSoldiersPerBanner - sc;
             if(sSpace <= 0) continue;
-            for(int j = banners.size() - 1; j > i; j--) {
+            for(int j = static_cast<int>(banners.size()) - 1;
+                j > i; j--) {
                 const auto ss = banners[j];
+                if(!ss) continue;
                 const int ssc = ss->count();
+                if(ssc <= 0) continue;
                 const int kMax = std::min(sSpace, ssc);
                 for(int k = 0; k < kMax; k++) {
                     ss->decCount();
@@ -2037,6 +2125,7 @@ stdsptr<ePlague> eBoardCity::nearestPlague(
 
 eBanner* eBoardCity::banner(const eBannerTypeS type, const int id) const {
     for(const auto& b : mBanners) {
+        if(!b) continue;
         const int bid = b->id();
         if(bid != id) continue;
         const auto btype = b->type();
@@ -2048,6 +2137,7 @@ eBanner* eBoardCity::banner(const eBannerTypeS type, const int id) const {
 
 eTile* eBoardCity::entryPoint() const {
     for(const auto b : mBanners) {
+        if(!b) continue;
         const auto type = b->type();
         if(type == eBannerTypeS::entryPoint) {
             return b->tile();
@@ -2058,6 +2148,7 @@ eTile* eBoardCity::entryPoint() const {
 
 eTile* eBoardCity::exitPoint() const {
     for(const auto b : mBanners) {
+        if(!b) continue;
         const auto type = b->type();
         if(type == eBannerTypeS::exitPoint) {
             return b->tile();
@@ -2068,6 +2159,7 @@ eTile* eBoardCity::exitPoint() const {
 
 eTile* eBoardCity::riverEntryPoint() const {
     for(const auto b : mBanners) {
+        if(!b) continue;
         const auto type = b->type();
         if(type == eBannerTypeS::riverEntryPoint) {
             return b->tile();
@@ -2078,6 +2170,7 @@ eTile* eBoardCity::riverEntryPoint() const {
 
 eTile* eBoardCity::riverExitPoint() const {
     for(const auto b : mBanners) {
+        if(!b) continue;
         const auto type = b->type();
         if(type == eBannerTypeS::riverExitPoint) {
             return b->tile();
@@ -2087,6 +2180,7 @@ eTile* eBoardCity::riverExitPoint() const {
 }
 
 void eBoardCity::registerBanner(eBanner* const b) {
+    if(!b) return;
     const int id = b->id();
     const auto type = b->type();
     const auto bb = banner(type, id);
@@ -2126,12 +2220,14 @@ eTile* eBoardCity::landSlideTile(const int id) const {
 
 void eBoardCity::musterAllSoldiers() {
     for(const auto& s : mSoldierBanners) {
+        if(!s) continue;
         s->backFromHome();
     }
 }
 
 void eBoardCity::sendAllSoldiersHome() {
     for(const auto& s : mSoldierBanners) {
+        if(!s) continue;
         s->goHome();
     }
 }
@@ -2140,6 +2236,7 @@ eEnlistedForces eBoardCity::getEnlistableForces() const {
     eEnlistedForces result;
 
     for(const auto& s : mSoldierBanners) {
+        if(!s) continue;
         if(s->count() <= 0) continue;
         switch(s->type()) {
         case eBannerType::hoplite:
@@ -2519,7 +2616,7 @@ void eBoardCity::startEpisode(eEpisode* const e) {
     const auto date = mBoard.date();
     for(const auto& ee : es) {
         const auto eee = ee->makeCopy();
-        eee->setupStartDate(date);
+        eEventStateHelpers::prepareEpisodeEvent(*eee, date);
         mCityEvents.addEvent(eee);
         eee->loadResources();
     }

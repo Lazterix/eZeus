@@ -151,7 +151,7 @@ void eMonument::read(eReadStream& src) {
     auto& board = getBoard();
 
     src.readCharacter(&board, [this](eCharacter* const c) {
-        mCart = static_cast<eCartTransporter*>(c);
+        mCart = dynamic_cast<eCartTransporter*>(c);
     });
 }
 

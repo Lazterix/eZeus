@@ -27,6 +27,7 @@ std::vector<eOverlay> eHuntingLodge::getOverlays(const eTileSize size) const {
     const int sizeId = static_cast<int>(size);
     const auto& texs = eGameTextures::buildings()[sizeId];
     const auto& coll = texs.fHuntingLodgeOverlay;
+    if(coll.size() <= 0) return {};
     const int texId = textureTime() % coll.size();
     eOverlay o;
     o.fTex = coll.getTexture(texId);
@@ -61,7 +62,7 @@ void eHuntingLodge::read(eReadStream& src) {
     eResourceCollectBuildingBase::read(src);
     src >> mSpawnTime;
     src.readCharacter(&getBoard(), [this](eCharacter* const c) {
-        mHunter = static_cast<eHunter*>(c);
+        mHunter = dynamic_cast<eHunter*>(c);
     });
 }
 
@@ -72,7 +73,9 @@ void eHuntingLodge::write(eWriteStream& dst) const {
 }
 
 bool eHuntingLodge::spawn() {
+    if(!enabled() || resource() >= maxResource()) return false;
     const auto t = centerTile();
+    if(!t) return false;
     const auto h = e::make_shared<eHunter>(getBoard());
     mHunter = h.get();
     h->setBothCityIds(cityId());

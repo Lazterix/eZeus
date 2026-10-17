@@ -356,6 +356,8 @@ void eCartTransporter::read(eReadStream& src) {
     src >> mType;
     eResourceType type;
     src >> type;
+    count = eResourceTypeHelpers::normalizedTransportCount(type, count);
+    if(count == 0) type = eResourceType::none;
     setResourceValue(type, count);
     src >> mSupports;
     src >> mSupport;
@@ -364,11 +366,12 @@ void eCartTransporter::read(eReadStream& src) {
     src >> mBigTrailer;
     src >> mMaxDistance;
     src.readCharacter(&getBoard(), [this](eCharacter* const c) {
-        mOx = static_cast<eOx*>(c);
+        mOx = dynamic_cast<eOx*>(c);
     });
     src.readCharacter(&getBoard(), [this](eCharacter* const c) {
-        mTrailer = static_cast<eTrailer*>(c);
+        mTrailer = dynamic_cast<eTrailer*>(c);
     });
+    mFollowers.clear();
     int nf;
     src >> nf;
     for(int i = 0; i < nf; i++) {

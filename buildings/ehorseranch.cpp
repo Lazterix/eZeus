@@ -19,7 +19,7 @@ eHorseRanch::~eHorseRanch() {
 }
 
 void eHorseRanch::erase() {
-    mEnclosure->eBuilding::erase();
+    if(mEnclosure) mEnclosure->eBuilding::erase();
     eBuilding::erase();
 }
 
@@ -36,6 +36,7 @@ std::vector<eOverlay> eHorseRanch::getOverlays(
     const auto& blds = eGameTextures::buildings();
     const auto& texs = blds[sizeId];
     const auto& coll = texs.fHorseRanchOverlay;
+    if(coll.size() <= 0) return {};
     const int texId = textureTime() % coll.size();
 
     std::vector<eOverlay> os;
@@ -64,15 +65,15 @@ void eHorseRanch::timeChanged(const int by) {
             mWheatTime += by;
             if(mWheatTime > eNumbers::sHorseRanchWheatUsePeriod) {
                 mWheatTime = 0;
-                mWheat -= 10;
+                // Small remaining portions must not turn into negative feed.
+                mWheat = std::max(0, mWheat - 10);
             }
             mHorseTime += by;
-            if(mHorseTime > eNumbers::sHorseRanchHorseSpawnPeriod) {
-                mHorseTime = 0;
-                mEnclosure->spawnHorse();
-
-                const bool isPp = isPersonPlayer();
-                if(isPp) {
+            if(mHorseTime >= eNumbers::sHorseRanchHorseSpawnPeriod) {
+                const bool produced = mEnclosure && mEnclosure->spawnHorse();
+                // Do not waste a finished breeding cycle while the pen is full.
+                mHorseTime = produced ? 0 : eNumbers::sHorseRanchHorseSpawnPeriod;
+                if(produced && isPersonPlayer()) {
                     auto& board = getBoard();
                     board.incProduced(eResourceType::horse, 1);
                 }
@@ -90,32 +91,36 @@ int eHorseRanch::count(const eResourceType type) const {
 
 int eHorseRanch::add(const eResourceType type, const int count) {
     if(type == eResourceType::wheat) {
-        mWheat += count*100;
-        return count;
+        const int accepted = std::clamp(count, 0, spaceLeft(type));
+        mWheat += accepted*100;
+        return accepted;
     }
     return eEmployingBuilding::add(type, count);
 }
 
 int eHorseRanch::take(const eResourceType type, const int count) {
     if(type == eResourceType::horse) {
-        return mEnclosure->take(type, count);
+        return mEnclosure ? mEnclosure->take(type, count) : 0;
     }
     return eEmployingBuilding::take(type, count);
 }
 
 int eHorseRanch::spaceLeft(const eResourceType type) const {
-    if(type == eResourceType::wheat) return 8 - mWheat/100;
+    // Wheat consumption happens in smaller portions than a delivery.
+    // Reserve room for the full 100-unit incoming batch.
+    if(type == eResourceType::wheat) return std::max(0, (800 - mWheat)/100);
     return eEmployingBuilding::spaceLeft(type);
 }
 
 std::vector<eCartTask> eHorseRanch::cartTasks() const {
     auto tasks = eEmployingBuilding::cartTasks();
 
-    if(800 > mWheat) {
+    const int room = spaceLeft(eResourceType::wheat);
+    if(room > 0) {
         eCartTask task;
         task.fType = eCartActionType::take;
         task.fResource = eResourceType::wheat;
-        task.fMaxCount = 8 - mWheat/100;
+        task.fMaxCount = room;
         tasks.push_back(task);
     }
 
@@ -123,7 +128,7 @@ std::vector<eCartTask> eHorseRanch::cartTasks() const {
 }
 
 int eHorseRanch::provide(const eProvide p, const int n) {
-    mEnclosure->eBuildingWithResource::provide(p, n);
+    if(mEnclosure) mEnclosure->eBuildingWithResource::provide(p, n);
     return eEmployingBuilding::provide(p, n);
 }
 
@@ -131,12 +136,16 @@ void eHorseRanch::setEnclosure(eHorseRanchEnclosure* const e) {
     mEnclosure = e;
 }
 
+eHorseRanchEnclosure* eHorseRanch::enclosure() const {
+    return mEnclosure.get();
+}
+
 int eHorseRanch::horseCount() const {
-    return mEnclosure->horseCount();
+    return mEnclosure ? mEnclosure->horseCount() : 0;
 }
 
 bool eHorseRanch::takeHorse() {
-    return mEnclosure->takeHorse();
+    return mEnclosure && mEnclosure->takeHorse();
 }
 
 void eHorseRanch::read(eReadStream& src) {
@@ -145,9 +154,12 @@ void eHorseRanch::read(eReadStream& src) {
     src >> mWheat;
     src >> mWheatTime;
     src >> mHorseTime;
+    mWheat = std::max(0, mWheat);
+    mWheatTime = std::max(0, mWheatTime);
+    mHorseTime = std::max(0, mHorseTime);
     auto& board = getBoard();
     src.readCharacter(&board, [this](eCharacter* const c) {
-        mTakeCart = static_cast<eCartTransporter*>(c);
+        mTakeCart = dynamic_cast<eCartTransporter*>(c);
     });
 }
 

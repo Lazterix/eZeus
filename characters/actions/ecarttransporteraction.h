@@ -20,7 +20,7 @@ public:
     eCartActionTypeSupport support() const;
     eResourceType supportsResource() const;
 
-    eBuilding* src() const { return mBuilding; }
+    eBuilding* src() const { return mBuilding.get(); }
     eBuilding* target() const { return mTarget; }
 
     bool waiting();
@@ -51,7 +51,7 @@ private:
 
     void disappear();
 
-    eBuildingWithResource* mBuilding = nullptr;
+    stdptr<eBuildingWithResource> mBuilding;
     stdptr<eBuilding> mTarget;
 
     eCartTask mTask;
@@ -79,7 +79,7 @@ public:
 
     void read(eReadStream& src) override {
         src.readCharacterAction(&board(), [this](eCharacterAction* const ca) {
-            mTptr = static_cast<eCartTransporterAction*>(ca);
+            mTptr = dynamic_cast<eCartTransporterAction*>(ca);
         });
         src >> mBx;
         src >> mBy;
@@ -118,7 +118,7 @@ public:
 
     void read(eReadStream& src) override {
         src.readCharacterAction(&board(), [this](eCharacterAction* const ca) {
-            mTptr = static_cast<eCartTransporterAction*>(ca);
+            mTptr = dynamic_cast<eCartTransporterAction*>(ca);
         });
     }
 

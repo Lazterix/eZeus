@@ -27,7 +27,7 @@ private:
 
     eGrowerType mType;
     eGrower* mGrower = nullptr;
-    eGrowersLodge* mLodge = nullptr;
+    stdptr<eGrowersLodge> mLodge;
 
     bool mFinishOnce = true;
 
@@ -45,9 +45,11 @@ public:
         mTptr(ca), mTile(tile), mType(type) {}
 
     void call() {
+        if(!mTile) return;
         mTile->setBusy(false);
         if(!mTptr) return;
         const auto t = mTptr.get();
+        if(!t->mGrower) return;
         if(const auto b = mTile->underBuilding()) {
             if(const auto bb = dynamic_cast<eResourceBuilding*>(b)) {
                 bb->workOn();
@@ -69,7 +71,7 @@ public:
 
     void read(eReadStream& src) {
         src.readCharacterAction(&board(), [this](eCharacterAction* const ca) {
-            mTptr = static_cast<eGrowerAction*>(ca);
+            mTptr = dynamic_cast<eGrowerAction*>(ca);
         });
         mTile = src.readTile(board());
         src >> mType;
@@ -95,7 +97,7 @@ public:
         mTile(tile) {}
 
     void call() {
-        mTile->setBusy(false);
+        if(mTile) mTile->setBusy(false);
     }
 
     void read(eReadStream& src) {

@@ -2,6 +2,7 @@
 
 #include "evectorhelpers.h"
 #include "egameboard.h"
+#include "gameEvents/eeventstatehelpers.h"
 
 eGameEvents::eGameEvents(const eCityId cid, eGameBoard& board) :
     mCid(cid), mBoard(board) {}
@@ -77,7 +78,17 @@ void eGameEvents::read(eReadStream& src) {
         src >> type;
         const auto branch = eGameEventBranch::root;
         const auto e = eGameEvent::sCreate(mCid, type, branch, mBoard);
+        if(!e) {
+            src.fail();
+            return;
+        }
         e->read(src);
+        if(src.failed()) return;
+        if(e->type() == eGameEventType::receiveRequest &&
+           eEventStateHelpers::shouldRestoreRecurringEpisodeOwnership(
+               e->isRootEvent(), e->repeat(), e->episodeEvent())) {
+            e->setIsEpisodeEvent(true);
+        }
         addEvent(e);
     }
 }

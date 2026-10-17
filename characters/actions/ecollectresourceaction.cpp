@@ -17,6 +17,11 @@ eCollectResourceAction::eCollectResourceAction(eCharacter* const c) :
     eCollectResourceAction(nullptr, c, nullptr) {}
 
 bool eCollectResourceAction::decide() {
+    const auto c = character();
+    if(!c || !c->tile() || !mBuilding || !mHasResource) {
+        setState(eCharacterActionState::failed);
+        return true;
+    }
     const bool r = eActionWithComeback::decide();
     if(r) return r;
 
@@ -25,7 +30,6 @@ bool eCollectResourceAction::decide() {
         return true;
     }
 
-    const auto c = character();
     const auto cc = static_cast<eResourceCollectorBase*>(c);
 
     const auto t = c->tile();
@@ -101,6 +105,7 @@ void eCollectResourceAction::setCollectedAction(const eTileActionType a) {
 }
 
 void eCollectResourceAction::callCollectedAction(eTile* const tile) const {
+    if(!tile || !mBuilding) return;
     eResourceType marbleType = eResourceType::marble;
     switch(mCollectedAction) {
     case eTileActionType::none:
@@ -119,12 +124,12 @@ void eCollectResourceAction::callCollectedAction(eTile* const tile) const {
         r->setResource(marbleType, 1);
 
         const auto finish = std::make_shared<eCRA_callCollectedActionFinish>(
-                                board, mBuilding);
+                                board, mBuilding.get());
         const auto a = e::make_shared<eMoveToAction>(r.get());
         a->setStateRelevance(eStateRelevance::terrain |
                              eStateRelevance::buildings);
         a->setFinishAction(finish);
-        a->start(mBuilding);
+        a->start(mBuilding.get());
         r->setAction(a);
         r->setActionType(eCharacterActionType::walk);
     } break;
@@ -135,7 +140,7 @@ void eCollectResourceAction::read(eReadStream& src) {
     eActionWithComeback::read(src);
     mHasResource = src.readHasResource();
     src.readBuilding(&board(), [this](eBuilding* const b) {
-        mBuilding = static_cast<eResourceCollectBuildingBase*>(b);
+        mBuilding = dynamic_cast<eResourceCollectBuildingBase*>(b);
     });
     src >> mCollectedAction;
     mWalkable = src.readWalkable();
@@ -150,7 +155,7 @@ void eCollectResourceAction::read(eReadStream& src) {
 void eCollectResourceAction::write(eWriteStream& dst) const {
     eActionWithComeback::write(dst);
     dst.writeHasResource(mHasResource.get());
-    dst.writeBuilding(mBuilding);
+    dst.writeBuilding(mBuilding.get());
     dst << mCollectedAction;
     dst.writeWalkable(mWalkable.get());
     dst << mDisabled;
@@ -187,20 +192,21 @@ bool eCollectResourceAction::findResourceDecision() {
     }
 
     const stdptr<eCharacter> cptr(c);
-    a->setFoundAction([cptr, tptr, this]() {
+    const stdptr<eResourceCollectBuildingBase> bptr(mBuilding);
+    a->setFoundAction([cptr, tptr, bptr]() {
         if(cptr) {
             cptr->setActionType(eCharacterActionType::walk);
         }
-        if(tptr) {
-            mNoTarget = false;
-            mBuilding->setNoTarget(false);
+        if(tptr && bptr) {
+            tptr->mNoTarget = false;
+            bptr->setNoTarget(false);
         }
     });
 
-    const auto findFailFunc = [tptr, this]() {
-        if(tptr) {
-            mNoTarget = true;
-            mBuilding->setNoTarget(true);
+    const auto findFailFunc = [tptr, bptr]() {
+        if(tptr && bptr) {
+            tptr->mNoTarget = true;
+            bptr->setNoTarget(true);
         }
     };
     a->setFindFailAction(findFailFunc);

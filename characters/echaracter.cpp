@@ -26,6 +26,7 @@ eCharacter::~eCharacter() {
 }
 
 bool eCharacter::canFight(eCharacter* const c) {
+    if(!c) return false;
     if(dead()) return false;
     const auto ct = c->type();
     const auto t = type();
@@ -78,11 +79,13 @@ bool eCharacter::canFight(eCharacter* const c) {
 }
 
 void eCharacter::provideToBuilding(eBuilding* const b) {
+    if(!b || mProvideCount <= 0) return;
     const int r = b->provide(mProvide, mProvideCount);
     mProvideCount -= r;
 }
 
 void eCharacter::fight(eCharacter* const c) {
+    if(!c || c == this) return;
     pauseAction();
     const auto ff = std::make_shared<eChar_fightFinish>(
                         getBoard(), this);
@@ -189,6 +192,8 @@ eOrientation eCharacter::rotatedOrientation() const {
             return eOrientation::right;
         }
     }
+
+    return mOrientation;
 }
 
 void eCharacter::changeTile(eTile* const t, const bool prepend) {

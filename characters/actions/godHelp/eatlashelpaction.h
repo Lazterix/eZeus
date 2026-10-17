@@ -54,7 +54,7 @@ public:
 
     void read(eReadStream& src) {
         src.readBuilding(&board(), [this](eBuilding* const b) {
-            mTarget = static_cast<eMonument*>(b);
+            mTarget = dynamic_cast<eMonument*>(b);
         });
     }
 

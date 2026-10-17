@@ -37,14 +37,15 @@ void eHeraHelpAction::read(eReadStream& src) {
     eGodAction::read(src);
     src >> mStage;
     src.readBuilding(&board(), [this](eBuilding* const b) {
-        mTarget = static_cast<eAgoraBase*>(b);
+        mTarget = dynamic_cast<eAgoraBase*>(b);
     });
     int nt;
     src >> nt;
     for(int i = 0; i < nt; i++) {
         src.readBuilding(&board(), [this](eBuilding* const b) {
-            const auto a = static_cast<eAgoraBase*>(b);
-            mFutureTargets.push_back(a);
+            if(const auto a = dynamic_cast<eAgoraBase*>(b)) {
+                mFutureTargets.push_back(a);
+            }
         });
     }
 }

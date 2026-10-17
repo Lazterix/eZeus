@@ -37,4 +37,5 @@ double eWageRateHelpers::wageMultiplier(const eWageRate wr) {
     case eWageRate::high: return 3.4;
     case eWageRate::veryHigh: return 4;
     }
+    return 0.0;
 }

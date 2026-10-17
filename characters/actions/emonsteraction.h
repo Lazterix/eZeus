@@ -73,7 +73,7 @@ public:
 
     void read(eReadStream& src) {
         src.readCharacterAction(&board(), [this](eCharacterAction* const ca) {
-            mTptr = static_cast<eMonsterAction*>(ca);
+            mTptr = dynamic_cast<eMonsterAction*>(ca);
         });
     }
 
@@ -104,7 +104,7 @@ public:
 
     void read(eReadStream& src) override {
         src.readCharacterAction(&board(), [this](eCharacterAction* const ca) {
-            mTptr = static_cast<eMonsterAction*>(ca);
+            mTptr = dynamic_cast<eMonsterAction*>(ca);
         });
         src.readBuilding(&board(), [this](eBuilding* const b) {
             mBptr = b;
@@ -135,7 +135,7 @@ public:
 
     void read(eReadStream& src) override {
         src.readCharacterAction(&board(), [this](eCharacterAction* const ca) {
-            mTptr = static_cast<eMonsterAction*>(ca);
+            mTptr = dynamic_cast<eMonsterAction*>(ca);
         });
     }
 
@@ -168,7 +168,7 @@ public:
 
     void read(eReadStream& src) override {
         src.readCharacterAction(&board(), [this](eCharacterAction* const ca) {
-            mTptr = static_cast<eMonsterAction*>(ca);
+            mTptr = dynamic_cast<eMonsterAction*>(ca);
         });
     }
 

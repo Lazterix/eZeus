@@ -63,8 +63,9 @@ void ePlague::read(eReadStream& src) {
     src >> n;
     for(int i = 0 ; i < n; i++) {
         src.readBuilding(&mBoard, [this](eBuilding* const b) {
-            const auto ch = static_cast<eSmallHouse*>(b);
-            mHouses.push_back(ch);
+            if(const auto ch = dynamic_cast<eSmallHouse*>(b)) {
+                mHouses.push_back(ch);
+            }
         });
     }
 }

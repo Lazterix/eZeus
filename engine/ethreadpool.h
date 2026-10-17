@@ -8,6 +8,7 @@
 #include <queue>
 #include <thread>
 #include <mutex>
+#include <atomic>
 #include <functional>
 #include <condition_variable>
 
@@ -35,7 +36,7 @@ private:
     eGameBoard& mBoard;
 
     bool mInterrupted = false;
-    bool mQuit = false;
+    std::atomic_bool mQuit{false};
 
     std::mutex mFinishedTasksMutex;
     std::vector<eTask*> mFinishedTasks;

@@ -19,6 +19,7 @@ void eMonsterUnleashedEvent::trigger() {
     if(!board) return;
 
     const auto monster = triggerBase();
+    if(!monster) return;
 
     bool validGod = false;
     const auto godType = eMonster::sMonsterSender(mMonster, &validGod);

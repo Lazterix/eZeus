@@ -69,6 +69,10 @@ bool hasAnimal(eTileBase* const tile, eCharacterType& type) {
 bool eHuntAction::decide() {
     const bool r = eActionWithComeback::decide();
     if(r) return r;
+    if(!mLodge || !mHunter) {
+        setState(eCharacterActionState::failed);
+        return true;
+    }
 
     const auto t = mHunter->tile();
     if(!t) return false;
@@ -82,9 +86,10 @@ bool eHuntAction::decide() {
 
     if(coll > 0) {
         if(inLodge) {
-            mLodge->addProduced(eResourceType::meat, coll);
-            mHunter->incCollected(-coll);
-            setState(eCharacterActionState::finished);
+            const int stored = mLodge->addProduced(eResourceType::meat, coll);
+            mHunter->incCollected(-stored);
+            if(mHunter->collected() == 0) setState(eCharacterActionState::finished);
+            else waitDecision();
         } else {
             goBackDecision();
         }
@@ -115,10 +120,10 @@ bool eHuntAction::decide() {
 void eHuntAction::read(eReadStream& src) {
     eActionWithComeback::read(src);
     src.readBuilding(&board(), [this](eBuilding* const b) {
-        mLodge = static_cast<eHuntingLodge*>(b);
+        mLodge = dynamic_cast<eHuntingLodge*>(b);
     });
     src.readCharacter(&board(), [this](eCharacter* const c) {
-        mHunter = static_cast<eHunter*>(c);
+        mHunter = dynamic_cast<eHunter*>(c);
     });
     src >> mNoResource;
 }
@@ -148,19 +153,19 @@ void eHuntAction::findResourceDecision() {
     a->setStateRelevance(eStateRelevance::huntingGrounds |
                          eStateRelevance::buildings |
                          eStateRelevance::terrain);
-    a->setFoundAction([tptr, this, c, aType]() {
-        if(tptr) {
-            if(*aType == eCharacterType::deer) {
-                mHunter->setDeerHunter(true);
-            }
-            mLodge->setNoTarget(false);
+    const stdptr<eCharacter> cptr(c);
+    a->setFoundAction([tptr, this, cptr, aType]() {
+        if(!tptr) return;
+        if(mHunter && *aType == eCharacterType::deer) {
+            mHunter->setDeerHunter(true);
         }
-        c->setActionType(eCharacterActionType::walk);
+        if(mLodge) mLodge->setNoTarget(false);
+        if(cptr) cptr->setActionType(eCharacterActionType::walk);
     });
     const auto findFailFunc = [tptr, this]() {
         if(tptr) {
             mNoResource = true;
-            mLodge->setNoTarget(true);
+            if(mLodge) mLodge->setNoTarget(true);
         }
     };
     a->setFindFailAction(findFailFunc);
@@ -170,6 +175,10 @@ void eHuntAction::findResourceDecision() {
 }
 
 void eHuntAction::goBackDecision() {
+    if(!mLodge || !mHunter) {
+        setState(eCharacterActionState::failed);
+        return;
+    }
     mHunter->setActionType(eCharacterActionType::carry);
     const auto rect = mLodge->tileRect();
     eActionWithComeback::goBack(rect, eWalkableObject::sCreateDefault());

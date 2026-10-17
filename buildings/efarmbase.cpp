@@ -4,6 +4,7 @@
 #include "enumbers.h"
 
 #include <algorithm>
+#include <cmath>
 
 eFarmBase::eFarmBase(eGameBoard& board,
                      const eBuildingType type,
@@ -59,10 +60,15 @@ void eFarmBase::timeChanged(const int by) {
     if(enabled()) {
         mNextRipe += by*effectiveness();
         if(mNextRipe > eNumbers::sFarmRipePeriod) {
-            mNextRipe = 0;
-            if(++mRipe == 5) {
-                addProduced(resourceType(), 4);
-                mRipe = 0;
+            if(mRipe == 4 && spaceLeft(resourceType()) < 4) {
+                // Keep the ripe crop in the field until all four units fit.
+                mNextRipe = eNumbers::sFarmRipePeriod;
+            } else {
+                mNextRipe -= eNumbers::sFarmRipePeriod;
+                if(++mRipe == 5) {
+                    addProduced(resourceType(), 4);
+                    mRipe = 0;
+                }
             }
         }
     }
@@ -74,6 +80,11 @@ void eFarmBase::read(eReadStream& src) {
 
     src >> mNextRipe;
     src >> mRipe;
+    // The harvest stage must stay in [0,4], or the crop can stop cycling.
+    mRipe = std::clamp(mRipe, 0, 4);
+    if(!std::isfinite(mNextRipe)) mNextRipe = 0;
+    mNextRipe = std::clamp(mNextRipe, 0.,
+                           static_cast<double>(eNumbers::sFarmRipePeriod));
 }
 
 void eFarmBase::write(eWriteStream& dst) const {

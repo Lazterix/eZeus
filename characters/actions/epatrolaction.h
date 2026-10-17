@@ -30,7 +30,7 @@ protected:
 private:
     std::vector<eOrientation> mPath;
     stdsptr<eDirectionTimes> mDirTimes;
-    ePatrolBuildingBase* mBuilding = nullptr;
+    stdptr<ePatrolBuildingBase> mBuilding;
 
     bool mDone = false;
 };
@@ -52,7 +52,7 @@ public:
 
     void read(eReadStream& src) override {
         src.readCharacterAction(&board(), [this](eCharacterAction* const ca) {
-            mTptr = static_cast<ePatrolAction*>(ca);
+            mTptr = dynamic_cast<ePatrolAction*>(ca);
         });
     }
 
@@ -79,7 +79,7 @@ public:
 
     void read(eReadStream& src) override {
         src.readCharacterAction(&board(), [this](eCharacterAction* const ca) {
-            mTptr = static_cast<ePatrolAction*>(ca);
+            mTptr = dynamic_cast<ePatrolAction*>(ca);
         });
     }
 

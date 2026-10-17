@@ -69,12 +69,12 @@ public:
 
     void read(eReadStream& src) {
         src.readBuilding(&board(), [this](eBuilding* const b) {
-            mTarget = static_cast<eStorageBuilding*>(b);
+            mTarget = dynamic_cast<eStorageBuilding*>(b);
         });
         src >> mResource;
         src >> mCount;
         src.readCharacterAction(&board(), [this](eCharacterAction* const a) {
-            mAction = static_cast<eProvideResourceHelpAction*>(a);
+            mAction = dynamic_cast<eProvideResourceHelpAction*>(a);
         });
     }
 

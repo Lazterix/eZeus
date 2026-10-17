@@ -112,7 +112,7 @@ public:
 
     void read(eReadStream& src) {
         src.readCharacter(&board(), [this](eCharacter* const g) {
-            mG = static_cast<eGod*>(g);
+            mG = dynamic_cast<eGod*>(g);
         });
     }
 
@@ -158,7 +158,7 @@ public:
 
     void read(eReadStream& src) {
         src.readBuilding(&board(), [this](eBuilding* const b) {
-            mTarget = static_cast<eSmallHouse*>(b);
+            mTarget = dynamic_cast<eSmallHouse*>(b);
         });
     }
 
@@ -197,7 +197,7 @@ public:
 
     void read(eReadStream& src) {
         src.readBuilding(&board(), [this](eBuilding* const b) {
-            mTarget = static_cast<eHouseBase*>(b);
+            mTarget = dynamic_cast<eHouseBase*>(b);
         });
     }
 
@@ -543,7 +543,7 @@ public:
 
     void read(eReadStream& src) override {
         src.readCharacterAction(&board(), [this](eCharacterAction* const ca) {
-            mTptr = static_cast<eGodAction*>(ca);
+            mTptr = dynamic_cast<eGodAction*>(ca);
         });
         mTile = src.readTile(board());
     }
@@ -572,7 +572,7 @@ public:
 
     void read(eReadStream& src) override {
         src.readCharacterAction(&board(), [this](eCharacterAction* const ca) {
-            mTptr = static_cast<eGodAction*>(ca);
+            mTptr = dynamic_cast<eGodAction*>(ca);
         });
     }
 
@@ -602,7 +602,7 @@ public:
 
     void read(eReadStream& src) override {
         src.readCharacterAction(&board(), [this](eCharacterAction* const ca) {
-            mTptr = static_cast<eGodMonsterAction*>(ca);
+            mTptr = dynamic_cast<eGodMonsterAction*>(ca);
         });
         mTile = src.readTile(board());
     }
@@ -637,7 +637,7 @@ public:
 
     void read(eReadStream& src) override {
         src.readCharacterAction(&board(), [this](eCharacterAction* const ca) {
-            mTptr = static_cast<eGodMonsterAction*>(ca);
+            mTptr = dynamic_cast<eGodMonsterAction*>(ca);
         });
         src.readCharacter(&board(), [this](eCharacter* const c) {
             mCptr = c;
@@ -710,7 +710,7 @@ public:
 
     void read(eReadStream& src) {
         src.readCharacterAction(&board(), [this](eCharacterAction* const ca) {
-            mTptr = static_cast<eGodMonsterAction*>(ca);
+            mTptr = dynamic_cast<eGodMonsterAction*>(ca);
         });
     }
 

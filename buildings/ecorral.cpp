@@ -9,6 +9,7 @@
 #include "enumbers.h"
 
 #include <algorithm>
+#include <cmath>
 
 eCorral::eCorral(eGameBoard& board,
                  const eCityId cid) :
@@ -38,6 +39,7 @@ std::vector<eOverlay> eCorral::getOverlays(const eTileSize size) const {
     }
     if(mNCattle == 0) {
         const auto& coll = texs.fCorralOverlay;
+        if(coll.size() <= 0) return result;
         const int texId = textureTime() % coll.size();
         auto& o = result.emplace_back();
         o.fTex = coll.getTexture(texId);
@@ -45,6 +47,7 @@ std::vector<eOverlay> eCorral::getOverlays(const eTileSize size) const {
         o.fY = -5.20;
     } else if(mNCattle == 1) {
         const auto& coll = texs.fCorralCattleOverlay[0];
+        if(coll.size() <= 0) return result;
         const int texId = textureTime() % coll.size();
         auto& o = result.emplace_back();
         o.fAlignTop = true;
@@ -53,6 +56,7 @@ std::vector<eOverlay> eCorral::getOverlays(const eTileSize size) const {
         o.fY = -2.95;
     } else if(mNCattle == 2) {
         const auto& coll = texs.fCorralCattleOverlay[1];
+        if(coll.size() <= 0) return result;
         const int texId = textureTime() % coll.size();
         auto& o = result.emplace_back();
         o.fAlignTop = true;
@@ -61,6 +65,7 @@ std::vector<eOverlay> eCorral::getOverlays(const eTileSize size) const {
         o.fY = -2.98;
     } else { // mNCattle == 3
         const auto& coll = texs.fCorralCattleOverlay[2];
+        if(coll.size() <= 0) return result;
         const int texId = textureTime() % coll.size();
         auto& o = result.emplace_back();
         o.fTex = coll.getTexture(texId);
@@ -71,15 +76,19 @@ std::vector<eOverlay> eCorral::getOverlays(const eTileSize size) const {
         eGameTextures::loadCattle();
         const auto& chars = eGameTextures::characters();
         const auto& texs = chars[sizeId];
-        const auto& coll = texs.fCattle1.fStand;
+        const auto& stands = texs.fCattle1.fStand;
+        if(stands.size() <= 2) return result;
+        const auto& coll = stands[2];
+        if(coll.size() <= 0) return result;
         const int texId = textureTime() % coll.size();
         auto& o = result.emplace_back();
-        o.fTex = coll[2].getTexture(texId);
+        o.fTex = coll.getTexture(texId);
         o.fX = 1.33;
         o.fY = -2.47;
     }
     if(mProcessing > 0) {
         const auto& coll = texs.fCorralProcessingOverlay;
+        if(coll.size() <= 0) return result;
         const int texId = textureTime() % coll.size();
         auto& o = result.emplace_back();
         o.fTex = coll.getTexture(texId);
@@ -97,6 +106,11 @@ void eCorral::read(eReadStream& src) {
     src >> mTakeWait;
     src >> mKillWait;
     src >> mReplaceWait;
+    mNCattle = std::clamp(mNCattle, 0, 3);
+    if(!std::isfinite(mProcessing) || mProcessing < 0) mProcessing = 0;
+    if(!std::isfinite(mTakeWait) || mTakeWait < 0) mTakeWait = 0;
+    if(!std::isfinite(mKillWait) || mKillWait < 0) mKillWait = 0;
+    if(!std::isfinite(mReplaceWait) || mReplaceWait < 0) mReplaceWait = 0;
 }
 
 void eCorral::write(eWriteStream& dst) const {
@@ -111,14 +125,22 @@ void eCorral::write(eWriteStream& dst) const {
 
 void eCorral::timeChanged(const int by) {
     eResourceBuildingBase::timeChanged(by);
+    // The corral must not run its own cattle and processing timers without staff.
+    if(!enabled()) return;
 
     const double eff = effectiveness();
     const double newP = std::max(0., mProcessing - by*eff);
     if(newP == 0. && mProcessing > 0) {
-        addProduced(eResourceType::meat, 3);
+        if(spaceLeft(eResourceType::meat) >= 3 &&
+           addProduced(eResourceType::meat, 3) == 3) {
+            mProcessing = 0.;
+        } else {
+            // The animal has been processed; retain the output until it fits.
+            mProcessing = 1.;
+        }
+    } else {
+        mProcessing = newP;
     }
-
-    mProcessing = newP;
 
     if(mNCattle < 3) {
         mTakeWait += by*eff;

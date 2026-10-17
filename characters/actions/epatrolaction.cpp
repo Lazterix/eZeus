@@ -1,9 +1,11 @@
 #include "epatrolaction.h"
 
 #include "../echaracter.h"
+#include "characters/epeddler.h"
 #include "engine/etile.h"
 #include "epatrolmoveaction.h"
 #include "buildings/epatrolbuildingbase.h"
+#include "buildings/eagorabase.h"
 
 ePatrolAction::ePatrolAction(eCharacter* const c,
                              ePatrolBuildingBase* const b,
@@ -23,6 +25,10 @@ ePatrolAction::ePatrolAction(eCharacter* const c,
 bool ePatrolAction::decide() {
     const bool r = eActionWithComeback::decide();
     if(r) return r;
+    if(!mBuilding || !character()) {
+        setState(eCharacterActionState::failed);
+        return true;
+    }
     if(mDone) {
         goBackDecision();
     } else {
@@ -33,6 +39,7 @@ bool ePatrolAction::decide() {
 
 void ePatrolAction::read(eReadStream& src) {
     eActionWithComeback::read(src);
+    mPath.clear();
     int n;
     src >> n;
     for(int i = 0; i < n; i++) {
@@ -40,7 +47,10 @@ void ePatrolAction::read(eReadStream& src) {
         src >> o;
     }
     src.readBuilding(&board(), [this](eBuilding* const b) {
-        mBuilding = static_cast<ePatrolBuildingBase*>(b);
+        mBuilding = dynamic_cast<ePatrolBuildingBase*>(b);
+        if(const auto peddler = dynamic_cast<ePeddler*>(character())) {
+            peddler->setAgora(dynamic_cast<eAgoraBase*>(b));
+        }
     });
     src >> mDone;
     mDirTimes = src.readDirectionTimes(board());
@@ -52,13 +62,17 @@ void ePatrolAction::write(eWriteStream& dst) const {
     for(const auto o : mPath) {
         dst << o;
     }
-    dst.writeBuilding(mBuilding);
+    dst.writeBuilding(mBuilding.get());
     dst << mDone;
     dst.writeDirectionTimes(mDirTimes.get());
 }
 
 void ePatrolAction::patrol() {
     const auto c = character();
+    if(!c || !mBuilding) {
+        setState(eCharacterActionState::failed);
+        return;
+    }
     c->setActionType(eCharacterActionType::walk);
     const auto failFunc = std::make_shared<ePA_patrolFail>(
                               board(), this);
@@ -75,7 +89,7 @@ void ePatrolAction::patrol() {
         setCurrentAction(a);
     } else {
         auto walkable = eWalkableObject::sCreateRoadAvenue();
-        walkable = eWalkableObject::sCreateRect(mBuilding, walkable);
+        walkable = eWalkableObject::sCreateRect(mBuilding.get(), walkable);
         const auto a = e::make_shared<eMovePathAction>(
             c, mPath, walkable);
         a->setFailAction(failFunc);
@@ -85,5 +99,9 @@ void ePatrolAction::patrol() {
 }
 
 void ePatrolAction::goBackDecision(const stdsptr<eWalkableObject>& w) {
-    goBack(mBuilding, w);
+    if(!mBuilding) {
+        setState(eCharacterActionState::failed);
+        return;
+    }
+    goBack(mBuilding.get(), w);
 }

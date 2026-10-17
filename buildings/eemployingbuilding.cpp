@@ -2,6 +2,8 @@
 
 #include "engine/egameboard.h"
 
+#include <algorithm>
+
 eEmployingBuilding::eEmployingBuilding(
         eGameBoard& board,
         const eBuildingType type,
@@ -19,7 +21,7 @@ eEmployingBuilding::~eEmployingBuilding() {
 }
 
 void eEmployingBuilding::setEmployed(const int e) {
-    mEmployed = e;
+    mEmployed = mShutDown ? 0 : std::clamp(e, 0, std::max(0, mMaxEmployees));
     setEnabled(mEmployed > 0);
 }
 
@@ -50,7 +52,8 @@ void eEmployingBuilding::read(eReadStream& src) {
     src >> mShutDown;
     src >> mMaxEmployees;
     src >> mEmployed;
-    setEnabled(mEmployed > 0);
+    mMaxEmployees = std::max(0, mMaxEmployees);
+    setEmployed(mEmployed);
 }
 
 void eEmployingBuilding::write(eWriteStream& dst) const {

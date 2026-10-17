@@ -409,18 +409,25 @@ void eHerosHall::arrive() {
 }
 
 eHero* eHerosHall::spawnHero() {
-    if(mHero) mHero->kill();
+    if(mHero) {
+        mHero->kill();
+        mHero = nullptr;
+    }
     auto& board = getBoard();
-    const auto c = eHero::sCreateHero(mType, board);
-    c->setBothCityIds(cityId());
-    mHero = c.get();
     const auto ct = centerTile();
+    if(!ct) return nullptr;
     const int tx = ct->x();
     const int ty = ct->y();
     const auto cr = eTileHelper::closestRoad(tx, ty, board);
-    mHero->changeTile(cr);
+    if(!cr) return nullptr;
+
+    const auto c = eHero::sCreateHero(mType, board);
+    if(!c) return nullptr;
+    c->setBothCityIds(cityId());
+    c->changeTile(cr);
     const auto ha = e::make_shared<eHeroAction>(c.get());
-    mHero->setAction(ha);
+    c->setAction(ha);
+    mHero = c.get();
     mSpawnWait = eNumbers::sHerosHallSpawnPeriod;
     return mHero;
 }
@@ -443,6 +450,7 @@ void eHerosHall::sendHeroOnQuest() {
 
 void eHerosHall::read(eReadStream& src) {
     eBuilding::read(src);
+    if(src.failed()) return;
     src >> mStage;
     src >> mArrivalCountdown;
     src >> mPhilosophers;
@@ -451,8 +459,9 @@ void eHerosHall::read(eReadStream& src) {
     src >> mUpdateCulture;
     src >> mHeroOnQuest;
     src >> mSpawnWait;
+    mHero = nullptr;
     src.readCharacter(&getBoard(), [this](eCharacter* const c) {
-        mHero = static_cast<eHero*>(c);
+        mHero = dynamic_cast<eHero*>(c);
     });
 }
 

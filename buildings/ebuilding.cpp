@@ -2467,13 +2467,15 @@ void eBuilding::erase() {
 void eBuilding::collapse() {
     auto tiles = mUnderBuilding;
     if(const auto r = dynamic_cast<eHorseRanch*>(this)) {
-        const auto e = r->enclosure();
-        const auto etiles = e->mUnderBuilding;
-        tiles.insert(tiles.end(), etiles.begin(), etiles.end());
+        if(const auto e = r->enclosure()) {
+            const auto etiles = e->mUnderBuilding;
+            tiles.insert(tiles.end(), etiles.begin(), etiles.end());
+        }
     } else if(const auto e = dynamic_cast<eHorseRanchEnclosure*>(this)) {
-        const auto r = e->ranch();
-        const auto rtiles = r->mUnderBuilding;
-        tiles.insert(tiles.end(), rtiles.begin(), rtiles.end());
+        if(const auto r = e->ranch()) {
+            const auto rtiles = r->mUnderBuilding;
+            tiles.insert(tiles.end(), rtiles.begin(), rtiles.end());
+        }
     }
     auto& b = getBoard();
     const auto tp = type();

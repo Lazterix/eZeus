@@ -517,13 +517,13 @@ void eRoad::read(eReadStream &src) {
     auto& board = getBoard();
     src >> mRoadblock;
     src.readBuilding(&board, [this](eBuilding* const bb) {
-        setUnderAgora(static_cast<eAgoraBase*>(bb));
+        setUnderAgora(dynamic_cast<eAgoraBase*>(bb));
     });
     src.readBuilding(&board, [this](eBuilding* const bb) {
-        setUnderGatehouse(static_cast<eGatehouse*>(bb));
+        setUnderGatehouse(dynamic_cast<eGatehouse*>(bb));
     });
     src.readBuilding(&board, [this](eBuilding* const bb) {
-        setAboveHippodrome(static_cast<eHippodromePiece*>(bb));
+        setAboveHippodrome(dynamic_cast<eHippodromePiece*>(bb));
     });
     src >> mCharacterAltitude;
 }

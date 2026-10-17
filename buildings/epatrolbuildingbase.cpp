@@ -65,17 +65,27 @@ ePatrolGuides ePatrolBuildingBase::reversePatrolGuides() const {
 
 void ePatrolBuildingBase::setPatrolGuides(const ePatrolGuides &g) {
     mPatrolGuides = g;
+    mPath.clear();
+    mReversePath.clear();
+    mPathState = -1;
+    ++mPathGeneration;
+    mSpawnOnPathSet = false;
 }
 
 void ePatrolBuildingBase::setBothDirections(const bool both) {
+    if(mBothDirections == both) return;
     mBothDirections = both;
+    mPath.clear();
+    mReversePath.clear();
+    mPathState = -1;
+    ++mPathGeneration;
+    mSpawnOnPathSet = false;
 }
 
 bool ePatrolBuildingBase::spawn() {
     if(!mCharGenerator || !mActGenerator) return false;
     const auto chr = mCharGenerator();
-    mChar = chr.get();
-    if(!mChar) return false;
+    if(!chr) return false;
     chr->setBothCityIds(cityId());
     if(mPatrolGuides.empty()) {
         eTile* t = nullptr;
@@ -87,6 +97,7 @@ bool ePatrolBuildingBase::spawn() {
             const auto ts = surroundingRoad(false, true);
             if(!ts.empty()) {
                 const int tss = ts.size();
+                if(mSpawnRoadId < -1 || mSpawnRoadId >= tss) mSpawnRoadId = -1;
                 if(++mSpawnRoadId >= tss) mSpawnRoadId = 0;
                 t = ts[mSpawnRoadId];
             }
@@ -94,8 +105,11 @@ bool ePatrolBuildingBase::spawn() {
         if(!t) return false;
         chr->changeTile(t);
     } else {
-        chr->changeTile(centerTile());
+        const auto t = centerTile();
+        if(!t) return false;
+        chr->changeTile(t);
     }
+    mChar = chr.get();
     bool reverse = false;
     if(mBothDirections) {
         mLastDirection = !mLastDirection;
@@ -117,6 +131,8 @@ bool ePatrolBuildingBase::spawnsPatrolers() const {
 }
 
 void ePatrolBuildingBase::read(eReadStream& src) {
+    ++mPathGeneration;
+    mSpawnOnPathSet = false;
     eEmployingBuilding::read(src);
 
     src >> mBothDirections;
@@ -125,6 +141,10 @@ void ePatrolBuildingBase::read(eReadStream& src) {
     src >> mSpawnPatrolers;
     src >> mSpawnTime;
     src >> mSpawnRoadId;
+    // The computed path is not saved. Rebuild it on the next patrol spawn.
+    mPath.clear();
+    mReversePath.clear();
+    mPathState = -1;
 
     mDirTimes = src.readDirectionTimes(getBoard());
 
@@ -134,6 +154,7 @@ void ePatrolBuildingBase::read(eReadStream& src) {
 
     int n;
     src >> n;
+    mPatrolGuides.clear();
     for(int i = 0; i < n; i++) {
         ePatrolGuide pg;
         src >> pg.fX;
@@ -186,6 +207,7 @@ bool ePatrolBuildingBase::updatePath(const eAction& finish) {
     }
     auto& board = getBoard();
     auto& tp = board.threadPool();
+    ++mPathGeneration;
     const auto task = new eGuidedMovePathTask(this, finish);
     tp.queueTask(task);
     return true;
@@ -197,6 +219,8 @@ void ePatrolBuildingBase::setPath(const std::vector<eOrientation> &path,
     mReversePath = reversePath;
     if(mSpawnOnPathSet) {
         mSpawnOnPathSet = false;
-        spawn();
+        if(!mPath.empty() && (!mBothDirections || !mReversePath.empty())) {
+            spawn();
+        }
     }
 }

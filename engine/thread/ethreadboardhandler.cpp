@@ -84,9 +84,8 @@ void eThreadBoardHandler::update(eGameBoard& board, const eCityId cid,
     }
 
     const int bState = board.state();
-    if(mTmpBoard.state() == bState) return;
-
     std::lock_guard l(mTmpBoardMutex);
+    if(mTmpBoard.state() == bState) return;
     mTmpChanged = true;
 
     const int cABState = c->allBuildingsState();

@@ -10,16 +10,34 @@ eThreadPool::eThreadPool(eGameBoard& board) :
     mBoard(board) {}
 
 eThreadPool::~eThreadPool() {
-    {
-        mQuit = true;
-        for(const auto d : mThreadData) {
-            { std::unique_lock<std::mutex> lock(d->fTasksMutex); }
-            d->fCv.notify_all();
+    // Coordinate the shutdown predicate with each worker wait.
+    // Otherwise notify_all() can be lost just before wait().
+    for(const auto d : mThreadData) {
+        {
+            std::lock_guard<std::mutex> lock(d->fTasksMutex);
+            mQuit = true;
         }
+        d->fCv.notify_all();
     }
     for(auto& thread : mThreads) {
-        thread.join();
+        if(thread.joinable()) thread.join();
     }
+    for(const auto d : mThreadData) {
+        {
+            std::lock_guard lock(d->fTasksMutex);
+            while(!d->fTasks.empty()) {
+                delete d->fTasks.front();
+                d->fTasks.pop();
+            }
+        }
+        delete d;
+    }
+    mThreadData.clear();
+    std::lock_guard lock(mFinishedTasksMutex);
+    for(const auto task : mFinishedTasks) delete task;
+    mFinishedTasks.clear();
+    for(const auto task : mWaitingTasks) delete task;
+    mWaitingTasks.clear();
 }
 
 void eThreadPool::initialize(const int w, const int h) {
@@ -185,12 +203,13 @@ void eThreadPool::scheduleDataUpdate() {
 }
 
 bool eThreadPool::finished() {
+    std::lock_guard finishedLock(mFinishedTasksMutex);
     for(const auto d : mThreadData) {
         std::lock_guard lock(d->fTasksMutex);
         const bool f = d->fTasks.empty() && !d->fBusy;
         if(!f) return false;
     }
-    return true;
+    return mFinishedTasks.empty();
 }
 
 void eThreadPool::waitFinished() {

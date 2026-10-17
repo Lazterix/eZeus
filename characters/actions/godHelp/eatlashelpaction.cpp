@@ -36,7 +36,7 @@ void eAtlasHelpAction::read(eReadStream& src) {
     eGodAction::read(src);
     src >> mStage;
     src.readBuilding(&board(), [this](eBuilding* const b) {
-        mTarget = static_cast<eSanctuary*>(b);
+        mTarget = dynamic_cast<eSanctuary*>(b);
     });
 }
 

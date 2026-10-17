@@ -46,7 +46,7 @@ void eProvideResourceHelpAction::read(eReadStream& src) {
     eGodAction::read(src);
     src >> mStage;
     src.readBuilding(&board(), [this](eBuilding* const b) {
-        mTarget = static_cast<eStorageBuilding*>(b);
+        mTarget = dynamic_cast<eStorageBuilding*>(b);
     });
     src >> mResource;
     src >> mCount;

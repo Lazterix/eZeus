@@ -17,6 +17,7 @@ int eBuildingWithResource::addProduced(const eResourceType type, const int count
 }
 
 int eBuildingWithResource::stash(const eResourceType type, const int count) {
+    if(count <= 0 || !eResourceTypeHelpers::isSingleType(type)) return 0;
     const bool a = static_cast<bool>(type & mStashable);
     if(!a) return 0;
     for(auto& s : mStash) {
@@ -30,12 +31,13 @@ int eBuildingWithResource::stash(const eResourceType type, const int count) {
 }
 
 int eBuildingWithResource::stashCount(const eResourceType type) const {
+    int total = 0;
     for(const auto& s : mStash) {
         if(static_cast<bool>(s.fType & type)) {
-            return s.fCount;
+            total += s.fCount;
         }
     }
-    return 0;
+    return total;
 }
 
 void eBuildingWithResource::setStashable(const eResourceType s) {
@@ -56,19 +58,24 @@ void eBuildingWithResource::addFromStash() {
 }
 
 int eBuildingWithResource::takeFromStash(const eResourceType t, const int count) {
-    for(int i = 0; i < (int)mStash.size(); i++) {
+    if(count <= 0) return 0;
+    int remaining = count;
+    for(int i = 0; i < static_cast<int>(mStash.size()) && remaining > 0;) {
         auto& s = mStash[i];
-        if(!static_cast<bool>(t & s.fType)) continue;
-        const int take = std::min(s.fCount, count);
-        if(take >= s.fCount) {
-            mStash.erase(mStash.begin() + i);
-            i--;
-        } else {
-            s.fCount -= take;
+        if(!static_cast<bool>(t & s.fType) || s.fCount <= 0) {
+            ++i;
+            continue;
         }
-        return take;
+        const int taken = std::min(s.fCount, remaining);
+        remaining -= taken;
+        if(taken >= s.fCount) {
+            mStash.erase(mStash.begin() + i);
+        } else {
+            s.fCount -= taken;
+            ++i;
+        }
     }
-    return 0;
+    return count - remaining;
 }
 
 stdptr<eCartTransporter> eBuildingWithResource::spawnCart(
@@ -91,12 +98,14 @@ stdptr<eCartTransporter> eBuildingWithResource::spawnCart(
 void eBuildingWithResource::read(eReadStream& src) {
     eBuilding::read(src);
     src >> mStashable;
+    mStash.clear();
     int ns;
     src >> ns;
     for(int i = 0; i < ns; i++) {
-        auto& s = mStash.emplace_back();
+        eStash s;
         src >> s.fType;
         src >> s.fCount;
+        stash(s.fType, s.fCount);
     }
 }
 

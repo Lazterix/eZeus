@@ -32,7 +32,7 @@ private:
     eCharacterType mAnimalType;
 
     eResourceCollectorBase* mCharacter = nullptr;
-    eShepherBuildingBase* mShed = nullptr;
+    stdptr<eShepherBuildingBase> mShed;
 
     bool mFinishOnce = true;
     int mGroomed = 0;
@@ -56,16 +56,16 @@ public:
             a->setBusy(false);
             a->setVisible(true);
         }
-        if(!mTptr) return;
+        if(!mTptr || !mTptr->mCharacter) return;
         mTptr->mCharacter->incCollected(c);
     }
 
     void read(eReadStream& src) override {
         src.readCharacterAction(&board(), [this](eCharacterAction* const ca) {
-            mTptr = static_cast<eShepherdAction*>(ca);
+            mTptr = dynamic_cast<eShepherdAction*>(ca);
         });
         src.readCharacter(&board(), [this](eCharacter* const c) {
-            mAptr = static_cast<eDomesticatedAnimal*>(c);
+            mAptr = dynamic_cast<eDomesticatedAnimal*>(c);
         });
     }
 
@@ -95,7 +95,7 @@ public:
 
     void read(eReadStream& src) override {
         src.readCharacter(&board(), [this](eCharacter* const c) {
-            mAptr = static_cast<eDomesticatedAnimal*>(c);
+            mAptr = dynamic_cast<eDomesticatedAnimal*>(c);
         });
     }
 
@@ -127,10 +127,10 @@ public:
 
     void read(eReadStream& src) override {
         src.readCharacterAction(&board(), [this](eCharacterAction* const ca) {
-            mTptr = static_cast<eShepherdAction*>(ca);
+            mTptr = dynamic_cast<eShepherdAction*>(ca);
         });
         src.readCharacter(&board(), [this](eCharacter* const c) {
-            mAptr = static_cast<eDomesticatedAnimal*>(c);
+            mAptr = dynamic_cast<eDomesticatedAnimal*>(c);
         });
     }
 
@@ -159,7 +159,7 @@ public:
 
     void read(eReadStream& src) override {
         src.readCharacter(&board(), [this](eCharacter* const c) {
-            mAptr = static_cast<eDomesticatedAnimal*>(c);
+            mAptr = dynamic_cast<eDomesticatedAnimal*>(c);
         });
     }
 

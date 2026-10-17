@@ -5,6 +5,7 @@
 #include "engine/eeventdata.h"
 #include "characters/actions/egodattackaction.h"
 #include "egodtraderesumesevent.h"
+#include "eeventstatehelpers.h"
 
 eGodAttackEvent::eGodAttackEvent(
         const eCityId cid,
@@ -19,7 +20,7 @@ void eGodAttackEvent::setSanctuary(const stdptr<eSanctuary>& s) {
 void eGodAttackEvent::setTypes(const std::vector<eGodType>& types) {
     mTypes = types;
     const int nTypes = mTypes.size();
-    if(mNextId >= nTypes) mNextId = 0;
+    mNextId = eEventStateHelpers::normalizeCycleIndex(mNextId, nTypes);
 }
 
 void eGodAttackEvent::setRandom(const bool r) {
@@ -42,8 +43,8 @@ void eGodAttackEvent::trigger() {
     if(mRandom) {
         tid = eRand::rand() % mTypes.size();
     } else {
-        tid = mNextId;
-        if(++mNextId >= nTypes) mNextId = 0;
+        tid = eEventStateHelpers::normalizeCycleIndex(mNextId, nTypes);
+        mNextId = eEventStateHelpers::nextCycleIndex(tid, nTypes);
     }
     const auto t = mTypes.at(tid);
     const auto god = eGod::sCreateGod(t, *board);
@@ -109,6 +110,8 @@ void eGodAttackEvent::write(eWriteStream& dst) const {
 
 void eGodAttackEvent::read(eReadStream& src) {
     eGameEvent::read(src);
+    if(src.failed()) return;
+    mTypes.clear();
     int n;
     src >> n;
     for(int i = 0; i < n; i++) {
@@ -118,8 +121,10 @@ void eGodAttackEvent::read(eReadStream& src) {
     }
     src >> mRandom;
     src >> mNextId;
+    mNextId = eEventStateHelpers::normalizeCycleIndex(
+        mNextId, static_cast<int>(mTypes.size()));
     const auto board = gameBoard();
     src.readBuilding(board, [this](eBuilding* const b) {
-        mSanctuary = static_cast<eSanctuary*>(b);
+        mSanctuary = dynamic_cast<eSanctuary*>(b);
     });
 }

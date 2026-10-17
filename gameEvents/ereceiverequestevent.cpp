@@ -468,7 +468,7 @@ void eReceiveRequestEvent::trigger() {
                 board->event(eEvent::famineAllyWarning, ed);
             }
         }
-    } else if(mRequestType == eReceiveRequestType::general) {
+    } else if(mRequestType == eReceiveRequestType::project) {
         if(mCity->isRival()) {
             if(mPostpone == 0) { // initial
                 board->event(eEvent::projectRivalInitial, ed);

@@ -42,9 +42,12 @@ void eStorageBuilding::timeChanged(const int by) {
 }
 
 int eStorageBuilding::addNotAccept(const eResourceType type, const int count) {
+    if(count <= 0 || !eResourceTypeHelpers::isSingleType(type)) return 0;
+    const auto cap = mMaxCount.find(type);
+    if(cap == mMaxCount.end() || cap->second <= 0) return 0;
     const bool sculpt = type == eResourceType::sculpture;
     const int sspace = sculpt ? 1 : 4;
-    const int max = mMaxCount[type];
+    const int max = cap->second;
     const int ccount = sCount(type, mResourceCount, mResource, mSpaceCount);
     int added = 0;
     const int maxRem = std::max(0, max - ccount);
@@ -53,6 +56,7 @@ int eStorageBuilding::addNotAccept(const eResourceType type, const int count) {
         const auto t = mResource[i];
         int& c = mResourceCount[i];
         if(t == type) {
+            c = std::clamp(c, 0, sspace);
             const int dep = std::min(sspace - c, rem);
             rem -= dep;
             c += dep;
@@ -64,6 +68,7 @@ int eStorageBuilding::addNotAccept(const eResourceType type, const int count) {
         int& c = mResourceCount[i];
         if(t == eResourceType::none) {
             t = type;
+            c = 0;
             const int dep = std::min(sspace, rem);
             rem -= dep;
             c += dep;
@@ -79,6 +84,7 @@ int eStorageBuilding::add(const eResourceType type, const int count) {
 }
 
 int eStorageBuilding::take(const eResourceType type, const int count) {
+    if(count <= 0) return 0;
     int rem = count;
     const int dep = takeFromStash(type, rem);
     rem -= dep;
@@ -193,7 +199,8 @@ int eStorageBuilding::sSpaceLeftDontAccept(
     }
     int max;
     if(eResourceTypeHelpers::isSingleType(type)) {
-        max = maxCounts.at(type);
+        const auto it = maxCounts.find(type);
+        max = it == maxCounts.end() ? 0 : it->second;
     } else {
         max = 0;
         for(const auto& m : maxCounts) {
@@ -203,7 +210,7 @@ int eStorageBuilding::sSpaceLeftDontAccept(
         }
     }
 
-    return std::min(std::max(0, max - count), space);
+    return std::max(0, std::min(std::max(0, max - count), space));
 }
 
 int eStorageBuilding::sSpaceLeft(
@@ -256,6 +263,19 @@ void eStorageBuilding::read(eReadStream& src) {
         src >> mResource[i];
     }
 
+    // Restore the slot invariants before stock and overlay logic uses them.
+    for(int i = 0; i < 15; i++) {
+        int& count = mResourceCount[i];
+        const auto type = mResource[i];
+        if(count <= 0 || type == eResourceType::none) {
+            count = 0;
+            mResource[i] = eResourceType::none;
+        } else {
+            const int capacity = type == eResourceType::sculpture ? 1 : 4;
+            count = std::min(count, capacity);
+        }
+    }
+
     int nc;
     src >> nc;
     for(int i = 0; i < nc; i++) {
@@ -263,14 +283,20 @@ void eStorageBuilding::read(eReadStream& src) {
         src >> rt;
         int c;
         src >> c;
-        mMaxCount[rt] = c;
+        // A quota cannot exceed the physical capacity of this store.
+        // Ignore unrecognized/multi-resource keys in damaged saves.
+        if(rt == eResourceType::none ||
+           !eResourceTypeHelpers::isSingleType(rt) ||
+           !static_cast<bool>(mCanAccept & rt)) continue;
+        const int physicalMax = (rt == eResourceType::sculpture ? 1 : 4) * mSpaceCount;
+        mMaxCount[rt] = std::clamp(c, 0, physicalMax);
     }
 
     src.readCharacter(&getBoard(), [this](eCharacter* const c) {
-        mCart1 = static_cast<eCartTransporter*>(c);
+        mCart1 = dynamic_cast<eCartTransporter*>(c);
     });
     src.readCharacter(&getBoard(), [this](eCharacter* const c) {
-        mCart2 = static_cast<eCartTransporter*>(c);
+        mCart2 = dynamic_cast<eCartTransporter*>(c);
     });
 }
 

@@ -48,11 +48,11 @@ void eSettlerAction::write(eWriteStream& dst) const {
 }
 
 void eSettlerAction::setNumberPeople(const int p) {
+    const int people = p < 0 ? 0 : p;
     auto& board = this->board();
     const auto popData = board.populationData(cityId());
-    if(!popData) return;
-    popData->incSettlers(p - mNPeople);
-    mNPeople = p;
+    if(popData) popData->incSettlers(people - mNPeople);
+    mNPeople = people;
 }
 
 void eSettlerAction::findHouse() {

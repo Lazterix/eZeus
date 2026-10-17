@@ -73,7 +73,7 @@ eTrailer::getTexture(const eTileSize size) const {
 void eTrailer::read(eReadStream& src) {
     eCharacter::read(src);
     src.readCharacter(&getBoard(), [this](eCharacter* const c) {
-        mFollow = static_cast<eCartTransporter*>(c);
+        mFollow = dynamic_cast<eCartTransporter*>(c);
     });
     src >> mIsBig;
     src >> mResCount;

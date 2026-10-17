@@ -2,6 +2,8 @@
 
 #include "esanctuary.h"
 
+#include <algorithm>
+
 eSanctCost totalCost(const std::vector<eSanctCost>& cost) {
     eSanctCost result{0, 0, 0};
     for(const auto& c : cost) {
@@ -24,10 +26,15 @@ eSanctBuilding::eSanctBuilding(const std::vector<eSanctCost>& cost,
 }
 
 void eSanctBuilding::erase() {
-    mMonument->erase();
+    if(mMonument) {
+        mMonument->erase();
+    } else {
+        eBuilding::erase();
+    }
 }
 
 bool eSanctBuilding::resourcesAvailable() const {
+    if(!mMonument) return false;
     if(finished()) return false;
     if(mHalted) return false;
     const auto& s = mMonument->stored();
@@ -44,7 +51,7 @@ bool eSanctBuilding::finished() const {
 }
 
 bool eSanctBuilding::incProgress() {
-    if(mProgress >= mMaxProgress) return false;
+    if(!mMonument || mProgress < 0 || mProgress >= mMaxProgress) return false;
     const auto& cost = mCost[mProgress++];
     mMonument->useResources(cost);
     updateNextCost();
@@ -69,6 +76,7 @@ void eSanctBuilding::read(eReadStream& src) {
     src >> mWorkedOn;
     src >> mProgress;
     src >> mHalted;
+    mProgress = std::clamp(mProgress, 0, mMaxProgress);
     updateNextCost();
 }
 

@@ -48,7 +48,7 @@ public:
 
     void read(eReadStream& src) override {
         src.readBuilding(&board(), [this](eBuilding* const b) {
-            mTptr = static_cast<ePatrolTarget*>(b);
+            mTptr = dynamic_cast<ePatrolTarget*>(b);
         });
     }
 

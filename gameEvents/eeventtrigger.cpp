@@ -44,7 +44,12 @@ void eEventTrigger::read(eReadStream& src) {
         src >> type;
         const auto branch = eGameEventBranch::trigger;
         const auto e = eGameEvent::sCreate(mCid, type, branch, mBoard);
+        if(!e) {
+            src.fail();
+            return;
+        }
         e->read(src);
+        if(src.failed()) return;
         mEvents.emplace_back(e);
     }
 }

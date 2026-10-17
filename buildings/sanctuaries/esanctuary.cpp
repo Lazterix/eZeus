@@ -111,16 +111,18 @@ eGodType eSanctuary::godType() const {
 
 eGod* eSanctuary::spawnGod() {
     auto& board = getBoard();
-    const auto c = eGod::sCreateGod(godType(), board);
-    c->setBothCityIds(cityId());
-    c->setAttitude(eGodAttitude::worshipped);
-    mGod = c.get();
     const auto ct = centerTile();
+    if(!ct) return nullptr;
     const int tx = ct->x();
     const int ty = ct->y();
     const auto cr = eTileHelper::closestRoad(tx, ty, board);
     if(!cr) return nullptr;
-    mGod->changeTile(cr);
+
+    const auto c = eGod::sCreateGod(godType(), board);
+    c->setBothCityIds(cityId());
+    c->setAttitude(eGodAttitude::worshipped);
+    c->changeTile(cr);
+    mGod = c.get();
     return c.get();
 }
 
@@ -366,11 +368,13 @@ void eSanctuary::nextMonth() {
 
 void eSanctuary::read(eReadStream& src) {
     eMonument::read(src);
+    if(src.failed()) return;
 
     auto& board = getBoard();
 
+    mGod = nullptr;
     src.readCharacter(&board, [this](eCharacter* const c) {
-        mGod = static_cast<eGod*>(c);
+        mGod = dynamic_cast<eGod*>(c);
     });
     src >> mSpawnWait;
     src >> mGodAbroad;
@@ -379,6 +383,7 @@ void eSanctuary::read(eReadStream& src) {
     src >> mCheckHelpNeeded;
     src >> mHelpTimer;
 
+    mWarriorTiles.clear();
     int nw;
     src >> nw;
     for(int i = 0; i < nw; i++) {
@@ -386,6 +391,7 @@ void eSanctuary::read(eReadStream& src) {
         mWarriorTiles.push_back(t);
     }
 
+    mSpecialTiles.clear();
     int ns;
     src >> ns;
     for(int i = 0; i < ns; i++) {

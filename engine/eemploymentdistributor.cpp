@@ -35,7 +35,7 @@ ePriority eEmploymentDistributor::priority(const eSector s) const {
 }
 
 void eEmploymentDistributor::setMaxEmployees(const eSector s, const int e) {
-    mMaxEmployees[s] = e;
+    mMaxEmployees[s] = std::max(0, e);
     mChanged = true;
 }
 
@@ -44,12 +44,13 @@ int eEmploymentDistributor::maxEmployees(const eSector s) const {
 }
 
 void eEmploymentDistributor::incMaxEmployees(const eSector s, const int by) {
-    mMaxEmployees[s] += by;
+    auto& value = mMaxEmployees[s];
+    value = std::max(0, value + by);
     mChanged = true;
 }
 
 int eEmploymentDistributor::employees(const eSector s) {
-    const int e = mEmplData.employable();
+    const int e = std::max(0, mEmplData.employable());
     if(e != mTotalEmployees) mChanged = true;
     mTotalEmployees = e;
     if(mChanged) distribute();
@@ -71,22 +72,22 @@ void eEmploymentDistributor::write(eWriteStream& dst) const {
 void eEmploymentDistributor::distribute() {
     mChanged = false;
 
-    int totalNeeded = 0;
-    for(auto& task : mMaxEmployees) {
-        totalNeeded += task.second;
+    long long totalNeeded = 0;
+    for(const auto& task : mMaxEmployees) {
+        totalNeeded += std::max(0, task.second);
     }
     if(mTotalEmployees >= totalNeeded) {
         for(auto& e : mEmployees) {
-            e.second = mMaxEmployees[e.first];
+            e.second = std::max(0, mMaxEmployees[e.first]);
         }
         return;
     }
 
-    int totalPriorityWeight = 0;
+    long long totalPriorityWeight = 0;
     for(const auto& task : mPriorities) {
         const int priority = ePriorityHelpers::sWeight(task.second);
-        const int maxEmployees = mMaxEmployees[task.first];
-        totalPriorityWeight += maxEmployees*priority;
+        const int maxEmployees = std::max(0, mMaxEmployees[task.first]);
+        totalPriorityWeight += static_cast<long long>(maxEmployees)*priority;
     }
 
     int allocatedCounter = 0;
@@ -99,14 +100,17 @@ void eEmploymentDistributor::distribute() {
     std::vector<eSectorReminder> reminders;
     for(const auto& task : mPriorities) {
         const auto s = task.first;
+        const int maxEmployees = std::max(0, mMaxEmployees[s]);
+        mEmployees[s] = 0;
+        if(maxEmployees == 0) continue;
         if(totalPriorityWeight == 0) {
             reminders.push_back({0, s});
             continue;
         }
         const int priority = ePriorityHelpers::sWeight(task.second);
-        const int maxEmployees = mMaxEmployees[s];
-        const double allocatedF = static_cast<double>(mTotalEmployees * maxEmployees * priority) / totalPriorityWeight;
-        const int allocated = std::floor(allocatedF);
+        const double allocatedF = static_cast<double>(mTotalEmployees) *
+                                  maxEmployees * priority / totalPriorityWeight;
+        const int allocated = static_cast<int>(std::floor(allocatedF));
         const int a = std::min(allocated, maxEmployees);
         reminders.push_back({(allocatedF - a)/maxEmployees, s});
         allocatedCounter += a;

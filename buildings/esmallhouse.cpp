@@ -141,7 +141,7 @@ void eSmallHouse::timeChanged(const int by) {
         eHouseBase::timeChanged(by);
         return;
     }
-    mUpdateCulture += by;
+    mUpdateWater += by;
     if(mUpdateWater > eNumbers::sHouseWaterDecrementPeriod) {
         mUpdateWater = 0;
         mWater = std::max(0, mWater - 1);
@@ -362,11 +362,11 @@ void eSmallHouse::read(eReadStream& src) {
 
     src >> mSpawnSick;
     src.readCharacter(&getBoard(), [this](eCharacter* const c) {
-        mSick = static_cast<eSick*>(c);
+        mSick = dynamic_cast<eSick*>(c);
     });
     src >> mSpawnDisg;
     src.readCharacter(&getBoard(), [this](eCharacter* const c) {
-        mDisg = static_cast<eDisgruntled*>(c);
+        mDisg = dynamic_cast<eDisgruntled*>(c);
     });
 }
 

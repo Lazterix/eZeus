@@ -31,8 +31,9 @@ eAgoraBase::eAgoraBase(eGameBoard& board,
 }
 
 void eAgoraBase::erase() {
-    for(const auto& b : mBs) {
-        b->erase();
+    for(int i = 0; i < static_cast<int>(mBs.size()); ++i) {
+        const auto b = mBs[i]; // Keep the stall alive while erase() updates the market.
+        if(b) b->erase();
     }
     for(int i = 0; i < mNPts; i++) {
         setBuilding(i, nullptr);
@@ -116,8 +117,19 @@ eBuilding* eAgoraBase::building(const int id) const {
 }
 
 void eAgoraBase::setBuilding(const int id, const stdsptr<eBuilding>& b) {
+    if(id < 0 || id >= static_cast<int>(mBs.size())) return;
     int ebefore = 0;
     auto& before = mBs[id];
+    if(b) {
+        auto& brd = getBoard();
+        const auto p = pt(id);
+        // Reject an incomplete 2x2 footprint before changing the market slot.
+        for(int x = p.x; x < p.x + 2; ++x) {
+            for(int y = p.y - 1; y < p.y + 1; ++y) {
+                if(!brd.tile(x, y)) return;
+            }
+        }
+    }
     if(dynamic_cast<eVendor*>(before.get())) ebefore = 4;
     before = b;
     const int me1 = maxEmployees() - ebefore;
@@ -156,14 +168,11 @@ void eAgoraBase::setBuilding(eBuilding* const space,
 }
 
 int eAgoraBase::buildingId(const eBuilding* const b) const {
-    int id = -1;
-    for(const auto& bb : mBs) {
-        id++;
-        if(bb.get() == b) {
-            break;
-        }
+    if(!b) return -1;
+    for(int i = 0; i < static_cast<int>(mBs.size()); ++i) {
+        if(mBs[i].get() == b) return i;
     }
-    return id;
+    return -1;
 }
 
 void eAgoraBase::fillSpaces() {

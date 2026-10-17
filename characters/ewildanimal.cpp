@@ -14,7 +14,7 @@ eWildAnimal::~eWildAnimal() {
 void eWildAnimal::read(eReadStream& src) {
     eAnimal::read(src);
     src.readBanner(&getBoard(), [this](eBanner* const b) {
-        mSpawner = static_cast<eSpawner*>(b);
+        mSpawner = dynamic_cast<eSpawner*>(b);
     });
 }
 

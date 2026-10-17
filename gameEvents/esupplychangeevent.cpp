@@ -20,12 +20,7 @@ void eSupplyChangeEvent::trigger() {
     chooseCount();
     const auto type = this->resourceType();
     const int by = this->count();
-    auto& sells = city->sells();
-    for(auto& s : sells) {
-        if(s.fType != type) continue;
-        s.fMax += by;
-        break;
-    }
+    city->changeSupply(type, by);
     const auto board = gameBoard();
     if(!board) return;
     eEventData ed((ePlayerCityTarget()));

@@ -9,6 +9,7 @@ int swCA(const eAgoraOrientation o) {
     case eAgoraOrientation::topLeft:
         return 3;
     }
+    return 6;
 }
 
 int shCA(const eAgoraOrientation o) {
@@ -20,6 +21,7 @@ int shCA(const eAgoraOrientation o) {
     case eAgoraOrientation::topLeft:
         return 6;
     }
+    return 3;
 }
 
 eCommonAgora::eCommonAgora(const eAgoraOrientation o, eGameBoard& board,

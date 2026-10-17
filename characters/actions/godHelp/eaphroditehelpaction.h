@@ -53,7 +53,7 @@ public:
 
     void read(eReadStream& src) {
         src.readBuilding(&board(), [this](eBuilding* const b) {
-            mTarget = static_cast<eHouseBase*>(b);
+            mTarget = dynamic_cast<eHouseBase*>(b);
         });
     }
 

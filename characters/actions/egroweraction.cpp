@@ -44,39 +44,32 @@ enum class eCollectType {
 eResourceBuilding* tryToCollect(eTile* const tile,
                                 const eGrowerType type,
                                 eCollectType& collType) {
-    if(tile->busy()) return nullptr;
+    if(!tile || tile->busy()) return nullptr;
     const auto b = tile->underBuilding();
-    if(b) {
-        const auto s = static_cast<eResourceBuilding*>(b);
-        if(s->workedOn()) return nullptr;
-        const auto t = b->type();
-        switch(type) {
-        case eGrowerType::grapesAndOlives:
-            if(t != eBuildingType::vine &&
-               t != eBuildingType::oliveTree) {
-                return nullptr;
-            }
-           break;
-        case eGrowerType::oranges:
-            if(t != eBuildingType::orangeTree) {
-                return nullptr;
-            }
-           break;
-        }
-
-        if(s->resource() > 0) {
-            collType = eCollectType::collect;
-        } else {
-            collType = eCollectType::groom;
-        }
-        return s;
+    if(!b) return nullptr;
+    const auto t = b->type();
+    switch(type) {
+    case eGrowerType::grapesAndOlives:
+        if(t != eBuildingType::vine &&
+           t != eBuildingType::oliveTree) return nullptr;
+        break;
+    case eGrowerType::oranges:
+        if(t != eBuildingType::orangeTree) return nullptr;
+        break;
     }
-    return nullptr;
+    const auto s = dynamic_cast<eResourceBuilding*>(b);
+    if(!s || s->workedOn()) return nullptr;
+    collType = s->resource() > 0 ? eCollectType::collect : eCollectType::groom;
+    return s;
 }
 
 bool eGrowerAction::decide() {
     const bool r = eActionWithComeback::decide();
     if(r) return r;
+    if(!mLodge || !mGrower || !mGrower->tile()) {
+        setState(eCharacterActionState::failed);
+        return true;
+    }
 
     const auto t = mGrower->tile();
 
@@ -84,19 +77,20 @@ bool eGrowerAction::decide() {
     const int olives = mGrower->olives();
     const int oranges = mGrower->oranges();
 
-    const bool inLodge = eWalkableHelpers::sTileUnderBuilding(t, mLodge);
+    const bool inLodge = eWalkableHelpers::sTileUnderBuilding(t, mLodge.get());
 
     if(grapes > 0 || olives > 0 || oranges > 0) {
         if(inLodge) {
-            mLodge->addProduced(eResourceType::grapes, grapes);
-            mLodge->addProduced(eResourceType::olives, olives);
-            mLodge->addProduced(eResourceType::oranges, oranges);
+            const int storedGrapes = mLodge->addProduced(eResourceType::grapes, grapes);
+            const int storedOlives = mLodge->addProduced(eResourceType::olives, olives);
+            const int storedOranges = mLodge->addProduced(eResourceType::oranges, oranges);
 
-            mGrower->incGrapes(-grapes);
-            mGrower->incOlives(-olives);
-            mGrower->incOranges(-oranges);
+            mGrower->incGrapes(-storedGrapes);
+            mGrower->incOlives(-storedOlives);
+            mGrower->incOranges(-storedOranges);
 
-            if(mFinishOnce) {
+            if(mFinishOnce && mGrower->grapes() == 0 &&
+               mGrower->olives() == 0 && mGrower->oranges() == 0) {
                 setState(eCharacterActionState::finished);
                 return true;
             } else {
@@ -149,10 +143,10 @@ void eGrowerAction::read(eReadStream& src) {
     eActionWithComeback::read(src);
     src >> mType;
     src.readCharacter(&board(), [this](eCharacter* const c) {
-        mGrower = static_cast<eGrower*>(c);
+        mGrower = dynamic_cast<eGrower*>(c);
     });
     src.readBuilding(&board(), [this](eBuilding* const b) {
-        mLodge = static_cast<eGrowersLodge*>(b);
+        mLodge = dynamic_cast<eGrowersLodge*>(b);
     });
     src >> mFinishOnce;
     src >> mGroomed;
@@ -205,6 +199,7 @@ bool eGrowerAction::findResourceDecision() {
 }
 
 void eGrowerAction::workOnDecision(eTile* const tile) {
+    if(!tile || tile->busy()) return;
     const auto type = tile->underBuildingType();
     switch(mType) {
     case eGrowerType::grapesAndOlives:
@@ -215,9 +210,9 @@ void eGrowerAction::workOnDecision(eTile* const tile) {
         if(type != eBuildingType::orangeTree) return;
         break;
     }
+    const auto bb = dynamic_cast<eResourceBuilding*>(tile->underBuilding());
+    if(!bb || bb->workedOn()) return;
     tile->setBusy(true);
-    const auto b = tile->underBuilding();
-    const auto bb = dynamic_cast<eResourceBuilding*>(b);
     if(bb->resource() > 0) {
         if(type == eBuildingType::vine) {
             mGrower->setActionType(eCharacterActionType::collectGrapes);
@@ -251,8 +246,12 @@ void eGrowerAction::workOnDecision(eTile* const tile) {
 }
 
 void eGrowerAction::goBackDecision() {
+    if(!mLodge || !mGrower) {
+        setState(eCharacterActionState::failed);
+        return;
+    }
     mGrower->setActionType(eCharacterActionType::carry);
-    goBack(mLodge, eWalkableObject::sCreateDefault());
+    goBack(mLodge.get(), eWalkableObject::sCreateDefault());
 }
 
 void eGrowerAction::waitDecision() {

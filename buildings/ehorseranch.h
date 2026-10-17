@@ -29,7 +29,7 @@ public:
 
     int wheat() const { return mWheat; }
 
-    eHorseRanchEnclosure* enclosure() const { return mEnclosure; }
+    eHorseRanchEnclosure* enclosure() const;
     void setEnclosure(eHorseRanchEnclosure* const e);
 
     int horseCount() const;
@@ -41,7 +41,7 @@ private:
     int mWheat = 0;
     int mWheatTime = 0;
     int mHorseTime = 0;
-    eHorseRanchEnclosure* mEnclosure = nullptr;
+    stdptr<eHorseRanchEnclosure> mEnclosure;
 
     stdptr<eCartTransporter> mTakeCart;
 };

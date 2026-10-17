@@ -6,6 +6,8 @@
 #include "eregrowforestaction.h"
 #include "ecolonymonumentaction.h"
 
+#include <stdexcept>
+
 ePlannedAction::ePlannedAction(const bool recurring,
                                const int actionTime,
                                const ePlannedActionType type) :
@@ -39,6 +41,7 @@ ePlannedAction* ePlannedAction::sCreate(const ePlannedActionType type) {
     case ePlannedActionType::colonyMonument:
         return new eColonyMonumentAction();
     }
+    throw std::runtime_error("Unsupported serialized planned action");
 }
 
 void ePlannedAction::incTime(const int by, eGameBoard& board) {

@@ -45,13 +45,14 @@ public:
         if(!t->mFireFighting) return;
         t->mFireFighting = false;
         const auto c = t->character();
+        if(!c) return;
         c->setActionType(eCharacterActionType::walk);
         t->goBackDecision(eWalkableObject::sCreateDefault());
     }
 
     void read(eReadStream& src) override {
         src.readCharacterAction(&board(), [this](eCharacterAction* const ca) {
-            mPtr = static_cast<eFireFighterAction*>(ca);
+            mPtr = dynamic_cast<eFireFighterAction*>(ca);
         });
     }
 
@@ -72,7 +73,7 @@ public:
         mCptr(c), mTile(t) {}
 
     void call() override {
-        if(!mCptr) return;
+        if(!mCptr || !mTile) return;
         mCptr->setActionType(eCharacterActionType::stand);
         if(const auto b = mTile->underBuilding()) {
             b->setOnFire(false);

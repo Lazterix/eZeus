@@ -127,8 +127,9 @@ void ePalace::read(eReadStream& src) {
     src >> tiles;
     for(int i = 0; i < tiles; i++) {
         src.readBuilding(&getBoard(), [this](eBuilding* const b) {
-            const auto pt = static_cast<ePalaceTile*>(b);
-            addTile(pt);
+            if(const auto pt = dynamic_cast<ePalaceTile*>(b)) {
+                addTile(pt);
+            }
         });
     }
 }
