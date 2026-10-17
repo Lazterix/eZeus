@@ -814,10 +814,10 @@ bool eMessages::loadImpl() {
     fDecreasedFavor.fCondensed.fTitle = loadMessage("PHRASE_CONDENSED_favor_change_title_D");
     fDecreasedFavor.fCondensed.fText = loadMessage("PHRASE_CONDENSED_favor_change_initial_announcement_D");
 
-    fUnemployment.fFull.fTitle = loadMessage("PHRASE_unemployment_title");
-    fUnemployment.fFull.fText = loadMessage("PHRASE_unemployment_initial_announcement");
-    fUnemployment.fCondensed.fTitle = loadMessage("PHRASE_CONDENSED_unemployment_title");
-    fUnemployment.fCondensed.fText = loadMessage("PHRASE_CONDENSED_unemployment_initial_announcement");
+    fUnemployment.fFull.fTitle = loadMessage(";PHRASE_unemployment_title");
+    fUnemployment.fFull.fText = loadMessage(";PHRASE_unemployment_initial_announcement");
+    fUnemployment.fCondensed.fTitle = loadMessage(";PHRASE_CONDENSED_unemployment_title");
+    fUnemployment.fCondensed.fText = loadMessage(";PHRASE_CONDENSED_unemployment_initial_announcement");
 
     fEmployees.fFull.fTitle = loadMessage("PHRASE_employees_needed_title");
     fEmployees.fFull.fText = loadMessage("PHRASE_employees_needed_initial_announcement");
